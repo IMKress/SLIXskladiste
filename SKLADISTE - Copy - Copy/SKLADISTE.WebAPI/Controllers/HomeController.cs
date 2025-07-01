@@ -342,6 +342,23 @@ namespace SKLADISTE.WebAPI.Controllers
             }
         }
 
+        [HttpGet("artikli_dokumenta")]
+        public async Task<IActionResult> GetAllArtikliDokumenata()
+        {
+            var data = await _service.GetAllArtikliDokumenataAsync();
+            return Ok(data);
+        }
+
+        [HttpGet("artikli_dokumenta/{id}")]
+        public async Task<IActionResult> GetArtikliDokumentaById(int id)
+        {
+            var item = await _service.GetArtikliDokumentaByIdAsync(id);
+            if (item == null)
+                return NotFound();
+
+            return Ok(item);
+        }
+
 
         //vracanje svih kategorija
         [HttpGet("kategorije")]
