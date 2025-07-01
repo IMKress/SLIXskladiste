@@ -29,6 +29,8 @@ namespace SKLADISTE.Service.Common
 
         Task<bool> AddDokumentAsync(Dokument dokument);
         Task<bool> AddArtiklDokumenta(ArtikliDokumenata artDok);
+        Task<IEnumerable<ArtikliDokumenata>> GetAllArtikliDokumenataAsync();
+        Task<ArtikliDokumenata?> GetArtikliDokumentaByIdAsync(int id);
 
         IEnumerable<Kategorija> GetAllKategorijeS();
 

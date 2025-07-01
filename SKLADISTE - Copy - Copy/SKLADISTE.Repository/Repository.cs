@@ -271,6 +271,16 @@ namespace SKLADISTE.Repository
             await _appDbContext.SaveChangesAsync();
             return true;
         }
+
+        public async Task<IEnumerable<ArtikliDokumenata>> GetAllArtikliDokumenataAsync()
+        {
+            return await _appDbContext.ArtikliDokumenata.ToListAsync();
+        }
+
+        public async Task<ArtikliDokumenata?> GetArtikliDokumentaByIdAsync(int id)
+        {
+            return await _appDbContext.ArtikliDokumenata.FirstOrDefaultAsync(a => a.Id == id);
+        }
         //vracanje svih kategorija
         public IEnumerable<Kategorija> GetAllKategorije()
         {

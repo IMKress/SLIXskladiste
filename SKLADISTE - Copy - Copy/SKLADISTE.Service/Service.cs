@@ -99,6 +99,16 @@ namespace SKLADISTE.Service
             return await _repository.AddArtiklDokumentaAsync(artDok);
         }
 
+        public async Task<IEnumerable<ArtikliDokumenata>> GetAllArtikliDokumenataAsync()
+        {
+            return await _repository.GetAllArtikliDokumenataAsync();
+        }
+
+        public async Task<ArtikliDokumenata?> GetArtikliDokumentaByIdAsync(int id)
+        {
+            return await _repository.GetArtikliDokumentaByIdAsync(id);
+        }
+
         public IEnumerable<Kategorija> GetAllKategorijeS()
         {
             IEnumerable<Kategorija> artiklDb = _repository.GetAllKategorije();
