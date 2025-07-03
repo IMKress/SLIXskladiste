@@ -664,6 +664,27 @@ namespace SKLADISTE.Repository
             return artikli;
         }
 
+        public async Task<bool> AzurirajNarudzbenicaKolicineAsync(int narudzbenicaId, int primkaId)
+        {
+            var primkaArtikli = await _appDbContext.ArtikliDokumenata
+                .Where(ad => ad.DokumentId == primkaId)
+                .ToListAsync();
+
+            foreach (var pArt in primkaArtikli)
+            {
+                var narArt = await _appDbContext.ArtikliDokumenata
+                    .FirstOrDefaultAsync(ad => ad.DokumentId == narudzbenicaId && ad.ArtiklId == pArt.ArtiklId);
+
+                if (narArt != null)
+                {
+                    narArt.TrenutnaKolicina += pArt.TrenutnaKolicina;
+                }
+            }
+
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
+
     }
 
 }
