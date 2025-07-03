@@ -211,5 +211,10 @@ namespace SKLADISTE.Service
             return await _repository.GetArtikliInfoByPrimkaId(primkaId);
         }
 
+        public async Task<bool> AzurirajNarudzbenicaKolicineAsync(int narudzbenicaId, int primkaId)
+        {
+            return await _repository.AzurirajNarudzbenicaKolicineAsync(narudzbenicaId, primkaId);
+        }
+
     }
 }
