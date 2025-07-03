@@ -715,6 +715,16 @@ namespace SKLADISTE.WebAPI.Controllers
             return Ok(result);
         }
 
+        [HttpPost("azuriraj_narudzbenica_kolicine")]
+        public async Task<IActionResult> AzurirajNarudzbenicaKolicine([FromBody] PrimNaruVezeDto dto)
+        {
+            var result = await _service.AzurirajNarudzbenicaKolicineAsync(dto.NarudzbenicaId, dto.PrimkaId);
+            if (result)
+                return Ok("Kolicine azurirane.");
+
+            return StatusCode(500, "Greska kod azuriranja kolicina.");
+        }
+
 
     }
 

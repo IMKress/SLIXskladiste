@@ -93,15 +93,18 @@ function Primka() {
                     artiklJmj: item.artiklJmj,
                     cijena: item.cijena,
                     kolicina: item.kolicina,
+                    trenutnaKolicina: item.trenutnaKolicina,
                     selected: false,
-                    odabranaKolicina: item.kolicina
+                    odabranaKolicina: Math.max(item.kolicina - item.trenutnaKolicina, 0)
                 }));
 
                 const uniqueArtikli = Array.from(new Map(
                     filtrirani.map(art => [art.artiklId, art])
                 ).values());
 
-                setArtikli(uniqueArtikli);
+                const dostupni = uniqueArtikli.filter(a => a.odabranaKolicina > 0);
+
+                setArtikli(dostupni);
             } catch (error) {
                 console.error("Greška pri dohvaćanju artikala:", error);
                 alert("Greška pri dohvaćanju artikala za narudžbenicu.");
@@ -121,7 +124,7 @@ function Primka() {
     }, [selectedNarudzbenicaId, narudzbenice]);
 
     const odabraniArtikli = artikli
-        .filter(a => a.selected)
+        .filter(a => a.selected && a.odabranaKolicina > 0)
         .map((a, index) => ({
             redniBroj: index + 1,
             artiklId: a.artiklId,
@@ -171,7 +174,7 @@ function Primka() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {artikli.map((art) => (
+                                    {artikli.filter(a => a.odabranaKolicina > 0).map((art) => (
                                         <tr key={art.artiklId}>
                                             <td>
                                                 <Form.Check
@@ -196,7 +199,7 @@ function Primka() {
                                                         }}
                                                     />
                                                 ) : (
-                                                    art.kolicina
+                                                    Math.max(art.kolicina - art.trenutnaKolicina, 0)
                                                 )}
                                             </td>
                                         </tr>

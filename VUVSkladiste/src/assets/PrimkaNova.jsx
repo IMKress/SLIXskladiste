@@ -19,7 +19,8 @@ function PrimkaNova() {
         return `${month.padStart(2, '0')}.${day.padStart(2, '0')}.${year}`;
     };
     const oznaka = generirajOznakuDokumenta();
-    const ukupniZbrojCijena = dodaniArtikli?.reduce((acc, item) => acc + item.ukupnaCijena, 0) || 0;
+    const filtriraniArtikli = dodaniArtikli?.filter(a => a.kolicina > 0) || [];
+    const ukupniZbrojCijena = filtriraniArtikli.reduce((acc, item) => acc + item.ukupnaCijena, 0);
 
     const handleCreatePrimka = async () => {
         const formattedDate = formatDateForAPI(datumPrimke);
@@ -46,7 +47,7 @@ function PrimkaNova() {
                 return;
             }
 
-            for (const artikl of dodaniArtikli) {
+            for (const artikl of filtriraniArtikli) {
                 const artiklBody = {
                     id: 0,
                     DokumentId: dokumentId,
@@ -76,6 +77,10 @@ function PrimkaNova() {
             };
             console.log(vezaBody)
             await axios.post('https://localhost:5001/api/home/kreiraj_primnaru', vezaBody, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            await axios.post('https://localhost:5001/api/home/azuriraj_narudzbenica_kolicine', vezaBody, {
                 headers: { 'Content-Type': 'application/json' }
             });
 
@@ -111,7 +116,7 @@ function PrimkaNova() {
                     </tr>
                 </thead>
                 <tbody>
-                    {dodaniArtikli.map((artikl, index) => (
+                    {filtriraniArtikli.map((artikl, index) => (
                         <tr key={index}>
                             <td>{artikl.redniBroj}</td>
                             <td>{artikl.artiklId}</td>
