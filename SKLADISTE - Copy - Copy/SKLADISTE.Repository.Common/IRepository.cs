@@ -64,6 +64,8 @@ namespace SKLADISTE.Repository.Common
 
         Task<List<PrimNaruArtiklDto>> GetArtikliInfoByPrimkaId(int primkaId);
 
+        Task<bool> AzurirajNarudzbenicaKolicineAsync(int narudzbenicaId, int primkaId);
+
         // IEnumerable<> GetAllArtiklsUlazDb();
         /*   IEnumerable<Artikl> GetAllArtiklsDb();
        IEnumerable<RobaStanje> GetAllArtiklsStanjeDb();

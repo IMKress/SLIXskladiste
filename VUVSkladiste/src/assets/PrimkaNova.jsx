@@ -79,6 +79,10 @@ function PrimkaNova() {
                 headers: { 'Content-Type': 'application/json' }
             });
 
+            await axios.post('https://localhost:5001/api/home/azuriraj_narudzbenica_kolicine', vezaBody, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+
             alert('Primka uspješno kreirana!');
             navigate('/Dokumenti');
         } catch (error) {
