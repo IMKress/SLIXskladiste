@@ -93,8 +93,9 @@ function Primka() {
                     artiklJmj: item.artiklJmj,
                     cijena: item.cijena,
                     kolicina: item.kolicina,
+                    trenutnaKolicina: item.trenutnaKolicina,
                     selected: false,
-                    odabranaKolicina: item.kolicina
+                    odabranaKolicina: Math.max(item.kolicina - item.trenutnaKolicina, 0)
                 }));
 
                 const uniqueArtikli = Array.from(new Map(
@@ -196,7 +197,7 @@ function Primka() {
                                                         }}
                                                     />
                                                 ) : (
-                                                    art.kolicina
+                                                    Math.max(art.kolicina - art.trenutnaKolicina, 0)
                                                 )}
                                             </td>
                                         </tr>
