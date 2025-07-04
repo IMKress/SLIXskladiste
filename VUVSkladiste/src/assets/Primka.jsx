@@ -39,7 +39,10 @@ function Primka() {
             ]);
 
             const zatvoreniStatusi = statusResponse.data
-                .filter(ds => ds.statusId === 3) // provjera ako je status isporuka
+                .filter(ds =>
+                    ds.statusId === 3 &&
+                    (ds.aktivan === true || ds.aktivan === 1 || ds.Aktivan === true || ds.Aktivan === 1)
+                )
                 .map(ds => ds.dokumentId);
 
             const filtriraneNarudzbenice = narudzbeniceResponse.data.filter(n =>
