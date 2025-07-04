@@ -7,7 +7,8 @@ function NarudzbenicaDetalji() {
     const [showModal, setShowModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [changingStatus, setChangingStatus] = useState(false);
-    const [statusZatvoren, setStatusZatvoren] = useState(false);
+    const [closingStatus, setClosingStatus] = useState(false);
+    const [aktivniStatusId, setAktivniStatusId] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -63,8 +64,8 @@ function NarudzbenicaDetalji() {
 
             if (res.status === 200) {
                 alert("Status uspješno promijenjen.");
-                setStatusDokumenta("Zatvorena");
-                setStatusZatvoren(true);
+                setStatusDokumenta("Isporuka");
+                setAktivniStatusId(3);
             } else {
                 alert("Greška pri promjeni statusa.");
             }
@@ -73,6 +74,45 @@ function NarudzbenicaDetalji() {
             alert("Došlo je do greške.");
         } finally {
             setChangingStatus(false);
+        }
+    };
+
+    const handleZatvoriNarudzbenicu = async () => {
+        const token = sessionStorage.getItem('token');
+        const zaposlenikId = sessionStorage.getItem('UserId');
+
+        if (!zaposlenikId) {
+            alert("Korisnik nije prijavljen.");
+            return;
+        }
+
+        setClosingStatus(true);
+        try {
+            const body = {
+                dokumentId: parseInt(id),
+                statusId: 2, //2=zatvoren
+                datum: new Date().toISOString(),
+                zaposlenikId
+            };
+
+            const res = await axios.put(
+                `https://localhost:5001/api/home/uredi_status_dokumenta`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.status === 200) {
+                alert("Status uspješno promijenjen.");
+                setStatusDokumenta("Zatvorena");
+                setAktivniStatusId(2);
+            } else {
+                alert("Greška pri promjeni statusa.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Došlo je do greške.");
+        } finally {
+            setClosingStatus(false);
         }
     };
 
@@ -113,8 +153,9 @@ function NarudzbenicaDetalji() {
                     const aktivni = statusResponse.data.find(s => s.aktivan === true);
                     const latest = statusResponse.data[statusResponse.data.length - 1];
                     const naziv = aktivni?.statusNaziv || latest.statusNaziv;
+                    const idStatusa = aktivni?.statusId || latest.statusId;
                     setStatusDokumenta(naziv);
-                    if (naziv?.toLowerCase().includes('zatvor')) setStatusZatvoren(true);
+                    setAktivniStatusId(idStatusa);
                 }
 
                 const detaljiResponse = await axios.get(`https://localhost:5001/api/home/narudzbenica_detalji/${id}`, {
@@ -202,7 +243,7 @@ function NarudzbenicaDetalji() {
                         Obriši narudžbenicu
                     </Button>
 
-                    {!statusZatvoren && (
+                    {aktivniStatusId !== 3 && aktivniStatusId !== 2 && (
                         <Button
                             variant="warning"
                             onClick={handlePromijeniStatus}
@@ -210,6 +251,17 @@ function NarudzbenicaDetalji() {
                             className="me-2"
                         >
                             {changingStatus ? 'Šaljem...' : 'Isporuka'}
+                        </Button>
+                    )}
+
+                    {aktivniStatusId !== 2 && (
+                        <Button
+                            variant="success"
+                            onClick={handleZatvoriNarudzbenicu}
+                            disabled={closingStatus}
+                            className="me-2"
+                        >
+                            {closingStatus ? 'Zatvaram...' : 'Zatvori narudžbenicu'}
                         </Button>
                     )}
 
