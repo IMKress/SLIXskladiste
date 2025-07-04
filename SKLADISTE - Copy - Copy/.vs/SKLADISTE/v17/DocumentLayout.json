@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9851C6C7-FA20-4775-931F-89521DDD793A}|SKLADISTE.WebAPI\\SKLADISTE.WebAPI.csproj|c:\\users\\ivor4\\desktop\\projekti\\skladiste-api-front\\skladiste - copy - copy\\skladiste.webapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9851C6C7-FA20-4775-931F-89521DDD793A}|SKLADISTE.WebAPI\\SKLADISTE.WebAPI.csproj|solutionrelative:skladiste.webapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{203679A2-3851-473B-9153-D3B3247C8F02}|SKLADISTE.Repository\\SKLADISTE.Repository.csproj|c:\\users\\ivor4\\desktop\\projekti\\skladiste-api-front\\skladiste - copy - copy\\skladiste.repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{203679A2-3851-473B-9153-D3B3247C8F02}|SKLADISTE.Repository\\SKLADISTE.Repository.csproj|solutionrelative:skladiste.repository\\repository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9851C6C7-FA20-4775-931F-89521DDD793A}|SKLADISTE.WebAPI\\SKLADISTE.WebAPI.csproj|c:\\users\\ivor4\\desktop\\projekti\\skladiste-api-front\\skladiste - copy - copy\\skladiste.webapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9851C6C7-FA20-4775-931F-89521DDD793A}|SKLADISTE.WebAPI\\SKLADISTE.WebAPI.csproj|solutionrelative:skladiste.webapi\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{9851C6C7-FA20-4775-931F-89521DDD793A}|SKLADISTE.WebAPI\\SKLADISTE.WebAPI.csproj|c:\\users\\ivor4\\desktop\\projekti\\skladiste-api-front\\skladiste - copy - copy\\skladiste.webapi\\controllers\\artiklidokumentacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -94,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 185,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -110,8 +110,7 @@
               "RelativeToolTip": "SKLADISTE.WebAPI\\Controllers\\ArtikliDokumentaController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-01T21:52:12.349Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-01T21:52:12.349Z"
             },
             {
               "$type": "Document",
@@ -127,13 +126,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "HomeController.cs",
               "DocumentMoniker": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\SKLADISTE.WebAPI\\Controllers\\HomeController.cs",
               "RelativeDocumentMoniker": "SKLADISTE.WebAPI\\Controllers\\HomeController.cs",
               "ToolTip": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\SKLADISTE.WebAPI\\Controllers\\HomeController.cs",
               "RelativeToolTip": "SKLADISTE.WebAPI\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAALYCAAAAAAAAAAAawM0CAAAxAAAA",
+              "ViewState": "AQIAAMUCAAAAAAAAAAAawOICAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-26T20:08:52.005Z",
               "EditorCaption": ""
@@ -188,13 +187,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Repository.cs",
               "DocumentMoniker": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\SKLADISTE.Repository\\Repository.cs",
               "RelativeDocumentMoniker": "SKLADISTE.Repository\\Repository.cs",
-              "ToolTip": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\SKLADISTE.Repository\\Repository.cs",
-              "RelativeToolTip": "SKLADISTE.Repository\\Repository.cs",
-              "ViewState": "AQIAAIYCAAAAAAAAAAAuwJoCAABBAAAA",
+              "ToolTip": "C:\\Users\\ivor4\\Desktop\\projekti\\SKLADISTE-api-front\\SKLADISTE - Copy - Copy\\SKLADISTE.Repository\\Repository.cs*",
+              "RelativeToolTip": "SKLADISTE.Repository\\Repository.cs*",
+              "ViewState": "AQIAADkBAAAAAAAAAAAuwFABAAA6AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-26T20:08:32.786Z",
               "EditorCaption": ""
@@ -209,8 +208,7 @@
               "RelativeToolTip": "SKLADISTE.WebAPI\\Controllers\\AuthController.cs",
               "ViewState": "AQIAAD8AAAAAAAAAAAAowCoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-01T15:15:33.907Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-01T15:15:33.907Z"
             },
             {
               "$type": "Document",

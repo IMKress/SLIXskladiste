@@ -447,7 +447,7 @@ namespace SKLADISTE.WebAPI.Controllers
                     StatusId = 1, // ← Zatvoren
                     Datum = DateTime.Now,
                     ZaposlenikId = dokument.ZaposlenikId, // uzmi iz istog dokumenta
-              
+                    aktivan=1
                 };
 
 
