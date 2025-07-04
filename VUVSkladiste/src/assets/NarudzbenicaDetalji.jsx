@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Card, Table, Button, Spinner, Modal, Form, Row, Col } from 'react-bootstrap';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 function NarudzbenicaDetalji() {
     const [showModal, setShowModal] = useState(false);
@@ -30,6 +32,41 @@ function NarudzbenicaDetalji() {
     const [detalji, setDetalji] = useState(null);
     const [nazivPlacanja, setNazivPlacanja] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const handleDownloadPDF = () => {
+        const doc = new jsPDF();
+        const title = `Narud\u017Ebenica #${narudzbenica?.oznakaDokumenta || id}`;
+
+        doc.setFontSize(16);
+        doc.text(title, 10, 15);
+
+        doc.setFontSize(12);
+        doc.text(`Datum: ${new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}`, 10, 25);
+        doc.text(`Zaposlenik: ${zaposlenikIme}`, 10, 32);
+        doc.text(`Status: ${statusDokumenta || 'Nepoznat'}`, 10, 39);
+
+        if (detalji) {
+            doc.text(`Mjesto isporuke: ${detalji.mjestoIsporuke}`, 10, 49);
+            doc.text(`Rok isporuke: ${new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}`, 10, 56);
+            doc.text(`Na\u010Din pla\u0107anja: ${nazivPlacanja || detalji.nP_Id}`, 10, 63);
+        }
+
+        const tableBody = artikli.map((a, idx) => [
+            idx + 1,
+            a.artiklNaziv,
+            a.kolicina,
+            a.cijena.toFixed(2),
+            a.ukupnaCijena.toFixed(2)
+        ]);
+
+        autoTable(doc, {
+            startY: detalji ? 70 : 45,
+            head: [['#', 'Artikl', 'Koli\u010Dina', 'Cijena', 'Ukupna cijena']],
+            body: tableBody
+        });
+
+        doc.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
+    };
 
     useEffect(() => {
         const fetchAllArtikli = async () => {
@@ -326,7 +363,7 @@ function NarudzbenicaDetalji() {
 
     return (
         <Container className="mt-4">
-            <Card>
+            <Card id="narudzbenica-pdf">
                 <Card.Body>
                     <h3>Pregled Narudžbenice #{narudzbenica.oznakaDokumenta}</h3>
                     <p><strong>Datum:</strong> {new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}</p>
@@ -480,6 +517,10 @@ function NarudzbenicaDetalji() {
                             {closingStatus ? 'Zatvaram...' : 'Zatvori narudžbenicu'}
                         </Button>
                     )}
+
+                    <Button variant="info" className="me-2" onClick={handleDownloadPDF}>
+                        Spremi kao PDF
+                    </Button>
 
                     <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                         <Modal.Header closeButton>
