@@ -29,6 +29,7 @@ namespace SKLADISTE.Repository.Common
         Task<bool> AddKategorijaAsync(Kategorija kat);
         Task<bool> AddDokumentAsync(Dokument dokument);
         Task<bool> AddArtiklDokumentaAsync(ArtikliDokumenata artDok);
+        Task<bool> UpdateArtiklDokumentaAsync(int dokumentId, int artiklId, float kolicina, float cijena);
         Task<IEnumerable<ArtikliDokumenata>> GetAllArtikliDokumenataAsync();
         Task<ArtikliDokumenata?> GetArtikliDokumentaByIdAsync(int id);
 

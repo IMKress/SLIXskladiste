@@ -327,19 +327,34 @@ namespace SKLADISTE.WebAPI.Controllers
             try
             {
                 bool result = await _service.AddArtiklDokumenta(artDok);
+
                 if (result)
                 {
                     return Ok("Artikl added successfully.");
                 }
                 else
                 {
-                    return StatusCode(500, "Internal server error while adding artikl.");
+                    return Conflict("Artikl je već dodan u narudžbenicu.");
                 }
             }
             catch (Exception ex)
             {
                 return StatusCode(500, "Internal server error: " + ex.Message);
             }
+        }
+
+        [HttpPut("update_artDok")]
+        public async Task<IActionResult> UpdateArtiklDok([FromBody] ArtiklDokumentUpdateRequest request)
+        {
+            if (request == null)
+                return BadRequest("Prazan zahtjev.");
+
+            var result = await _service.UpdateArtiklDokumentaAsync(request.DokumentId, request.ArtiklId, request.Kolicina, request.Cijena);
+
+            if (result)
+                return Ok("ArtiklDokumenta updated.");
+
+            return NotFound("ArtiklDokumenta nije pronađen.");
         }
 
         [HttpGet("artikli_dokumenta")]
@@ -741,6 +756,14 @@ namespace SKLADISTE.WebAPI.Controllers
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserName { get; set; }
+    }
+
+    public class ArtiklDokumentUpdateRequest
+    {
+        public int DokumentId { get; set; }
+        public int ArtiklId { get; set; }
+        public float Kolicina { get; set; }
+        public float Cijena { get; set; }
     }
 
 }
