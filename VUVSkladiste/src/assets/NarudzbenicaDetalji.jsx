@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Container, Card, Table, Button, Spinner, Modal } from 'react-bootstrap';
+import { Container, Card, Table, Button, Spinner, Modal, Form, Row, Col } from 'react-bootstrap';
 
 function NarudzbenicaDetalji() {
     const [showModal, setShowModal] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [changingStatus, setChangingStatus] = useState(false);
-    const [statusZatvoren, setStatusZatvoren] = useState(false);
+    const [closingStatus, setClosingStatus] = useState(false);
+    const [aktivniStatusId, setAktivniStatusId] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [allArtikli, setAllArtikli] = useState([]);
+    const [selectedArtikl, setSelectedArtikl] = useState('');
+    const [kolicinaArtikla, setKolicinaArtikla] = useState('');
+    const [cijenaArtikla, setCijenaArtikla] = useState('');
+    const [ukupnoArtikla, setUkupnoArtikla] = useState(0);
+    const [addingArtikl, setAddingArtikl] = useState(false);
+    const [editingArtiklId, setEditingArtiklId] = useState(null);
+    const [editKolicina, setEditKolicina] = useState('');
+    const [editCijena, setEditCijena] = useState('');
+    const [savingEdit, setSavingEdit] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -18,6 +30,28 @@ function NarudzbenicaDetalji() {
     const [detalji, setDetalji] = useState(null);
     const [nazivPlacanja, setNazivPlacanja] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchAllArtikli = async () => {
+            try {
+                const res = await axios.get('https://localhost:5001/api/home/artikli_db', {
+                    headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` }
+                });
+                setAllArtikli(res.data);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+        fetchAllArtikli();
+    }, []);
+
+    useEffect(() => {
+        if (kolicinaArtikla && cijenaArtikla) {
+            setUkupnoArtikla(parseFloat(kolicinaArtikla) * parseFloat(cijenaArtikla));
+        } else {
+            setUkupnoArtikla(0);
+        }
+    }, [kolicinaArtikla, cijenaArtikla]);
 
     const handleDelete = async () => {
         setDeleting(true);
@@ -63,8 +97,8 @@ function NarudzbenicaDetalji() {
 
             if (res.status === 200) {
                 alert("Status uspješno promijenjen.");
-                setStatusDokumenta("Zatvorena");
-                setStatusZatvoren(true);
+                setStatusDokumenta("Isporuka");
+                setAktivniStatusId(3);
             } else {
                 alert("Greška pri promjeni statusa.");
             }
@@ -74,6 +108,140 @@ function NarudzbenicaDetalji() {
         } finally {
             setChangingStatus(false);
         }
+    };
+
+    const handleZatvoriNarudzbenicu = async () => {
+        const token = sessionStorage.getItem('token');
+        const zaposlenikId = sessionStorage.getItem('UserId');
+
+        if (!zaposlenikId) {
+            alert("Korisnik nije prijavljen.");
+            return;
+        }
+
+        setClosingStatus(true);
+        try {
+            const body = {
+                dokumentId: parseInt(id),
+                statusId: 2, //2=zatvoren
+                datum: new Date().toISOString(),
+                zaposlenikId
+            };
+
+            const res = await axios.put(
+                `https://localhost:5001/api/home/uredi_status_dokumenta`,
+                body,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.status === 200) {
+                alert("Status uspješno promijenjen.");
+                setStatusDokumenta("Zatvorena");
+                setAktivniStatusId(2);
+            } else {
+                alert("Greška pri promjeni statusa.");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Došlo je do greške.");
+        } finally {
+            setClosingStatus(false);
+        }
+    };
+
+    const handleDodajArtikl = async () => {
+        if (!selectedArtikl || !kolicinaArtikla || !cijenaArtikla) {
+            alert('Popunite sva polja.');
+            return;
+        }
+        if (artikli.some(a => a.artiklId === parseInt(selectedArtikl))) {
+            alert('Artikl je već dodan.');
+            return;
+        }
+        setAddingArtikl(true);
+        const token = sessionStorage.getItem('token');
+        const zaposlenikId = sessionStorage.getItem('UserId');
+        try {
+            const body = {
+                id: 0,
+                DokumentId: parseInt(id),
+                RbArtikla: artikli.length + 1,
+                Kolicina: parseFloat(kolicinaArtikla),
+                Cijena: parseFloat(cijenaArtikla),
+                UkupnaCijena: parseFloat(kolicinaArtikla) * parseFloat(cijenaArtikla),
+                ArtiklId: parseInt(selectedArtikl),
+                TrenutnaKolicina: 0,
+                ZaposlenikId: zaposlenikId
+            };
+
+            const res = await axios.post('https://localhost:5001/api/home/add_artDok', body, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status === 200) {
+                const artResponse = await axios.get(`https://localhost:5001/api/home/artikli_by_dokument/${id}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setArtikli(artResponse.data);
+                setSelectedArtikl('');
+                setKolicinaArtikla('');
+                setCijenaArtikla('');
+                setShowAddForm(false);
+            } else {
+                alert('Greška pri dodavanju artikla.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Došlo je do greške.');
+        } finally {
+            setAddingArtikl(false);
+        }
+    };
+
+    const handleEditClick = (a) => {
+        setEditingArtiklId(a.artiklId);
+        setEditKolicina(a.kolicina);
+        setEditCijena(a.cijena);
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editKolicina || !editCijena) {
+            alert('Popunite sva polja.');
+            return;
+        }
+        setSavingEdit(true);
+        const token = sessionStorage.getItem('token');
+        try {
+            const body = {
+                DokumentId: parseInt(id),
+                ArtiklId: editingArtiklId,
+                Kolicina: parseFloat(editKolicina),
+                Cijena: parseFloat(editCijena)
+            };
+            await axios.put('https://localhost:5001/api/home/update_artDok', body, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const artResponse = await axios.get(`https://localhost:5001/api/home/artikli_by_dokument/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setArtikli(artResponse.data);
+            setEditingArtiklId(null);
+        } catch (err) {
+            console.error(err);
+            alert('Greška pri ažuriranju.');
+        } finally {
+            setSavingEdit(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingArtiklId(null);
+        setEditKolicina('');
+        setEditCijena('');
     };
 
     useEffect(() => {
@@ -113,8 +281,9 @@ function NarudzbenicaDetalji() {
                     const aktivni = statusResponse.data.find(s => s.aktivan === true);
                     const latest = statusResponse.data[statusResponse.data.length - 1];
                     const naziv = aktivni?.statusNaziv || latest.statusNaziv;
+                    const idStatusa = aktivni?.statusId || latest.statusId;
                     setStatusDokumenta(naziv);
-                    if (naziv?.toLowerCase().includes('zatvor')) setStatusZatvoren(true);
+                    setAktivniStatusId(idStatusa);
                 }
 
                 const detaljiResponse = await axios.get(`https://localhost:5001/api/home/narudzbenica_detalji/${id}`, {
@@ -178,6 +347,7 @@ function NarudzbenicaDetalji() {
                                     <th>Količina</th>
                                     <th>Cijena</th>
                                     <th>Ukupna cijena</th>
+                                    {aktivniStatusId === 1 && <th></th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -187,9 +357,35 @@ function NarudzbenicaDetalji() {
                                         <td>{a.artiklId}</td>
                                         <td>{a.artiklNaziv}</td>
                                         <td>{a.artiklJmj}</td>
-                                        <td>{a.kolicina}</td>
-                                        <td>{a.cijena}</td>
-                                        <td>{a.ukupnaCijena}</td>
+                                        <td>
+                                            {editingArtiklId === a.artiklId ? (
+                                                <Form.Control type="number" value={editKolicina} onChange={e => setEditKolicina(e.target.value)} />
+                                            ) : (
+                                                a.kolicina
+                                            )}
+                                        </td>
+                                        <td>
+                                            {editingArtiklId === a.artiklId ? (
+                                                <Form.Control type="number" value={editCijena} onChange={e => setEditCijena(e.target.value)} />
+                                            ) : (
+                                                a.cijena
+                                            )}
+                                        </td>
+                                        <td>{editingArtiklId === a.artiklId ? (parseFloat(editKolicina || 0) * parseFloat(editCijena || 0)).toFixed(2) : a.ukupnaCijena}</td>
+                                        {aktivniStatusId === 1 && (
+                                            <td>
+                                                {editingArtiklId === a.artiklId ? (
+                                                    <>
+                                                        <Button variant="success" size="sm" className="me-1" onClick={handleSaveEdit} disabled={savingEdit}>
+                                                            {savingEdit ? 'Spremam...' : 'Spremi'}
+                                                        </Button>
+                                                        <Button variant="secondary" size="sm" onClick={handleCancelEdit}>Odustani</Button>
+                                                    </>
+                                                ) : (
+                                                    <Button variant="outline-primary" size="sm" onClick={() => handleEditClick(a)}>Uredi</Button>
+                                                )}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
@@ -198,11 +394,63 @@ function NarudzbenicaDetalji() {
                         <p>Ova narudžbenica nema artikala.</p>
                     )}
 
+                    {aktivniStatusId === 1 && !showAddForm && (
+                        <Button variant="primary" className="mt-2" onClick={() => setShowAddForm(true)}>
+                            Dodaj Artikl
+                        </Button>
+                    )}
+
+                    {aktivniStatusId === 1 && showAddForm && (
+                        <div className="mt-3">
+                            <Row>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>Artikl</Form.Label>
+                                        <Form.Control as="select" value={selectedArtikl} onChange={(e) => setSelectedArtikl(e.target.value)}>
+                                            <option value="">-- Odaberi --</option>
+                                            {allArtikli.map(a => (
+                                                <option key={a.artiklId} value={a.artiklId}>
+                                                    {a.artiklNaziv} ({a.artiklJmj})
+                                                </option>
+                                            ))}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>Količina</Form.Label>
+                                        <Form.Control type="number" value={kolicinaArtikla} onChange={(e) => setKolicinaArtikla(e.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>Cijena</Form.Label>
+                                        <Form.Control type="number" value={cijenaArtikla} onChange={(e) => setCijenaArtikla(e.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                    <Form.Group>
+                                        <Form.Label>Ukupno</Form.Label>
+                                        <Form.Control type="text" value={ukupnoArtikla.toFixed(2)} readOnly />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <div className="mt-2">
+                                <Button variant="success" onClick={handleDodajArtikl} disabled={addingArtikl} className="me-2">
+                                    {addingArtikl ? 'Spremam...' : 'Spremi'}
+                                </Button>
+                                <Button variant="secondary" onClick={() => { setShowAddForm(false); setSelectedArtikl(''); setKolicinaArtikla(''); setCijenaArtikla(''); }}>
+                                    Odustani
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+
                     <Button variant="danger" className="ms-2" onClick={() => setShowModal(true)}>
                         Obriši narudžbenicu
                     </Button>
 
-                    {!statusZatvoren && (
+                    {aktivniStatusId !== 3 && aktivniStatusId !== 2 && (
                         <Button
                             variant="warning"
                             onClick={handlePromijeniStatus}
@@ -210,6 +458,17 @@ function NarudzbenicaDetalji() {
                             className="me-2"
                         >
                             {changingStatus ? 'Šaljem...' : 'Isporuka'}
+                        </Button>
+                    )}
+
+                    {aktivniStatusId !== 2 && (
+                        <Button
+                            variant="success"
+                            onClick={handleZatvoriNarudzbenicu}
+                            disabled={closingStatus}
+                            className="me-2"
+                        >
+                            {closingStatus ? 'Zatvaram...' : 'Zatvori narudžbenicu'}
                         </Button>
                     )}
 
