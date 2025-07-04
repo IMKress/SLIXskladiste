@@ -327,13 +327,14 @@ namespace SKLADISTE.WebAPI.Controllers
             try
             {
                 bool result = await _service.AddArtiklDokumenta(artDok);
+
                 if (result)
                 {
                     return Ok("Artikl added successfully.");
                 }
                 else
                 {
-                    return StatusCode(500, "Internal server error while adding artikl.");
+                    return Conflict("Artikl je već dodan u narudžbenicu.");
                 }
             }
             catch (Exception ex)

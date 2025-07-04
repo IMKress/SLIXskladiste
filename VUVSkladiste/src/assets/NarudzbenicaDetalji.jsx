@@ -194,8 +194,12 @@ function NarudzbenicaDetalji() {
                 alert('Greška pri dodavanju artikla.');
             }
         } catch (err) {
-            console.error(err);
-            alert('Došlo je do greške.');
+            if (err.response && err.response.status === 409) {
+                alert('Artikl je već dodan.');
+            } else {
+                console.error(err);
+                alert('Došlo je do greške.');
+            }
         } finally {
             setAddingArtikl(false);
         }

@@ -267,6 +267,12 @@ namespace SKLADISTE.Repository
         {
             if (artDok == null) throw new ArgumentNullException(nameof(artDok));
 
+            bool exists = await _appDbContext.ArtikliDokumenata
+                .AnyAsync(a => a.DokumentId == artDok.DokumentId && a.ArtiklId == artDok.ArtiklId);
+
+            if (exists)
+                return false;
+
             await _appDbContext.ArtikliDokumenata.AddAsync(artDok);
             await _appDbContext.SaveChangesAsync();
             return true;
