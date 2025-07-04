@@ -34,6 +34,7 @@ function NarudzbenicaDetalji() {
     const [loading, setLoading] = useState(true);
 
     const handleDownloadPDF = () => {
+
         const doc = new jsPDF();
         const title = `Narud\u017Ebenica #${narudzbenica?.oznakaDokumenta || id}`;
 
