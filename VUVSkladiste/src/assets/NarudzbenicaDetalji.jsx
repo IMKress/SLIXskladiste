@@ -9,6 +9,7 @@ function NarudzbenicaDetalji() {
     const [changingStatus, setChangingStatus] = useState(false);
     const [closingStatus, setClosingStatus] = useState(false);
     const [aktivniStatusId, setAktivniStatusId] = useState(null);
+
     const [showAddForm, setShowAddForm] = useState(false);
     const [allArtikli, setAllArtikli] = useState([]);
     const [selectedArtikl, setSelectedArtikl] = useState('');
@@ -16,6 +17,7 @@ function NarudzbenicaDetalji() {
     const [cijenaArtikla, setCijenaArtikla] = useState('');
     const [ukupnoArtikla, setUkupnoArtikla] = useState(0);
     const [addingArtikl, setAddingArtikl] = useState(false);
+
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -145,6 +147,7 @@ function NarudzbenicaDetalji() {
         }
     };
 
+
     const handleDodajArtikl = async () => {
         if (!selectedArtikl || !kolicinaArtikla || !cijenaArtikla) {
             alert('Popunite sva polja.');
@@ -192,6 +195,7 @@ function NarudzbenicaDetalji() {
             setAddingArtikl(false);
         }
     };
+
 
     useEffect(() => {
         const fetchData = async () => {
