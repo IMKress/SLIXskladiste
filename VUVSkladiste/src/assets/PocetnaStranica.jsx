@@ -52,7 +52,6 @@ function Pocetna() {
                                     <tr>
                                         <th>ID</th>
                                         <th>Datum stvaranja</th>
-                                        <th>Posljednje ažuriranje</th>
                                         <th>Info</th>
                                     </tr>
                                 </thead>
@@ -61,20 +60,16 @@ function Pocetna() {
                                         <th scope="row">1</th>
                                         <td></td>
                                         <td></td>
+                                    </tr><tr>
+                                        <th scope="row">1</th>
+                                        <td></td>
                                         <td></td>
                                     </tr><tr>
                                         <th scope="row">1</th>
                                         <td></td>
                                         <td></td>
-                                        <td></td>
                                     </tr><tr>
                                         <th scope="row">1</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr><tr>
-                                        <th scope="row">1</th>
-                                        <td></td>
                                         <td></td>
                                         <td></td>
                                     </tr>
