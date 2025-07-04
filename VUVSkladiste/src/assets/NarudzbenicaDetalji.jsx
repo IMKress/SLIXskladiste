@@ -9,7 +9,6 @@ function NarudzbenicaDetalji() {
     const [changingStatus, setChangingStatus] = useState(false);
     const [closingStatus, setClosingStatus] = useState(false);
     const [aktivniStatusId, setAktivniStatusId] = useState(null);
-
     const [showAddForm, setShowAddForm] = useState(false);
     const [allArtikli, setAllArtikli] = useState([]);
     const [selectedArtikl, setSelectedArtikl] = useState('');
@@ -17,12 +16,10 @@ function NarudzbenicaDetalji() {
     const [cijenaArtikla, setCijenaArtikla] = useState('');
     const [ukupnoArtikla, setUkupnoArtikla] = useState(0);
     const [addingArtikl, setAddingArtikl] = useState(false);
-
     const [editingArtiklId, setEditingArtiklId] = useState(null);
     const [editKolicina, setEditKolicina] = useState('');
     const [editCijena, setEditCijena] = useState('');
     const [savingEdit, setSavingEdit] = useState(false);
-
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -151,19 +148,15 @@ function NarudzbenicaDetalji() {
             setClosingStatus(false);
         }
     };
-
-
     const handleDodajArtikl = async () => {
         if (!selectedArtikl || !kolicinaArtikla || !cijenaArtikla) {
             alert('Popunite sva polja.');
             return;
         }
-
         if (artikli.some(a => a.artiklId === parseInt(selectedArtikl))) {
             alert('Artikl je već dodan.');
             return;
         }
-
         setAddingArtikl(true);
         const token = sessionStorage.getItem('token');
         const zaposlenikId = sessionStorage.getItem('UserId');
@@ -200,8 +193,13 @@ function NarudzbenicaDetalji() {
                 alert('Greška pri dodavanju artikla.');
             }
         } catch (err) {
-            console.error(err);
-            alert('Došlo je do greške.');
+
+            if (err.response && err.response.status === 409) {
+                alert('Artikl je već dodan.');
+            } else {
+                console.error(err);
+                alert('Došlo je do greške.');
+            }
         } finally {
             setAddingArtikl(false);
         }
@@ -289,7 +287,7 @@ function NarudzbenicaDetalji() {
                     const naziv = aktivni?.statusNaziv || latest.statusNaziv;
                     const idStatusa = aktivni?.statusId || latest.statusId;
                     setStatusDokumenta(naziv);
-                    setAktivniStatusId(idStatusa);
+                    setAktivniStatusId(parseInt(idStatusa, 10));
                 }
 
                 const detaljiResponse = await axios.get(`https://localhost:5001/api/home/narudzbenica_detalji/${id}`, {
@@ -414,11 +412,13 @@ function NarudzbenicaDetalji() {
                                         <Form.Label>Artikl</Form.Label>
                                         <Form.Control as="select" value={selectedArtikl} onChange={(e) => setSelectedArtikl(e.target.value)}>
                                             <option value="">-- Odaberi --</option>
-                                            {allArtikli.map(a => (
-                                                <option key={a.artiklId} value={a.artiklId}>
-                                                    {a.artiklNaziv} ({a.artiklJmj})
-                                                </option>
-                                            ))}
+                                            {allArtikli
+                                                .filter(a => !artikli.some(exists => exists.artiklId === a.artiklId))
+                                                .map(a => (
+                                                    <option key={a.artiklId} value={a.artiklId}>
+                                                        {a.artiklNaziv} ({a.artiklJmj})
+                                                    </option>
+                                                ))}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
