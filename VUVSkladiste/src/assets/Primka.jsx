@@ -174,7 +174,7 @@ function Primka() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {artikli.filter(a => a.odabranaKolicina > 0).map((art) => (
+                                   {artikli.map((art) => (
                                         <tr key={art.artiklId}>
                                             <td>
                                                 <Form.Check
