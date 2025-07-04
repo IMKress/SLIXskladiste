@@ -194,6 +194,7 @@ function NarudzbenicaDetalji() {
                 alert('Greška pri dodavanju artikla.');
             }
         } catch (err) {
+
             if (err.response && err.response.status === 409) {
                 alert('Artikl je već dodan.');
             } else {
