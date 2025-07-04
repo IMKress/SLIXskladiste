@@ -8,6 +8,7 @@ namespace Skladiste.Model
     {
         public int DokumentId { get; set; }
         public int StatusId { get; set; }
+        public bool aktivan {get; set;}
     }
 
 }

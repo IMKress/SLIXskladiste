@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Skladiste.Model")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2217daca6e25c7f8396c3e4eb717ed65cf71a90d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+54961b5bec1b8258cab5d7d0c9c41fb58162ad01")]
 [assembly: System.Reflection.AssemblyProductAttribute("Skladiste.Model")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Skladiste.Model")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -27,7 +27,7 @@ function Primka() {
     }, []);
 
     useEffect(() => {
-    const fetchZatvoreneNarudzbenice = async () => {
+    const fetchIsporukaNarudzbenice = async () => {
         try {
             const [statusResponse, narudzbeniceResponse] = await Promise.all([
                 axios.get("https://localhost:5001/api/home/dokument_status_parovi", {
@@ -53,7 +53,7 @@ function Primka() {
         }
     };
 
-    fetchZatvoreneNarudzbenice();
+    fetchIsporukaNarudzbenice();
 }, []);
 
     const getLastDokId = async () => {

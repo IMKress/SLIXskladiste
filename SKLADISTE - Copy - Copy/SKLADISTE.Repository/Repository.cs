@@ -623,7 +623,8 @@ namespace SKLADISTE.Repository
                 .Select(s => new DokumentStatusDto
                 {
                     DokumentId = s.DokumentId,
-                    StatusId = s.StatusId
+                    StatusId = s.StatusId,
+                    aktivan=s.aktivan
                 })
                 .ToListAsync();
         }
