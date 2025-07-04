@@ -50,7 +50,7 @@ function NarudzbenicaDetalji() {
         try {
             const body = {
                 dokumentId: parseInt(id),
-                statusId: 2, // Pretpostavljeno ID za "Zatvorena"
+                statusId: 3, //3=isporuka
                 datum: new Date().toISOString(),
                 zaposlenikId
             };
@@ -209,7 +209,7 @@ function NarudzbenicaDetalji() {
                             disabled={changingStatus}
                             className="me-2"
                         >
-                            {changingStatus ? 'Mijenjam...' : 'Zatvori narudžbenicu'}
+                            {changingStatus ? 'Šaljem...' : 'Isporuka'}
                         </Button>
                     )}
 
