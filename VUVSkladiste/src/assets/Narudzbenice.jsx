@@ -68,9 +68,11 @@ function Narudzbenice() {
                     'Authorization': `Bearer ${sessionStorage.getItem('token')}`
                 }
             });
-            const aktivni = response.data.find(s => s.aktivan === true);
+            const aktivni = response.data.find(
+                s => s.aktivan === true || s.aktivan === 1 || s.Aktivan === true || s.Aktivan === 1
+            );
             const latest = response.data[response.data.length - 1];
-            const naziv = aktivni?.statusNaziv || latest?.statusNaziv || "Nepoznat";
+            const naziv = aktivni?.statusNaziv || aktivni?.StatusNaziv || latest?.statusNaziv || latest?.StatusNaziv || "Nepoznat";
             setStatusi(prev => ({ ...prev, [dokumentId]: naziv }));
         } catch (err) {
             console.error(`Greška pri dohvaćanju statusa za dokument ${dokumentId}`, err);
