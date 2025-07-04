@@ -18,6 +18,11 @@ function NarudzbenicaDetalji() {
     const [ukupnoArtikla, setUkupnoArtikla] = useState(0);
     const [addingArtikl, setAddingArtikl] = useState(false);
 
+    const [editingArtiklId, setEditingArtiklId] = useState(null);
+    const [editKolicina, setEditKolicina] = useState('');
+    const [editCijena, setEditCijena] = useState('');
+    const [savingEdit, setSavingEdit] = useState(false);
+
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -153,6 +158,12 @@ function NarudzbenicaDetalji() {
             alert('Popunite sva polja.');
             return;
         }
+
+        if (artikli.some(a => a.artiklId === parseInt(selectedArtikl))) {
+            alert('Artikl je već dodan.');
+            return;
+        }
+
         setAddingArtikl(true);
         const token = sessionStorage.getItem('token');
         const zaposlenikId = sessionStorage.getItem('UserId');
@@ -196,6 +207,48 @@ function NarudzbenicaDetalji() {
         }
     };
 
+    const handleEditClick = (a) => {
+        setEditingArtiklId(a.artiklId);
+        setEditKolicina(a.kolicina);
+        setEditCijena(a.cijena);
+    };
+
+    const handleSaveEdit = async () => {
+        if (!editKolicina || !editCijena) {
+            alert('Popunite sva polja.');
+            return;
+        }
+        setSavingEdit(true);
+        const token = sessionStorage.getItem('token');
+        try {
+            const body = {
+                DokumentId: parseInt(id),
+                ArtiklId: editingArtiklId,
+                Kolicina: parseFloat(editKolicina),
+                Cijena: parseFloat(editCijena)
+            };
+            await axios.put('https://localhost:5001/api/home/update_artDok', body, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            const artResponse = await axios.get(`https://localhost:5001/api/home/artikli_by_dokument/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setArtikli(artResponse.data);
+            setEditingArtiklId(null);
+        } catch (err) {
+            console.error(err);
+            alert('Greška pri ažuriranju.');
+        } finally {
+            setSavingEdit(false);
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingArtiklId(null);
+        setEditKolicina('');
+        setEditCijena('');
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -300,6 +353,7 @@ function NarudzbenicaDetalji() {
                                     <th>Količina</th>
                                     <th>Cijena</th>
                                     <th>Ukupna cijena</th>
+                                    {aktivniStatusId === 1 && <th></th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -309,9 +363,35 @@ function NarudzbenicaDetalji() {
                                         <td>{a.artiklId}</td>
                                         <td>{a.artiklNaziv}</td>
                                         <td>{a.artiklJmj}</td>
-                                        <td>{a.kolicina}</td>
-                                        <td>{a.cijena}</td>
-                                        <td>{a.ukupnaCijena}</td>
+                                        <td>
+                                            {editingArtiklId === a.artiklId ? (
+                                                <Form.Control type="number" value={editKolicina} onChange={e => setEditKolicina(e.target.value)} />
+                                            ) : (
+                                                a.kolicina
+                                            )}
+                                        </td>
+                                        <td>
+                                            {editingArtiklId === a.artiklId ? (
+                                                <Form.Control type="number" value={editCijena} onChange={e => setEditCijena(e.target.value)} />
+                                            ) : (
+                                                a.cijena
+                                            )}
+                                        </td>
+                                        <td>{editingArtiklId === a.artiklId ? (parseFloat(editKolicina || 0) * parseFloat(editCijena || 0)).toFixed(2) : a.ukupnaCijena}</td>
+                                        {aktivniStatusId === 1 && (
+                                            <td>
+                                                {editingArtiklId === a.artiklId ? (
+                                                    <>
+                                                        <Button variant="success" size="sm" className="me-1" onClick={handleSaveEdit} disabled={savingEdit}>
+                                                            {savingEdit ? 'Spremam...' : 'Spremi'}
+                                                        </Button>
+                                                        <Button variant="secondary" size="sm" onClick={handleCancelEdit}>Odustani</Button>
+                                                    </>
+                                                ) : (
+                                                    <Button variant="outline-primary" size="sm" onClick={() => handleEditClick(a)}>Uredi</Button>
+                                                )}
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
