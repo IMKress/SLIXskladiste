@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Card, Table, Button, Spinner, Modal, Form, Row, Col } from 'react-bootstrap';
 import { jsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
+import autoTable from 'jspdf-autotable';
 
 function NarudzbenicaDetalji() {
     const [showModal, setShowModal] = useState(false);
@@ -34,29 +34,39 @@ function NarudzbenicaDetalji() {
     const [loading, setLoading] = useState(true);
 
     const handleDownloadPDF = () => {
-        const element = document.getElementById('narudzbenica-pdf');
-        if (!element) return;
-        html2canvas(element).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const imgWidth = 210;
-            const pageHeight = 297;
-            const imgHeight = canvas.height * imgWidth / canvas.width;
-            let heightLeft = imgHeight;
-            let position = 0;
 
-            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+        const doc = new jsPDF();
+        const title = `Narud\u017Ebenica #${narudzbenica?.oznakaDokumenta || id}`;
 
-            while (heightLeft > 0) {
-                position -= pageHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                heightLeft -= pageHeight;
-            }
+        doc.setFontSize(16);
+        doc.text(title, 10, 15);
 
-            pdf.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
+        doc.setFontSize(12);
+        doc.text(`Datum: ${new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}`, 10, 25);
+        doc.text(`Zaposlenik: ${zaposlenikIme}`, 10, 32);
+        doc.text(`Status: ${statusDokumenta || 'Nepoznat'}`, 10, 39);
+
+        if (detalji) {
+            doc.text(`Mjesto isporuke: ${detalji.mjestoIsporuke}`, 10, 49);
+            doc.text(`Rok isporuke: ${new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}`, 10, 56);
+            doc.text(`Na\u010Din pla\u0107anja: ${nazivPlacanja || detalji.nP_Id}`, 10, 63);
+        }
+
+        const tableBody = artikli.map((a, idx) => [
+            idx + 1,
+            a.artiklNaziv,
+            a.kolicina,
+            a.cijena.toFixed(2),
+            a.ukupnaCijena.toFixed(2)
+        ]);
+
+        autoTable(doc, {
+            startY: detalji ? 70 : 45,
+            head: [['#', 'Artikl', 'Koli\u010Dina', 'Cijena', 'Ukupna cijena']],
+            body: tableBody
         });
+
+        doc.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
     };
 
     useEffect(() => {
