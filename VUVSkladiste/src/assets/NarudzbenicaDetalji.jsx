@@ -412,11 +412,13 @@ function NarudzbenicaDetalji() {
                                         <Form.Label>Artikl</Form.Label>
                                         <Form.Control as="select" value={selectedArtikl} onChange={(e) => setSelectedArtikl(e.target.value)}>
                                             <option value="">-- Odaberi --</option>
-                                            {allArtikli.map(a => (
-                                                <option key={a.artiklId} value={a.artiklId}>
-                                                    {a.artiklNaziv} ({a.artiklJmj})
-                                                </option>
-                                            ))}
+                                            {allArtikli
+                                                .filter(a => !artikli.some(exists => exists.artiklId === a.artiklId))
+                                                .map(a => (
+                                                    <option key={a.artiklId} value={a.artiklId}>
+                                                        {a.artiklNaziv} ({a.artiklJmj})
+                                                    </option>
+                                                ))}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
