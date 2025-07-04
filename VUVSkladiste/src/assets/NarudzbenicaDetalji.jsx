@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Container, Card, Table, Button, Spinner, Modal, Form, Row, Col } from 'react-bootstrap';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 
 function NarudzbenicaDetalji() {
     const [showModal, setShowModal] = useState(false);
@@ -30,6 +32,32 @@ function NarudzbenicaDetalji() {
     const [detalji, setDetalji] = useState(null);
     const [nazivPlacanja, setNazivPlacanja] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const handleDownloadPDF = () => {
+        const element = document.getElementById('narudzbenica-pdf');
+        if (!element) return;
+        html2canvas(element).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210;
+            const pageHeight = 297;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            while (heightLeft > 0) {
+                position -= pageHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
+        });
+    };
 
     useEffect(() => {
         const fetchAllArtikli = async () => {
@@ -326,7 +354,7 @@ function NarudzbenicaDetalji() {
 
     return (
         <Container className="mt-4">
-            <Card>
+            <Card id="narudzbenica-pdf">
                 <Card.Body>
                     <h3>Pregled Narudžbenice #{narudzbenica.oznakaDokumenta}</h3>
                     <p><strong>Datum:</strong> {new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}</p>
@@ -480,6 +508,10 @@ function NarudzbenicaDetalji() {
                             {closingStatus ? 'Zatvaram...' : 'Zatvori narudžbenicu'}
                         </Button>
                     )}
+
+                    <Button variant="info" className="me-2" onClick={handleDownloadPDF}>
+                        Spremi kao PDF
+                    </Button>
 
                     <Modal show={showModal} onHide={() => setShowModal(false)} centered>
                         <Modal.Header closeButton>
