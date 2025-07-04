@@ -148,6 +148,7 @@ function NarudzbenicaDetalji() {
             setClosingStatus(false);
         }
     };
+
     const handleDodajArtikl = async () => {
         if (!selectedArtikl || !kolicinaArtikla || !cijenaArtikla) {
             alert('Popunite sva polja.');
@@ -282,10 +283,12 @@ function NarudzbenicaDetalji() {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 if (statusResponse.data && statusResponse.data.length > 0) {
-                    const aktivni = statusResponse.data.find(s => s.aktivan === true);
+                    const aktivni = statusResponse.data.find(
+                        s => s.aktivan === true || s.aktivan === 1 || s.Aktivan === true || s.Aktivan === 1
+                    );
                     const latest = statusResponse.data[statusResponse.data.length - 1];
-                    const naziv = aktivni?.statusNaziv || latest.statusNaziv;
-                    const idStatusa = aktivni?.statusId || latest.statusId;
+                    const naziv = aktivni?.statusNaziv || aktivni?.StatusNaziv || latest.statusNaziv || latest.StatusNaziv;
+                    const idStatusa = aktivni?.statusId || aktivni?.StatusId || latest.statusId || latest.StatusId;
                     setStatusDokumenta(naziv);
                     setAktivniStatusId(parseInt(idStatusa, 10));
                 }
