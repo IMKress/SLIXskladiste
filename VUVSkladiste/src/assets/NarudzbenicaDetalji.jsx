@@ -148,7 +148,6 @@ function NarudzbenicaDetalji() {
             setClosingStatus(false);
         }
     };
-
     const handleDodajArtikl = async () => {
         if (!selectedArtikl || !kolicinaArtikla || !cijenaArtikla) {
             alert('Popunite sva polja.');
@@ -194,6 +193,7 @@ function NarudzbenicaDetalji() {
                 alert('Greška pri dodavanju artikla.');
             }
         } catch (err) {
+
             if (err.response && err.response.status === 409) {
                 alert('Artikl je već dodan.');
             } else {
