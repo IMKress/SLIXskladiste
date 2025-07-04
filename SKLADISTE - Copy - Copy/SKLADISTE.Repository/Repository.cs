@@ -267,7 +267,29 @@ namespace SKLADISTE.Repository
         {
             if (artDok == null) throw new ArgumentNullException(nameof(artDok));
 
+            bool exists = await _appDbContext.ArtikliDokumenata
+                .AnyAsync(a => a.DokumentId == artDok.DokumentId && a.ArtiklId == artDok.ArtiklId);
+
+            if (exists)
+                return false;
+
             await _appDbContext.ArtikliDokumenata.AddAsync(artDok);
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateArtiklDokumentaAsync(int dokumentId, int artiklId, float kolicina, float cijena)
+        {
+            var existing = await _appDbContext.ArtikliDokumenata
+                .FirstOrDefaultAsync(a => a.DokumentId == dokumentId && a.ArtiklId == artiklId);
+
+            if (existing == null)
+                return false;
+
+            existing.Kolicina = kolicina;
+            existing.Cijena = cijena;
+            existing.UkupnaCijena = kolicina * cijena;
+
             await _appDbContext.SaveChangesAsync();
             return true;
         }
@@ -362,11 +384,13 @@ namespace SKLADISTE.Repository
             var data = from sd in _appDbContext.StatusiDokumenata
                        join st in _appDbContext.StatusiTipova on sd.StatusId equals st.StatusId
                        where sd.DokumentId == dokumentId
+                       orderby sd.Datum
                        select new
                        {
                            sd.DokumentId,
                            sd.StatusId,
                            sd.Datum,
+                           sd.aktivan,
                            StatusNaziv = st.StatusNaziv
                        };
 
