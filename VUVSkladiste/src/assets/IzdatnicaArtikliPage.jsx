@@ -16,8 +16,7 @@ function IzdatnicaArtikliPage() {
         datumIzdatnice,
         dokumentId,
         UserId,
-        dobavljacId,
-        dobavljacNaziv
+        mjestoTroska
     } = location.state || {};
 
     const [selectedDate, setSelectedDate] = useState(datumIzdatnice || new Date());
@@ -42,7 +41,7 @@ function IzdatnicaArtikliPage() {
             Napomena: "",
             DobavljacId: 1,
             OznakaDokumenta: oznaka,
-            PrimateljId: dobavljacId
+            MjestoTroska: mjestoTroska
         };
         console.log('Dokument koji se šalje:', dokumentBody);
         try {
@@ -138,8 +137,7 @@ function IzdatnicaArtikliPage() {
             <h2>Pregled Izdatnice</h2>
 
             <div className="mb-3">
-              
-                <strong>Primatelj (Dobavljač):</strong> {dobavljacNaziv} (ID: {dobavljacId})
+                <strong>Mjesto troška:</strong> {mjestoTroska}
             </div>
 
             <Form.Group controlId="formDatumIzdatnice" className="my-3">
