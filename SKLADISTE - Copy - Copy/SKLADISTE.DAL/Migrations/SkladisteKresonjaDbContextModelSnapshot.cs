@@ -325,8 +325,8 @@ namespace SKLADISTE.DAL.Migrations
                     b.Property<string>("OznakaDokumenta")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PrimateljId")
-                        .HasColumnType("int");
+                    b.Property<string>("MjestoTroska")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TipDokumentaId")
                         .HasColumnType("int");

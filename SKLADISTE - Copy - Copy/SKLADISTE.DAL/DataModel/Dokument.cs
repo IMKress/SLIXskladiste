@@ -12,7 +12,7 @@ namespace SKLADISTE.DAL.DataModel
         public DateTime DatumDokumenta { get; set; }
         public string ZaposlenikId { get; set; }
         public string Napomena { get; set; }
-        public int PrimateljId { get; set; }
+        public string MjestoTroska { get; set; }
         public int DobavljacId { get; set; }
         public ICollection<ArtikliDokumenata> ArtikliDokumenata { get; set; }
 
