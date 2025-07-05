@@ -175,7 +175,8 @@ function Narudzbenice() {
                     {filteredNarudzbenice.map((art, index) => {
                         const rok = rokovi[art.dokumentId] ? new Date(rokovi[art.dokumentId]) : null;
                         let rowClass = '';
-                        if (rok) {
+                        const statusNaziv = statusi[art.dokumentId]?.toLowerCase();
+                        if (rok && statusNaziv === 'isporuka') {
                             const today = new Date();
                             today.setHours(0,0,0,0);
                             const rokDate = new Date(rok);
