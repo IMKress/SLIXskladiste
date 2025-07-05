@@ -51,7 +51,6 @@ function Pocetna() {
                         return { ...n, statusNaziv: 'Nepoznat' };
                     }
                 }));
-
                 const filtrirane = narWithStatus.filter(n => n.statusNaziv && n.statusNaziv.toLowerCase() === 'isporuka');
                 setNarudzbenice(filtrirane);
 
