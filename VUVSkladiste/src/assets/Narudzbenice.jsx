@@ -12,6 +12,7 @@ function Narudzbenice() {
     const [searchTerm, setSearchTerm] = useState("");
     const [usernames, setUsernames] = useState({});
     const [statusi, setStatusi] = useState({});
+    const [rokovi, setRokovi] = useState({});
     const [filterStatus, setFilterStatus] = useState("sve");
 
     const navigate = useNavigate();
@@ -30,7 +31,10 @@ function Narudzbenice() {
 
                 const uniqueIds = [...new Set(response.data.map(n => n.zaposlenikId))];
                 uniqueIds.forEach(id => fetchUsername(id));
-                response.data.forEach(n => fetchStatus(n.dokumentId));
+                response.data.forEach(n => {
+                    fetchStatus(n.dokumentId);
+                    fetchRok(n.dokumentId);
+                });
             })
             .catch(error => {
                 console.error(error);
@@ -77,6 +81,18 @@ function Narudzbenice() {
         } catch (err) {
             console.error(`Greška pri dohvaćanju statusa za dokument ${dokumentId}`, err);
             setStatusi(prev => ({ ...prev, [dokumentId]: "Nepoznat" }));
+        }
+    };
+
+    const fetchRok = async (dokumentId) => {
+        try {
+            const response = await axios.get(`https://localhost:5001/api/home/narudzbenica_detalji/${dokumentId}`, {
+                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
+            });
+            const rok = response.data?.rokIsporuke;
+            setRokovi(prev => ({ ...prev, [dokumentId]: rok }));
+        } catch (err) {
+            console.error(`Greška pri dohvaćanju roka isporuke za dokument ${dokumentId}`, err);
         }
     };
 
@@ -155,8 +171,19 @@ function Narudzbenice() {
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredNarudzbenice.map((art, index) => (
-                        <tr key={index}>
+                    {filteredNarudzbenice.map((art, index) => {
+                        const rok = rokovi[art.dokumentId] ? new Date(rokovi[art.dokumentId]) : null;
+                        let rowClass = '';
+                        if (rok) {
+                            const today = new Date();
+                            today.setHours(0,0,0,0);
+                            const rokDate = new Date(rok);
+                            rokDate.setHours(0,0,0,0);
+                            if (rokDate.getTime() === today.getTime()) rowClass = 'table-warning';
+                            else if (rokDate < today) rowClass = 'table-danger';
+                        }
+                        return (
+                        <tr key={index} className={rowClass}>
                             <td>{art.oznakaDokumenta}</td>
                             <td>{new Date(art.datumDokumenta).toLocaleDateString('en-GB', {
                                 day: '2-digit', month: '2-digit', year: 'numeric'
@@ -174,7 +201,8 @@ function Narudzbenice() {
                                 </Button>
                             </td>
                         </tr>
-                    ))}
+                        );
+                    })}
                 </tbody>
             </Table>
         </>

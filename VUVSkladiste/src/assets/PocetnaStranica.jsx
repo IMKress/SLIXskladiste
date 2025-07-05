@@ -10,6 +10,7 @@ function Pocetna() {
     const [userDetails, setUserDetails] = useState({ username: '', roles: [] });
     const [narudzbenice, setNarudzbenice] = useState([]);
     const [artikliMalo, setArtikliMalo] = useState([]);
+    const [rokovi, setRokovi] = useState({});
 
     useEffect(() => {
         const token = sessionStorage.getItem('token');
@@ -34,21 +35,30 @@ function Pocetna() {
 
                 const narWithStatus = await Promise.all(narData.map(async n => {
                     try {
-                        const resp = await axios.get(`https://localhost:5001/api/home/statusi_dokumenata_by_dokument/${n.dokumentId}`, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        });
-                        const statuses = resp.data;
+                        const [statusRes, detaljiRes] = await Promise.all([
+                            axios.get(`https://localhost:5001/api/home/statusi_dokumenata_by_dokument/${n.dokumentId}`, { headers: { Authorization: `Bearer ${token}` } }),
+                            axios.get(`https://localhost:5001/api/home/narudzbenica_detalji/${n.dokumentId}`, { headers: { Authorization: `Bearer ${token}` } })
+                        ]);
+
+                        const statuses = statusRes.data;
                         const aktivni = statuses.find(s => s.aktivan === true || s.aktivan === 1 || s.Aktivan === true || s.Aktivan === 1);
                         const latest = statuses[statuses.length - 1];
                         const naziv = aktivni?.statusNaziv || aktivni?.StatusNaziv || latest?.statusNaziv || latest?.StatusNaziv || 'Nepoznat';
-                        return { ...n, statusNaziv: naziv };
+                        const rok = detaljiRes.data?.rokIsporuke;
+                        return { ...n, statusNaziv: naziv, rokIsporuke: rok };
                     } catch (err) {
-                        console.error('Greška pri dohvaćanju statusa:', err);
+                        console.error('Greška pri dohvaćanju podataka:', err);
                         return { ...n, statusNaziv: 'Nepoznat' };
                     }
                 }));
+                const filtrirane = narWithStatus.filter(n => n.statusNaziv && n.statusNaziv.toLowerCase() === 'isporuka');
+                setNarudzbenice(filtrirane);
 
-                setNarudzbenice(narWithStatus.filter(n => n.statusNaziv && n.statusNaziv.toLowerCase() === 'isporuka'));
+                const rokMap = {};
+                filtrirane.forEach(n => {
+                    if (n.rokIsporuke) rokMap[n.dokumentId] = n.rokIsporuke;
+                });
+                setRokovi(rokMap);
             } catch (err) {
                 console.error(err);
                 alert('Greška prilikom učitavanja narudžbenica');
@@ -114,8 +124,19 @@ function Pocetna() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {narudzbenice.map((n, idx) => (
-                                        <tr key={idx}>
+                                    {narudzbenice.map((n, idx) => {
+                                        const rok = rokovi[n.dokumentId] ? new Date(rokovi[n.dokumentId]) : null;
+                                        let rowClass = '';
+                                        if (rok) {
+                                            const today = new Date();
+                                            today.setHours(0,0,0,0);
+                                            const rokDate = new Date(rok);
+                                            rokDate.setHours(0,0,0,0);
+                                            if (rokDate.getTime() === today.getTime()) rowClass = 'table-warning';
+                                            else if (rokDate < today) rowClass = 'table-danger';
+                                        }
+                                        return (
+                                        <tr key={idx} className={rowClass}>
                                             <td>{n.oznakaDokumenta}</td>
                                             <td>{new Date(n.datumDokumenta).toLocaleDateString('hr-HR')}</td>
                                             <td>
@@ -124,7 +145,8 @@ function Pocetna() {
                                                 </Button>
                                             </td>
                                         </tr>
-                                    ))}
+                                        );
+                                    })}
                                 </tbody>
                             </Table>
                         </Card.Body>
