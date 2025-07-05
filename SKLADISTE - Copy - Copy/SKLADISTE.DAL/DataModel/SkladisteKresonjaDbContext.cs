@@ -58,7 +58,7 @@ namespace SKLADISTE.DAL.DataModel
                 .HasMaxLength(500);
 
             modelBuilder.Entity<Dokument>()
-                .Property(d => d.PrimateljId);
+                .Property(d => d.MjestoTroska);
 
 
 
