@@ -3,19 +3,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 using SKLADISTE.Service.Common;
 
 namespace SKLADISTE.WebAPI
 {
     public class NarudzbenicaCleanupService : BackgroundService
     {
-        private readonly IService _service;
+        private readonly IServiceScopeFactory _scopeFactory;
         private readonly ILogger<NarudzbenicaCleanupService> _logger;
         private readonly TimeSpan _interval = TimeSpan.FromHours(1);
 
-        public NarudzbenicaCleanupService(IService service, ILogger<NarudzbenicaCleanupService> logger)
+        public NarudzbenicaCleanupService(IServiceScopeFactory scopeFactory, ILogger<NarudzbenicaCleanupService> logger)
         {
-            _service = service;
+            _scopeFactory = scopeFactory;
             _logger = logger;
         }
 
@@ -25,7 +26,9 @@ namespace SKLADISTE.WebAPI
             {
                 try
                 {
-                    var removed = await _service.ObrisiStareOtvoreneNarudzbeniceAsync();
+                    using var scope = _scopeFactory.CreateScope();
+                    var service = scope.ServiceProvider.GetRequiredService<IService>();
+                    var removed = await service.ObrisiStareOtvoreneNarudzbeniceAsync();
                     if (removed > 0)
                     {
                         _logger.LogInformation($"Automatski obrisano {removed} narudžbenica.");
