@@ -66,6 +66,7 @@ namespace SKLADISTE.Service.Common
         Task<List<PrimNaruArtiklDto>> GetArtikliInfoByPrimkaId(int primkaId);
 
         Task<bool> AzurirajNarudzbenicaKolicineAsync(int narudzbenicaId, int primkaId);
+        Task<int> ObrisiStareOtvoreneNarudzbeniceAsync();
 
     }
 }

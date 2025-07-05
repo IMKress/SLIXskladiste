@@ -120,6 +120,7 @@ function Pocetna() {
                                     <tr>
                                         <th>Oznaka</th>
                                         <th>Datum stvaranja</th>
+                                        <th>Rok isporuke</th>
                                         <th>Info</th>
                                     </tr>
                                 </thead>
@@ -139,6 +140,7 @@ function Pocetna() {
                                         <tr key={idx} className={rowClass}>
                                             <td>{n.oznakaDokumenta}</td>
                                             <td>{new Date(n.datumDokumenta).toLocaleDateString('hr-HR')}</td>
+                                            <td>{rok ? new Date(rok).toLocaleDateString('hr-HR') : '-'}</td>
                                             <td>
                                                 <Button variant="info" size="sm" onClick={() => navigate(`/narudzbenica/${n.dokumentId}`)}>
                                                     Detalji

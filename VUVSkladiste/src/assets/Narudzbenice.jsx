@@ -167,6 +167,7 @@ function Narudzbenice() {
                         <th>Tip dokumenta</th>
                         <th>Kreirao</th>
                         <th>Status</th>
+                        <th>Rok isporuke</th>
                         <th>Info</th>
                     </tr>
                 </thead>
@@ -191,6 +192,7 @@ function Narudzbenice() {
                             <td>{art.tipDokumenta}</td>
                             <td>{usernames[art.zaposlenikId] || <span className="text-muted">Učitavanje...</span>}</td>
                             <td>{statusi[art.dokumentId] || <span className="text-muted">Učitavanje...</span>}</td>
+                            <td>{rok ? new Date(rok).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}</td>
                             <td>
                                 <Button
                                     variant="info"
