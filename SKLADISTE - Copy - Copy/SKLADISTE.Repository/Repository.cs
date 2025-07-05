@@ -726,8 +726,8 @@ namespace SKLADISTE.Repository
                       ds => ds.StatusId,
                       st => st.StatusId,
                       (ds, st) => new { ds.Dokument, st.StatusNaziv })
-                .Where(x => !string.Equals(x.StatusNaziv, "zatvorena", StringComparison.OrdinalIgnoreCase) &&
-                             !string.Equals(x.StatusNaziv, "zatvoren", StringComparison.OrdinalIgnoreCase))
+                .Where(x => x.StatusNaziv.ToLower() == "otvorena" ||
+                             x.StatusNaziv.ToLower() == "otvoren")
                 .Select(x => x.Dokument)
                 .ToListAsync();
 
