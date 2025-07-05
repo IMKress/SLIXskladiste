@@ -16,9 +16,7 @@ function Izdatnice() {
     const [raspolozivaKolicina, setRaspolozivaKolicina] = useState(0);
     const [prosjekCijena, setProsjekCijena] = useState(0);
 
-    const [dobavljaci, setDobavljaci] = useState([]);
-    const [selectedDobavljacId, setSelectedDobavljacId] = useState('');
-    const [selectedDobavljacNaziv, setSelectedDobavljacNaziv] = useState('');
+    const [mjestoTroska, setMjestoTroska] = useState('');
 
     const [userDetails, setUserDetails] = useState({ username: '', roles: [], UserId: '' });
 
@@ -35,30 +33,6 @@ function Izdatnice() {
         }
     }, []);
 
-    useEffect(() => {
-        const fetchDobavljaci = async () => {
-            try {
-                const response = await axios.get('https://localhost:5001/api/home/dobavljaci', {
-                    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-                });
-                setDobavljaci(response.data);
-            } catch (error) {
-                console.error(error);
-                alert("Greška prilikom učitavanja dobavljača");
-            }
-        };
-
-        fetchDobavljaci();
-    }, []);
-
-    useEffect(() => {
-        const dobavljac = dobavljaci.find(d => d.dobavljacId === parseInt(selectedDobavljacId));
-        if (dobavljac) {
-            setSelectedDobavljacNaziv(dobavljac.dobavljacNaziv);
-        } else {
-            setSelectedDobavljacNaziv('');
-        }
-    }, [selectedDobavljacId, dobavljaci]);
 
     useEffect(() => {
         const fetchArtikli = async () => {
@@ -139,8 +113,7 @@ function Izdatnice() {
                 datumIzdatnice,
                 dokumentId,
                 UserId: userDetails.UserId,
-                dobavljacId: parseInt(selectedDobavljacId),
-                dobavljacNaziv: selectedDobavljacNaziv
+                mjestoTroska: mjestoTroska.trim()
             }
         });
     };
@@ -152,19 +125,13 @@ function Izdatnice() {
                     <h3 className="text-center mb-4">Kreiraj Izdatnicu #{dokumentId}</h3>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Odaberi Primatelja</Form.Label>
+                        <Form.Label>Mjesto troška</Form.Label>
                         <Form.Control
-                            as="select"
-                            value={selectedDobavljacId}
-                            onChange={(e) => setSelectedDobavljacId(e.target.value)}
-                        >
-                            <option value="">-- Odaberi --</option>
-                            {dobavljaci.map(d => (
-                                <option key={d.dobavljacId} value={d.dobavljacId}>
-                                    {d.dobavljacNaziv}
-                                </option>
-                            ))}
-                        </Form.Control>
+                            type="text"
+                            value={mjestoTroska}
+                            onChange={(e) => setMjestoTroska(e.target.value)}
+                            placeholder="Upišite mjesto troška"
+                        />
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -225,7 +192,7 @@ function Izdatnice() {
                         <Button
                             variant="info"
                             onClick={handlePreviewAndCreate}
-                            disabled={!dodaniArtikli.length || !selectedDobavljacId}
+                            disabled={!dodaniArtikli.length || !mjestoTroska.trim()}
                         >
                             Pregledaj artikle i napravi izdatnicu
                         </Button>
