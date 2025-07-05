@@ -221,5 +221,10 @@ namespace SKLADISTE.Service
             return await _repository.AzurirajNarudzbenicaKolicineAsync(narudzbenicaId, primkaId);
         }
 
+        public async Task<int> ObrisiStareOtvoreneNarudzbeniceAsync()
+        {
+            return await _repository.ObrisiStareOtvoreneNarudzbeniceAsync();
+        }
+
     }
 }

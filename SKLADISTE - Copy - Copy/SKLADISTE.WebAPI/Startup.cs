@@ -44,6 +44,7 @@ namespace SKLADISTE.WebAPI
 
             services.AddScoped<IService, Service.Service>();
             services.AddScoped<IRepository, Repository.Repository>();
+            services.AddHostedService<NarudzbenicaCleanupService>();
 
             // Add CORS policy
             services.AddCors(options =>

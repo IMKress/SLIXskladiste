@@ -709,6 +709,35 @@ namespace SKLADISTE.Repository
             await _appDbContext.SaveChangesAsync();
             return true;
         }
+        public async Task<int> ObrisiStareOtvoreneNarudzbeniceAsync()
+        {
+            var cutoff = DateTime.Now.AddDays(-1);
+            var otvorene = await _appDbContext.Dokumenti
+                .Where(d => d.DatumDokumenta <= cutoff)
+                .Join(_appDbContext.DokumentTipovi.Where(t => t.TipDokumenta == "Narudzbenica"),
+                      d => d.TipDokumentaId,
+                      dt => dt.TipDokumentaId,
+                      (d, dt) => d)
+                .Join(_appDbContext.StatusiDokumenata.Where(s => s.aktivan),
+                      d => d.DokumentId,
+                      sd => sd.DokumentId,
+                      (d, sd) => new { Dokument = d, sd.StatusId })
+                .Join(_appDbContext.StatusiTipova,
+                      ds => ds.StatusId,
+                      st => st.StatusId,
+                      (ds, st) => new { ds.Dokument, st.StatusNaziv })
+                .Where(x => !string.Equals(x.StatusNaziv, "zatvorena", StringComparison.OrdinalIgnoreCase) &&
+                             !string.Equals(x.StatusNaziv, "zatvoren", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Dokument)
+                .ToListAsync();
+
+            foreach (var dok in otvorene)
+            {
+                await ObrisiDokumentAsync(dok.DokumentId);
+            }
+
+            return otvorene.Count;
+        }
 
     }
 
