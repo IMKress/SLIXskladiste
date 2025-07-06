@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SKLADISTE.Service.Common")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f1285dfceb3f7ff1dba29aa08f715309c08896dc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17e3419ac3186cb6773372aa8f2878fba2b3f311")]
 [assembly: System.Reflection.AssemblyProductAttribute("SKLADISTE.Service.Common")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SKLADISTE.Service.Common")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
