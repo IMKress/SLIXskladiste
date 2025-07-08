@@ -7,7 +7,8 @@ function DodajDobavljaca() {
     const [dobavljac, setDobavljac] = useState({
         dobavljacNaziv: "",
         adresaDobavljaca: "",
-        brojTelefona: ""
+        brojTelefona: "",
+        email: ""
     });
 
     const navigate = useNavigate();
@@ -56,6 +57,15 @@ function DodajDobavljaca() {
                         type="text"
                         value={dobavljac.brojTelefona}
                         onChange={(e) => setDobavljac({ ...dobavljac, brojTelefona: e.target.value })}
+                        required
+                    />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                        type="email"
+                        value={dobavljac.email}
+                        onChange={(e) => setDobavljac({ ...dobavljac, email: e.target.value })}
                         required
                     />
                 </Form.Group>
