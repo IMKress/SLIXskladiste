@@ -49,6 +49,10 @@ namespace SKLADISTE.Repository.Common
         Task<bool> UpdateDobavljacAsync(Dobavljac dobavljac);
         Task<bool> DeleteDobavljacAsync(int id);
 
+        Task<Skladiste?> GetSkladisteAsync();
+        Task<bool> AddSkladisteAsync(Skladiste skladiste);
+        Task<bool> UpdateSkladisteAsync(Skladiste skladiste);
+
         Task<IEnumerable<Dokument>> GetDokumentiByDobavljacIdAsync(int dobavljacId);
 
         Task<bool> ObrisiDokumentAsync(int dokumentId);
