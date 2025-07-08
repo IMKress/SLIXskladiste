@@ -37,7 +37,8 @@ function Dobavljaci() {
             filtered = filtered.filter(d =>
                 d.dobavljacNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 d.adresaDobavljaca.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                d.brojTelefona.toLowerCase().includes(searchTerm.toLowerCase())
+                d.brojTelefona.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (d.email && d.email.toLowerCase().includes(searchTerm.toLowerCase()))
             );
         }
 
@@ -79,6 +80,7 @@ function Dobavljaci() {
                         <th>Naziv</th>
                         <th>Adresa</th>
                         <th>Telefon</th>
+                        <th>Email</th>
                         <th>Dokumenti</th>
                     </tr>
                 </thead>
@@ -88,6 +90,7 @@ function Dobavljaci() {
                             <td>{d.dobavljacNaziv}</td>
                             <td>{d.adresaDobavljaca}</td>
                             <td>{d.brojTelefona}</td>
+                            <td>{d.email}</td>
                             <td>
                                 <button
                                     className="btn btn-info btn-sm"

@@ -26,6 +26,7 @@ import AzurirajDobavljaca from './assets/AzurirajDobavljaca';
 import DodajDobavljaca from './assets/DodajDobavljaca';
 import PrimkaNova from './assets/PrimkaNova';
 import IzdatnicaArtikliPage from './assets/IzdatnicaArtikliPage';
+import PodatciSkladista from './assets/PodatciSkladista';
 function App() {
   return (
     <Router>
@@ -58,6 +59,7 @@ function App() {
           <Route path="/dobavljaci/azuriraj/:dobavljacId" element={<AzurirajDobavljaca />} />
           <Route path="/dobavljaci/novi" element={<DodajDobavljaca />} />
           <Route path="/PrimkaNova" element={<PrimkaNova />} />
+          <Route path="/SkladistePodaci" element={<PodatciSkladista />} />
 
 
           <Route path="zaposlenici" element={<Zaposlenici />} />
