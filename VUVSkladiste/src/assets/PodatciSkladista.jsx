@@ -1,18 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
+import axios from "axios";
 
 function PodatciSkladista() {
     const [skladiste, setSkladiste] = useState({
+        skladisteId: 0,
         skladisteNaziv: "",
         adresaSkladista: "",
         brojTelefona: "",
         email: ""
     });
 
+    useEffect(() => {
+        axios.get("https://localhost:5001/api/home/skladiste", {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
+        })
+            .then(res => {
+                if (res.data) {
+                    setSkladiste(res.data);
+                }
+            })
+            .catch(err => {
+                console.error("Greška prilikom dohvaćanja podataka:", err);
+            });
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // submit logic to API would go here
-        alert("Podaci o skladištu spremljeni (demo)." );
+
+        const headers = { Authorization: `Bearer ${sessionStorage.getItem("token")}` };
+
+        if (skladiste.skladisteId) {
+            axios.put(`https://localhost:5001/api/home/skladiste/${skladiste.skladisteId}`, skladiste, { headers })
+                .then(() => alert("Podaci skladišta ažurirani."))
+                .catch(err => {
+                    console.error("Greška prilikom ažuriranja:", err);
+                    alert("Greška prilikom ažuriranja podataka.");
+                });
+        } else {
+            axios.post("https://localhost:5001/api/home/skladiste", skladiste, { headers })
+                .then(res => {
+                    alert("Podaci skladišta dodani.");
+                    setSkladiste(res.data);
+                })
+                .catch(err => {
+                    console.error("Greška prilikom dodavanja:", err);
+                    alert("Greška prilikom spremanja podataka.");
+                });
+        }
     };
 
     return (

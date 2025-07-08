@@ -467,6 +467,48 @@ namespace SKLADISTE.Repository
                 .ToListAsync();
         }
 
+        public async Task<Skladiste?> GetSkladisteAsync()
+        {
+            return await _appDbContext.Skladista.FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AddSkladisteAsync(Skladiste skladiste)
+        {
+            try
+            {
+                await _appDbContext.Skladista.AddAsync(skladiste);
+                await _appDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateSkladisteAsync(Skladiste skladiste)
+        {
+            var existing = await _appDbContext.Skladista.FindAsync(skladiste.SkladisteId);
+            if (existing == null)
+                return false;
+
+            existing.SkladisteNaziv = skladiste.SkladisteNaziv;
+            existing.AdresaSkladista = skladiste.AdresaSkladista;
+            existing.brojTelefona = skladiste.brojTelefona;
+            existing.Email = skladiste.Email;
+
+            try
+            {
+                _appDbContext.Skladista.Update(existing);
+                await _appDbContext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> ObrisiDokumentAsync(int dokumentId)
         {
             using var transaction = await _appDbContext.Database.BeginTransactionAsync();

@@ -580,6 +580,49 @@ namespace SKLADISTE.WebAPI.Controllers
             return Ok(dtoList);
         }
 
+        [HttpGet("skladiste")]
+        public async Task<IActionResult> GetSkladiste()
+        {
+            var skl = await _service.GetSkladisteAsync();
+            if (skl == null)
+                return Ok(null);
+
+            var dto = new SkladisteDTO
+            {
+                SkladisteId = skl.SkladisteId,
+                SkladisteNaziv = skl.SkladisteNaziv,
+                AdresaSkladista = skl.AdresaSkladista,
+                BrojTelefona = skl.brojTelefona,
+                Email = skl.Email
+            };
+
+            return Ok(dto);
+        }
+
+        [HttpPost("skladiste")]
+        public async Task<IActionResult> AddSkladiste([FromBody] Skladiste skladiste)
+        {
+            var result = await _service.AddSkladisteAsync(skladiste);
+            if (!result)
+                return StatusCode(500, "Greška prilikom dodavanja podataka.");
+
+            return Ok(skladiste);
+        }
+
+        [HttpPut("skladiste/{id}")]
+        public async Task<IActionResult> UpdateSkladiste(int id, [FromBody] Skladiste skladiste)
+        {
+            if (id != skladiste.SkladisteId)
+                return BadRequest("ID se ne podudara.");
+
+            var result = await _service.UpdateSkladisteAsync(skladiste);
+
+            if (result)
+                return Ok("Skladište ažurirano.");
+
+            return NotFound("Skladište nije pronađeno.");
+        }
+
         [HttpDelete("obrisiDokument/{id}")]
         public async Task<IActionResult> ObrisiDokument(int id)
         {
