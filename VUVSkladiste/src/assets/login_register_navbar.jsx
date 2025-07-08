@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWarehouse } from '@fortawesome/free-solid-svg-icons';
+import logo from './img/logo.png';
+
 
 function Navigacija() {
   const [userDetails, setUserDetails] = useState({ username: '', roles: [], UserId: "" });
@@ -70,9 +70,7 @@ function Navigacija() {
       {/* Topbar */}
       
       <div className="topbar">
-         <h4 className="text-white mt-4 ms-3">
-          <FontAwesomeIcon icon={faWarehouse} /> Skladište
-        </h4>
+        <img src={logo} alt="logo" className="navbar-logo ms-3 mt-2" />
         <span className="ms-auto text-white">
           
           {isLoggedIn && `Trenutni račun: ${userDetails.username}`}

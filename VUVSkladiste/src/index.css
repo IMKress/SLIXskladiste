@@ -26,7 +26,9 @@ body {
 .centered-table tr:hover {
   background-color: #5a6268;
 }
-
+.navbar-logo {
+  height: 50px;
+}
 .form {
   background-color: #3b3f45;
   padding: 20px;
