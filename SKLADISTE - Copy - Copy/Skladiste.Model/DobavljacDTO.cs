@@ -10,5 +10,6 @@ namespace Skladiste.Model
         public string DobavljacNaziv { get; set; }
         public string AdresaDobavljaca { get; set; }
         public string BrojTelefona { get; set; }
+        public string Email { get; set; }
     }
 }

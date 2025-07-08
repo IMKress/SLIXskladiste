@@ -174,6 +174,19 @@ namespace SKLADISTE.Service
             return await _repository.GetDokumentiByDobavljacIdAsync(dobavljacId);
         }
 
+        public async Task<Skladiste?> GetSkladisteAsync()
+        {
+            return await _repository.GetSkladisteAsync();
+        }
+        public async Task<bool> AddSkladisteAsync(Skladiste skladiste)
+        {
+            return await _repository.AddSkladisteAsync(skladiste);
+        }
+        public async Task<bool> UpdateSkladisteAsync(Skladiste skladiste)
+        {
+            return await _repository.UpdateSkladisteAsync(skladiste);
+        }
+
 
         public async Task<bool> ObrisiDokumentAsync(int dokumentId)
         {

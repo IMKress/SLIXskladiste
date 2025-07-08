@@ -56,6 +56,7 @@ function Navigacija() {
           <li><Link to="/Dokumenti">Dokumenti</Link></li>
           <li><Link to="/Primka">Nova Primka</Link></li>
           <li><Link to="/Izdatnica">Nova Izdatnica</Link></li>
+          <li><Link to="/SkladistePodaci">Podaci o Skladištu</Link></li>
          
           
           <li><Link to="/Narudzbenice">Narudžbenice</Link></li>

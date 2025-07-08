@@ -16,6 +16,7 @@ namespace SKLADISTE.DAL.DataModel
         public DbSet<StatusDokumenta> StatusiDokumenata { get; set; }
         public DbSet<StatusTip> StatusiTipova { get; set; }
         public DbSet<Dobavljac> Dobavljaci { get; set; }
+        public DbSet<Skladiste> Skladista { get; set; }
         public DbSet<PrimNaruVeze> PrimNaruVeze { get; set; }
         public DbSet<Nacin_Placanja> NaciniPlacanja { get; set; }
         public DbSet<NarudzbenicaDetalji> NarudzbenicaDetalji { get; set; }
