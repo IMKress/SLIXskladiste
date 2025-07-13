@@ -471,7 +471,8 @@ namespace SKLADISTE.WebAPI.Controllers
                 DobavljacId = d.DobavljacId,
                 DobavljacNaziv = d.DobavljacNaziv,
                 AdresaDobavljaca = d.AdresaDobavljaca,
-                BrojTelefona = d.brojTelefona
+                BrojTelefona = d.brojTelefona,
+                Email = d.Email
             }).ToList();
 
             return Ok(dtoList);
@@ -489,7 +490,8 @@ namespace SKLADISTE.WebAPI.Controllers
                 DobavljacId = dobavljac.DobavljacId,
                 DobavljacNaziv = dobavljac.DobavljacNaziv,
                 AdresaDobavljaca = dobavljac.AdresaDobavljaca,
-                BrojTelefona = dobavljac.brojTelefona
+                BrojTelefona = dobavljac.brojTelefona,
+                Email = dobavljac.Email
             };
 
             return Ok(dto);
