@@ -71,19 +71,18 @@ namespace SKLADISTE.Repository
         //Artikli ispis(spojen sa kategorijom)
         public IEnumerable<object> GetAllArtiklsDb()
         {
-            
-                var joinedData = from art in _appDbContext.Artikli
-                                 join kat in _appDbContext.Kategorije on art.KategorijaId equals kat.KategorijaId
-                                 select new
-                                 {
-                                     art.ArtiklId,
-                                     art.ArtiklNaziv,
-                                     art.ArtiklJmj,
-                                     kat.KategorijaNaziv
-                                 };
+            var joinedData = from art in _appDbContext.Artikli
+                             join kat in _appDbContext.Kategorije on art.KategorijaId equals kat.KategorijaId
+                             select new
+                             {
+                                 art.ArtiklId,
+                                 art.ArtiklNaziv,
+                                 art.ArtiklJmj,
+                                 kat.KategorijaNaziv,
+                                 art.ArtiklOznaka
+                             };
 
-                return joinedData.ToList();
-            
+            return joinedData.ToList();
 
         }
 
@@ -238,6 +237,13 @@ namespace SKLADISTE.Repository
         public async Task<bool> AddArtiklAsync(Artikl artikl)
         {
             if (artikl == null) throw new ArgumentNullException(nameof(artikl));
+
+            var kategorija = await _appDbContext.Kategorije
+                .FirstOrDefaultAsync(k => k.KategorijaId == artikl.KategorijaId);
+
+            var prefix = kategorija?.KategorijaNaziv?.FirstOrDefault().ToString().ToUpper() ?? "A";
+            var rnd = new Random();
+            artikl.ArtiklOznaka = $"{prefix}{rnd.Next(1000, 10000)}";
 
             await _appDbContext.Artikli.AddAsync(artikl);
             await _appDbContext.SaveChangesAsync();

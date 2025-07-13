@@ -222,7 +222,7 @@ function Stanja() {
             <Table className="centered-table mt-3" striped bordered hover variant="dark">
                 <thead>
                     <tr>
-                        <th>Šifra</th>
+                        <th>Oznaka</th>
                         <th>Naziv artikla</th>
                         <th>Jedinična mjerna jedinica</th>
                         <th>Kategorija</th>
@@ -234,7 +234,7 @@ function Stanja() {
                 <tbody>
                     {filteredArtikli.map((art) => (
                         <tr key={art.artiklId}>
-                            <td>{art.artiklId}</td>
+                            <td>{art.artiklOznaka}</td>
                             <td>{art.artiklNaziv}</td>
                             <td>{art.artiklJmj}</td>
                             <td>{art.kategorijaNaziv}</td>
