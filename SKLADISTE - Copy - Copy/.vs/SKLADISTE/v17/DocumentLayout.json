@@ -122,8 +122,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 185,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -147,12 +151,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\DataModel\\Artikl.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAwAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-13T20:24:58.678Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "WhenOpened": "2025-07-13T20:24:58.678Z"
             },
             {
               "$type": "Document",
@@ -164,8 +163,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\Migrations\\20250713142746_PIS_Skladiste_3_3.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-13T14:27:46.732Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-13T14:27:46.732Z"
             },
             {
               "$type": "Document",
@@ -177,8 +175,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\Migrations\\20250708220130_PIS_Skladiste_3_2.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T22:01:30.795Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T22:01:30.795Z"
             },
             {
               "$type": "Document",
@@ -190,8 +187,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\DataModel\\SkladistePodatci.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T20:55:34.555Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T20:55:34.555Z"
             },
             {
               "$type": "Document",
@@ -215,8 +211,7 @@
               "RelativeToolTip": "SKLADISTE.Repository\\Repository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAqwA4AAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:08:32.786Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:08:32.786Z"
             },
             {
               "$type": "Document",
@@ -228,8 +223,7 @@
               "RelativeToolTip": "SKLADISTE.WebAPI\\Controllers\\ArtikliDokumentaController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-01T21:52:12.349Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-01T21:52:12.349Z"
             },
             {
               "$type": "Document",
@@ -241,8 +235,7 @@
               "RelativeToolTip": "SKLADISTE.WebAPI\\Controllers\\HomeController.cs",
               "ViewState": "AQIAAN8AAAAAAAAAAAAlwOcAAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:08:52.005Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:08:52.005Z"
             },
             {
               "$type": "Document",
@@ -254,8 +247,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\DataModel\\Dokument.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T21:08:17.737Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T21:08:17.737Z"
             },
             {
               "$type": "Document",
@@ -267,8 +259,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\DataModel\\SkladisteKresonjaDbContext.cs",
               "ViewState": "AQIAADkAAAAAAAAAAAAiwE8AAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:26:10.066Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:26:10.066Z"
             },
             {
               "$type": "Document",
@@ -304,8 +295,7 @@
               "RelativeToolTip": "SKLADISTE.Repository.Common\\IRepository.cs",
               "ViewState": "AQIAACUAAAAAAAAAAAAUwDUAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:08:17.279Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:08:17.279Z"
             },
             {
               "$type": "Document",
@@ -317,8 +307,7 @@
               "RelativeToolTip": "SKLADISTE.Service.Common\\IService.cs",
               "ViewState": "AQIAAC4AAAAAAAAAAAAAwDgAAAA4AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:07:53.341Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:07:53.341Z"
             },
             {
               "$type": "Document",
@@ -330,8 +319,7 @@
               "RelativeToolTip": "SKLADISTE.Service\\Service.cs",
               "ViewState": "AQIAAKYAAAAAAAAAAAAqwLgAAABFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-26T20:08:04.727Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-26T20:08:04.727Z"
             },
             {
               "$type": "Document",
@@ -343,8 +331,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\Migrations\\20250705110351_PIS_Skladiste_3_0.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-05T11:03:53.567Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-05T11:03:53.567Z"
             },
             {
               "$type": "Document",
@@ -356,8 +343,7 @@
               "RelativeToolTip": "SKLADISTE.DAL\\Migrations\\20250708205243_PIS_Skladiste_3_1.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-08T20:52:44.12Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-08T20:52:44.12Z"
             },
             {
               "$type": "Document",
