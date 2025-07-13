@@ -7,10 +7,9 @@ import logo from './img/logo.png';
 function Navigacija() {
   const [userDetails, setUserDetails] = useState({ username: '', roles: [], UserId: "" });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [artikliOpen, setArtikliOpen] = useState(false);
   const [dokumentiOpen, setDokumentiOpen] = useState(false);
   const [narudzbenicaOpen, setNarudzbenicaOpen] = useState(false);
-    const [artikliOpen, setArtikliOpen] = useState(false);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,10 +52,10 @@ function Navigacija() {
     <>
       {/* Sidebar – stalno vidljiv */}
       <div className="sidebar">
-
+       
         <ul className="sidebar-links ">
           <li><Link to="/PocetnaStranica">Početna</Link></li>
-           <li>
+          <li>
             <div className="d-flex justify-content-between" onClick={() => setArtikliOpen(!artikliOpen)}>
               <Link to="/Stanja">Artikli</Link>
               <span style={{ cursor: 'pointer' }}>{artikliOpen ? '▲' : '▼'}</span>
@@ -80,6 +79,7 @@ function Navigacija() {
               </ul>
             )}
           </li>
+          <li><Link to="/SkladistePodaci">Podaci o Skladištu</Link></li>
           <li>
             <div className="d-flex justify-content-between" onClick={() => setNarudzbenicaOpen(!narudzbenicaOpen)}>
               <Link to="/Narudzbenice">Narudžbenice</Link>
@@ -91,8 +91,6 @@ function Navigacija() {
               </ul>
             )}
           </li>
-          <li><Link to="/SkladistePodaci">Podaci o Skladištu</Link></li>
-
           <li><Link to="/Dobavljaci">Dobavljači</Link></li>
           <li><Link to="/Zaposlenici">Zaposlenici</Link></li>
           <li><Link to="/Statistika">Statistika</Link></li>
@@ -101,11 +99,11 @@ function Navigacija() {
       </div>
 
       {/* Topbar */}
-
+      
       <div className="topbar">
         <img src={logo} alt="logo" className="navbar-logo ms-3 mt-2" />
         <span className="ms-auto text-white">
-
+          
           {isLoggedIn && `Trenutni račun: ${userDetails.username}`}
         </span>
         {isLoggedIn && (
