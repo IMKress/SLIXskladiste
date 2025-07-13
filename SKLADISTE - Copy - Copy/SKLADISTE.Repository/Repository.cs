@@ -715,6 +715,23 @@ namespace SKLADISTE.Repository
 
             return dokument;
         }
+        public async Task<IzdatnicaInfoDto> GetIzdatnicaInfoByIdAsync(int izdatnicaId)
+        {
+            var dokument = await _appDbContext.Dokumenti
+                .Where(d => d.DokumentId == izdatnicaId && d.TipDokumentaId == 2)
+                .Select(d => new IzdatnicaInfoDto
+                {
+                    DokumentId = d.DokumentId,
+                    DatumDokumenta = d.DatumDokumenta,
+                    TipDokumenta = "Izdatnica",
+                    ZaposlenikId = d.ZaposlenikId,
+                    OznakaDokumenta = d.OznakaDokumenta,
+                    MjestoTroska = d.MjestoTroska
+                })
+                .FirstOrDefaultAsync();
+
+            return dokument;
+        }
         public async Task<List<PrimNaruArtiklDto>> GetArtikliInfoByPrimkaId(int primkaId)
         {
             var veza = await _appDbContext.PrimNaruVeze

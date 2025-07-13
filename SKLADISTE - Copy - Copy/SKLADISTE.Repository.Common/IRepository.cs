@@ -66,6 +66,7 @@ namespace SKLADISTE.Repository.Common
         Task<List<DokumentStatusDto>> GetDokumentStatusPairsAsync();
         Task DodajVezuAsync(int primkaId, int narudzbenicaId);
         Task<PrimkaInfoDto> GetPrimkaInfoByIdAsync(int primkaId);
+        Task<IzdatnicaInfoDto> GetIzdatnicaInfoByIdAsync(int izdatnicaId);
 
         Task<List<PrimNaruArtiklDto>> GetArtikliInfoByPrimkaId(int primkaId);
 

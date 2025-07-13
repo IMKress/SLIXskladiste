@@ -11,46 +11,57 @@ function DokumentInfo() {
     const [username, setUsername] = useState('');
     const [oznakaNarudzbenice, setOznakaNarudzbenice] = useState('');
     const [narucenaKolicinaMap, setNarucenaKolicinaMap] = useState({});
+    const [isPrimka, setIsPrimka] = useState(true);
 
     useEffect(() => {
-        // Dohvati dokument (primku)
-        axios.get(`https://localhost:5001/api/home/primka_info/${id}`, {
-            headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-        }).then(res => {
+        const auth = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } };
+
+        axios.get(`https://localhost:5001/api/home/primka_info/${id}`, auth).then(res => {
+            setIsPrimka(true);
             setDokument(res.data);
 
             // Dohvati korisnicko ime zaposlenika
             if (res.data.zaposlenikId) {
-                axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, {
-                    headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-                }).then(resp => setUsername(resp.data.userName))
-                  .catch(() => setUsername('Nepoznato'));
+                axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
+                    .then(resp => setUsername(resp.data.userName))
+                    .catch(() => setUsername('Nepoznato'));
             }
 
             // Dohvati oznaku narudzbenice
-            axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, {
-                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-            }).then(resp => {
+            axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, auth).then(resp => {
                 const nar = resp.data.find(n => n.dokumentId === res.data.narudzbenicaId);
                 if (nar) setOznakaNarudzbenice(nar.oznakaDokumenta);
             });
 
             // Dohvati narucenu kolicinu
-            axios.get(`https://localhost:5001/api/home/artikli_info_po_primci/${id}`, {
-                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-            }).then(resp => {
+            axios.get(`https://localhost:5001/api/home/artikli_info_po_primci/${id}`, auth).then(resp => {
                 const map = {};
                 resp.data.forEach(entry => {
                     map[entry.artiklId] = entry.kolicina;
                 });
                 setNarucenaKolicinaMap(map);
             });
-        }).catch(() => alert("Greška pri učitavanju dokumenta."));
+        }).catch(err => {
+            if (err.response && err.response.status === 404) {
+                axios.get(`https://localhost:5001/api/home/izdatnica_info/${id}`, auth)
+                    .then(res2 => {
+                        setIsPrimka(false);
+                        setDokument(res2.data);
+
+                        if (res2.data.zaposlenikId) {
+                            axios.get(`https://localhost:5001/api/home/username/${res2.data.zaposlenikId}`, auth)
+                                .then(resp => setUsername(resp.data.userName))
+                                .catch(() => setUsername('Nepoznato'));
+                        }
+                    })
+                    .catch(() => alert("Greška pri učitavanju dokumenta."));
+            } else {
+                alert("Greška pri učitavanju dokumenta.");
+            }
+        });
 
         // Dohvati artikle
-        axios.get(`https://localhost:5001/api/home/joined_artikls_db`, {
-            headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` }
-        }).then(res => {
+        axios.get(`https://localhost:5001/api/home/joined_artikls_db`, auth).then(res => {
             const filtered = res.data.filter(a => a.dokumentId.toString() === id);
             setArtikli(filtered);
         }).catch(() => alert("Greška pri učitavanju artikala."));
@@ -72,7 +83,11 @@ function DokumentInfo() {
                     <p><strong>Tip:</strong> {dokument.tipDokumenta}</p>
                     <p><strong>Datum:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}</p>
                     <p><strong>Zaposlenik:</strong> {username}</p>
-                    <p><strong>Narudžbenica:</strong> {oznakaNarudzbenice}</p>
+                    {isPrimka ? (
+                        <p><strong>Narudžbenica:</strong> {oznakaNarudzbenice}</p>
+                    ) : (
+                        <p><strong>Mjesto troška:</strong> {dokument.mjestoTroska}</p>
+                    )}
                 </Card.Body>
             </Card>
 
@@ -87,7 +102,7 @@ function DokumentInfo() {
                             <th>Količina</th>
                             <th>Cijena (€)</th>
                             <th>Ukupno (€)</th>
-                            <th>Naručena količina</th>
+                            {isPrimka && <th>Naručena količina</th>}
                             <th>Trenutna Količina</th>
                             <th>Trenutna Cijena (€)</th>
                             <th></th>
@@ -102,15 +117,15 @@ function DokumentInfo() {
                                 <td>{a.kolicina}</td>
                                 <td>{a.cijena.toFixed(2)}</td>
                                 <td>{a.ukupnaCijena.toFixed(2)}</td>
-                                <td>{narucenaKolicinaMap[a.artiklId] || '-'}</td>
+                                {isPrimka && <td>{narucenaKolicinaMap[a.artiklId] || '-'}</td>}
                                 <td>{a.trenutnaKolicina}</td>
                                 <td>{(a.trenutnaKolicina * a.cijena).toFixed(2)}</td>
                                 <td></td>
                             </tr>
                         ))}
                         <tr>
-                            <td colSpan={6}><strong>Ukupno:</strong></td>
-                            <td></td>
+                            <td colSpan={isPrimka ? 6 : 5}><strong>Ukupno:</strong></td>
+                            {isPrimka && <td></td>}
                             <td><strong>{ukupnaKolicina}</strong></td>
                             <td><strong>{ukupnaCijena.toFixed(2)} €</strong></td>
                             <td><strong>{ukupnaTrenutnaCijena.toFixed(2)} €</strong></td>

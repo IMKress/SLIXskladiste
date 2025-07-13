@@ -766,6 +766,14 @@ namespace SKLADISTE.WebAPI.Controllers
                 return NotFound("Primka nije pronađena.");
             return Ok(info);
         }
+        [HttpGet("izdatnica_info/{id}")]
+        public async Task<IActionResult> GetIzdatnicaInfo(int id)
+        {
+            var info = await _service.GetIzdatnicaInfoByIdAsync(id);
+            if (info == null)
+                return NotFound("Izdatnica nije pronađena.");
+            return Ok(info);
+        }
         [HttpGet("artikli_info_po_primci/{primkaId}")]
         public async Task<IActionResult> GetArtikliInfoByPrimkaId(int primkaId)
         {
