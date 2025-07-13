@@ -166,7 +166,7 @@ function Primka() {
                         </Form.Group>
 
                         {selectedNarudzbenicaId && (
-                            <Table striped bordered hover className="mt-3" variant="secondary">
+                            <Table striped bordered hover className="mt-3" variant="light">
                                 <thead>
                                     <tr>
                                         <th>Odaberi</th>

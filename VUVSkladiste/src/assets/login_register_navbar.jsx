@@ -102,7 +102,7 @@ function Navigacija() {
       
       <div className="topbar">
         <img src={logo} alt="logo" className="navbar-logo ms-3 mt-2" />
-        <span className="ms-auto text-white">
+        <span className="ms-auto">
           
           {isLoggedIn && `Trenutni račun: ${userDetails.username}`}
         </span>

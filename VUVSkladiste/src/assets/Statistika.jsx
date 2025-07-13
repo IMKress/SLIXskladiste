@@ -350,7 +350,7 @@ export function Statistika() {
             </div>
 
             <div style={{ flex: 1 }}>
-                <Table className="centered-table" striped bordered hover variant="dark" style={{ width: '90%' }}>
+                <Table className="centered-table" striped bordered hover variant="light" style={{ width: '90%' }}>
                     <thead>
                         <tr>
                             <th>Naziv Artikla</th>

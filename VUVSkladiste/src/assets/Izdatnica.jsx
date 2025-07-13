@@ -201,7 +201,7 @@ function Izdatnice() {
             </Card>
 
             <h3 className="mt-4">Dodani Artikli</h3>
-            <Table striped bordered hover variant="secondary">
+            <Table striped bordered hover variant="light">
                 <thead>
                     <tr>
                         <th>#</th>
