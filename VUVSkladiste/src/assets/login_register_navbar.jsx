@@ -9,6 +9,8 @@ function Navigacija() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [dokumentiOpen, setDokumentiOpen] = useState(false);
   const [narudzbenicaOpen, setNarudzbenicaOpen] = useState(false);
+    const [artikliOpen, setArtikliOpen] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,10 +53,21 @@ function Navigacija() {
     <>
       {/* Sidebar – stalno vidljiv */}
       <div className="sidebar">
-       
+
         <ul className="sidebar-links ">
           <li><Link to="/PocetnaStranica">Početna</Link></li>
-          <li><Link to="/Stanja">Artikli</Link></li>
+           <li>
+            <div className="d-flex justify-content-between" onClick={() => setArtikliOpen(!artikliOpen)}>
+              <Link to="/Stanja">Artikli</Link>
+              <span style={{ cursor: 'pointer' }}>{artikliOpen ? '▲' : '▼'}</span>
+            </div>
+            {artikliOpen && (
+              <ul className="submenu">
+                <li><Link to="/DodajNoviArtikl">Dodaj Artikl</Link></li>
+                <li><Link to="/dodajkategoriju">Dodaj Kategoriju</Link></li>
+              </ul>
+            )}
+          </li>
           <li>
             <div className="d-flex justify-content-between" onClick={() => setDokumentiOpen(!dokumentiOpen)}>
               <Link to="/Dokumenti">Dokumenti</Link>
@@ -67,7 +80,6 @@ function Navigacija() {
               </ul>
             )}
           </li>
-          <li><Link to="/SkladistePodaci">Podaci o Skladištu</Link></li>
           <li>
             <div className="d-flex justify-content-between" onClick={() => setNarudzbenicaOpen(!narudzbenicaOpen)}>
               <Link to="/Narudzbenice">Narudžbenice</Link>
@@ -79,6 +91,8 @@ function Navigacija() {
               </ul>
             )}
           </li>
+          <li><Link to="/SkladistePodaci">Podaci o Skladištu</Link></li>
+
           <li><Link to="/Dobavljaci">Dobavljači</Link></li>
           <li><Link to="/Zaposlenici">Zaposlenici</Link></li>
           <li><Link to="/Statistika">Statistika</Link></li>
@@ -87,11 +101,11 @@ function Navigacija() {
       </div>
 
       {/* Topbar */}
-      
+
       <div className="topbar">
         <img src={logo} alt="logo" className="navbar-logo ms-3 mt-2" />
         <span className="ms-auto text-white">
-          
+
           {isLoggedIn && `Trenutni račun: ${userDetails.username}`}
         </span>
         {isLoggedIn && (

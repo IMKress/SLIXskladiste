@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SKLADISTE.DAL")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2f30f71db0f7fe46b39e47ef31f6cccd59403a44")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7475082b0331929caabef42aa0baec045f213ac0")]
 [assembly: System.Reflection.AssemblyProductAttribute("SKLADISTE.DAL")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SKLADISTE.DAL")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
