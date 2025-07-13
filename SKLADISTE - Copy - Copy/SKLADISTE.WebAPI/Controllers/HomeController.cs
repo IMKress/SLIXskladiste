@@ -600,7 +600,7 @@ namespace SKLADISTE.WebAPI.Controllers
         }
 
         [HttpPost("skladiste")]
-        public async Task<IActionResult> AddSkladiste([FromBody] Skladiste skladiste)
+        public async Task<IActionResult> AddSkladiste([FromBody] SkladistePodatci skladiste)
         {
             var result = await _service.AddSkladisteAsync(skladiste);
             if (!result)
@@ -610,7 +610,7 @@ namespace SKLADISTE.WebAPI.Controllers
         }
 
         [HttpPut("skladiste/{id}")]
-        public async Task<IActionResult> UpdateSkladiste(int id, [FromBody] Skladiste skladiste)
+        public async Task<IActionResult> UpdateSkladiste(int id, [FromBody] SkladistePodatci skladiste)
         {
             if (id != skladiste.SkladisteId)
                 return BadRequest("ID se ne podudara.");

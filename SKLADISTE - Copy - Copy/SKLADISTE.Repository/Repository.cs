@@ -467,16 +467,16 @@ namespace SKLADISTE.Repository
                 .ToListAsync();
         }
 
-        public async Task<Skladiste?> GetSkladisteAsync()
+        public async Task<SkladistePodatci?> GetSkladisteAsync()
         {
-            return await _appDbContext.Skladista.FirstOrDefaultAsync();
+            return await _appDbContext.SkladistePodatcis.FirstOrDefaultAsync();
         }
 
-        public async Task<bool> AddSkladisteAsync(Skladiste skladiste)
+        public async Task<bool> AddSkladisteAsync(SkladistePodatci skladiste)
         {
             try
             {
-                await _appDbContext.Skladista.AddAsync(skladiste);
+                await _appDbContext.SkladistePodatcis.AddAsync(skladiste);
                 await _appDbContext.SaveChangesAsync();
                 return true;
             }
@@ -486,9 +486,9 @@ namespace SKLADISTE.Repository
             }
         }
 
-        public async Task<bool> UpdateSkladisteAsync(Skladiste skladiste)
+        public async Task<bool> UpdateSkladisteAsync(SkladistePodatci skladiste)
         {
-            var existing = await _appDbContext.Skladista.FindAsync(skladiste.SkladisteId);
+            var existing = await _appDbContext.SkladistePodatcis.FindAsync(skladiste.SkladisteId);
             if (existing == null)
                 return false;
 
@@ -499,7 +499,7 @@ namespace SKLADISTE.Repository
 
             try
             {
-                _appDbContext.Skladista.Update(existing);
+                _appDbContext.SkladistePodatcis.Update(existing);
                 await _appDbContext.SaveChangesAsync();
                 return true;
             }

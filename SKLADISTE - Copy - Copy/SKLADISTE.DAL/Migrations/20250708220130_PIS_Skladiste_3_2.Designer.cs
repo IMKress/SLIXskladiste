@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SKLADISTE.DAL.DataModel;
 
 namespace SKLADISTE.DAL.Migrations
 {
     [DbContext(typeof(SkladisteKresonjaDbContext))]
-    partial class SkladisteKresonjaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250708220130_PIS_Skladiste_3_2")]
+    partial class PIS_Skladiste_3_2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,9 +321,6 @@ namespace SKLADISTE.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int>("DobavljacId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Dostavio")
                         .HasColumnType("int");
 
                     b.Property<string>("MjestoTroska")

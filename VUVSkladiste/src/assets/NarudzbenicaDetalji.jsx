@@ -38,19 +38,48 @@ function NarudzbenicaDetalji() {
         const doc = new jsPDF();
         const title = `Narud\u017Ebenica #${narudzbenica?.oznakaDokumenta || id}`;
 
-        doc.setFontSize(16);
-        doc.text(title, 10, 15);
+        doc.setFontSize(11);
+        doc.rect(15, 30, 85, 30); // x, y, width, height
+        doc.rect(110, 30, 85, 30); // x, y, width, height
+        // doc.text('Left side text', 20, 40);
+        // doc.text('Right side text', 140, 40);
+        //primatelj
+        doc.text(skladiste.skladisteNaziv, 25, 37);
+        doc.text(skladiste.adresaSkladista, 25, 43);
+        doc.text(skladiste.brojTelefona, 25, 49);
+        doc.text(skladiste.email, 25, 55);
+        //posiljatelj
+        doc.text(skladiste.skladisteNaziv, 120, 37);
+        doc.text(skladiste.adresaSkladista, 120, 43);
+        doc.text(skladiste.brojTelefona, 120, 49);
+        doc.text(skladiste.email, 120, 55);
+        doc.setFontSize(9);
+        doc.text("KUPAC (PRIMATELJ) naziv - ime i prezime", 28, 25);
+        doc.text("adresa - mjesto, ulica i broj telefona", 32, 29);
+        doc.text("ISPORUCITELJ (PRODAVATELJ) naziv - ime i prezime", 112, 25);
+        doc.text("adresa - mjesto, ulica i broj telefona", 128, 29);
+        doc.setFontSize(11);
+        doc.text(`Datum: ${new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}`, 15, 65);
+        doc.setFontSize(15);
+        doc.text(title, 111, 66);
+        //narucena roba kutija
+        doc.rect(15, 70, 85, 20);
+        doc.rect(15, 70, 85, 5);
+        //rok isporuke kutija
+        doc.rect(128, 70, 50, 20);
+        doc.rect(128, 70, 50, 5);
+        doc.setFontSize(8);
+        doc.text("NARUCENA DOBRA - USLUGE ISPORUCITI NA NASLOV:", 20, 74);
+        doc.text("ROK ISPORUKE:", 143, 74);
 
-        doc.setFontSize(12);
-        doc.text(`Datum: ${new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}`, 10, 25);
-        doc.text(`Zaposlenik: ${zaposlenikIme}`, 10, 32);
-        doc.text(`Status: ${statusDokumenta || 'Nepoznat'}`, 10, 39);
+        /*
+                if (detalji) {
+                    doc.text(`Mjesto isporuke: ${detalji.mjestoIsporuke}`, 10, 49);
+                    doc.text(`Rok isporuke: ${new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}`, 10, 56);
+                    doc.text(`Na\u010Din pla\u0107anja: ${nazivPlacanja || detalji.nP_Id}`, 10, 63);
+                }*/
 
-        if (detalji) {
-            doc.text(`Mjesto isporuke: ${detalji.mjestoIsporuke}`, 10, 49);
-            doc.text(`Rok isporuke: ${new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}`, 10, 56);
-            doc.text(`Na\u010Din pla\u0107anja: ${nazivPlacanja || detalji.nP_Id}`, 10, 63);
-        }
+        const startY = detalji ? 100 : 45;
 
         const tableBody = artikli.map((a, idx) => [
             idx + 1,
@@ -60,15 +89,51 @@ function NarudzbenicaDetalji() {
             a.ukupnaCijena.toFixed(2)
         ]);
 
-        autoTable(doc, {
-            startY: detalji ? 70 : 45,
+        const tableOptions = {
+            startY,
             head: [['#', 'Artikl', 'Koli\u010Dina', 'Cijena', 'Ukupna cijena']],
-            body: tableBody
-        });
+            body: tableBody,
+            didDrawPage: (data) => {
+                const tableBottomY = data.cursor.y; // bottom Y of the table
+                const lineY = tableBottomY + 56.7; // 2 cm below
+
+                doc.text(`Izdao:`, 140, lineY-6);
+                doc.setFontSize(9);
+
+                doc.text(`${zaposlenikIme}`, 140, lineY-1);
+                // Make sure the line fits on the page
+                if (lineY < doc.internal.pageSize.height - 10) {
+                    doc.setDrawColor(0); // black
+                    //   doc.line(35, lineY, 80, lineY); // draw line from x=15 to x=195
+                    doc.line(130, lineY, 175, lineY); // draw line from x=15 to x=195
+
+                }
+            }
+        };
+        autoTable(doc, tableOptions);
 
         doc.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
     };
-
+    const [skladiste, setSkladiste] = useState({
+        skladisteId: 0,
+        skladisteNaziv: "",
+        adresaSkladista: "",
+        brojTelefona: "",
+        email: ""
+    });
+    useEffect(() => {
+        axios.get("https://localhost:5001/api/home/skladiste", {
+            headers: { Authorization: `Bearer ${sessionStorage.getItem("token")}` }
+        })
+            .then(res => {
+                if (res.data) {
+                    setSkladiste(res.data);
+                }
+            })
+            .catch(err => {
+                console.error("Greška prilikom dohvaćanja podataka:", err);
+            });
+    }, []);
     useEffect(() => {
         const fetchAllArtikli = async () => {
             try {
