@@ -10,6 +10,7 @@ namespace SKLADISTE.DAL.DataModel
         public string ArtiklNaziv { get; set; }
         public string ArtiklJmj { get; set; }
         public int KategorijaId { get; set; }
+        public string ArtiklOznaka { get; set; }
 
         public Kategorija Kategorija { get; set; }
     }
