@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Container, Table, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -19,6 +19,7 @@ function PrimkaNova() {
         return `${month.padStart(2, '0')}.${day.padStart(2, '0')}.${year}`;
     };
     const oznaka = generirajOznakuDokumenta();
+    const [dostavio, setDostavio] = useState('');
     const filtriraniArtikli = dodaniArtikli?.filter(a => a.kolicina > 0) || [];
     const ukupniZbrojCijena = filtriraniArtikli.reduce((acc, item) => acc + item.ukupnaCijena, 0);
 
@@ -33,7 +34,8 @@ function PrimkaNova() {
             Napomena: "",
             DobavljacId: dobavljacId,
             OznakaDokumenta: oznaka,
-            PrimateljId: 0
+            PrimateljId: 0,
+            Dostavio: parseInt(dostavio) || 0
         };
         console.log('Dokument koji se šalje:', dokumentBody);
         try {
@@ -102,6 +104,16 @@ function PrimkaNova() {
             <Form.Group className="mb-3">
                 <Form.Label>Datum Primke</Form.Label>
                 <Form.Control type="text" readOnly value={new Date(datumPrimke).toLocaleDateString('hr-HR')} />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Dostavio</Form.Label>
+                <Form.Control
+                    type="text"
+                    value={dostavio}
+                    onChange={(e) => setDostavio(e.target.value)}
+                    placeholder="Unesite ime dostavljača"
+                />
             </Form.Group>
 
             <Table striped bordered hover>
