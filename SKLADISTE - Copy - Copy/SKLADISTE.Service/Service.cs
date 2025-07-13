@@ -224,6 +224,10 @@ namespace SKLADISTE.Service
         {
             return await _repository.GetPrimkaInfoByIdAsync(primkaId);
         }
+        public async Task<IzdatnicaInfoDto> GetIzdatnicaInfoByIdAsync(int izdatnicaId)
+        {
+            return await _repository.GetIzdatnicaInfoByIdAsync(izdatnicaId);
+        }
         public async Task<List<PrimNaruArtiklDto>> GetArtikliInfoByPrimkaId(int primkaId)
         {
             return await _repository.GetArtikliInfoByPrimkaId(primkaId);
