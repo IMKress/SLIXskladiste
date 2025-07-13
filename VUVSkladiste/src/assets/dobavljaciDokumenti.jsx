@@ -74,7 +74,7 @@ function DobavljaciDokumenti() {
             {dokumenti.length === 0 ? (
                 <p className="mt-3">Nema dokumenata za ovog dobavljača.</p>
             ) : (
-                <Table className="centered-table mt-3" striped bordered hover variant="dark">
+                <Table className="centered-table mt-3" striped bordered hover variant="light">
                     <thead>
                         <tr>
                             <th>Oznaka</th>

@@ -60,7 +60,7 @@ function Zaposlenici() {
             >
                 Dodaj zaposlenika
             </Button>
-            <Table className="centered-table mt-3" striped bordered hover variant="dark" style={{ width: '60%' }}>
+            <Table className="centered-table mt-3" striped bordered hover variant="light" style={{ width: '60%' }}>
                 <thead>
                     <tr>
                         <th>Korisničko ime</th>

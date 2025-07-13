@@ -219,7 +219,7 @@ function Stanja() {
                 />
             </Form.Group>
 
-            <Table className="centered-table mt-3" striped bordered hover variant="dark">
+            <Table className="centered-table mt-3" striped bordered hover variant="light">
                 <thead>
                     <tr>
                         <th>Oznaka</th>
