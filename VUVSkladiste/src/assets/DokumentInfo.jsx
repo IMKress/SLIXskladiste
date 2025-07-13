@@ -11,29 +11,34 @@ function DokumentInfo() {
     const [username, setUsername] = useState('');
     const [oznakaNarudzbenice, setOznakaNarudzbenice] = useState('');
     const [narucenaKolicinaMap, setNarucenaKolicinaMap] = useState({});
-    const [isPrimka, setIsPrimka] = useState(true);
+    const [isPrimka, setIsPrimka] = useState(null);
+    const [dostavioIme, setDostavioIme] = useState('');
 
     useEffect(() => {
         const auth = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } };
 
-        axios.get(`https://localhost:5001/api/home/primka_info/${id}`, auth).then(res => {
+        const fetchPrimkaData = async () => {
+            const res = await axios.get(`https://localhost:5001/api/home/primka_info/${id}`, auth);
             setIsPrimka(true);
             setDokument(res.data);
 
-            // Dohvati korisnicko ime zaposlenika
             if (res.data.zaposlenikId) {
                 axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
                     .then(resp => setUsername(resp.data.userName))
                     .catch(() => setUsername('Nepoznato'));
             }
 
-            // Dohvati oznaku narudzbenice
+            if (res.data.dostavio) {
+                axios.get(`https://localhost:5001/api/home/username/${res.data.dostavio}`, auth)
+                    .then(resp => setDostavioIme(resp.data.userName))
+                    .catch(() => setDostavioIme('Nepoznato'));
+            }
+
             axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, auth).then(resp => {
                 const nar = resp.data.find(n => n.dokumentId === res.data.narudzbenicaId);
                 if (nar) setOznakaNarudzbenice(nar.oznakaDokumenta);
             });
 
-            // Dohvati narucenu kolicinu
             axios.get(`https://localhost:5001/api/home/artikli_info_po_primci/${id}`, auth).then(resp => {
                 const map = {};
                 resp.data.forEach(entry => {
@@ -41,30 +46,41 @@ function DokumentInfo() {
                 });
                 setNarucenaKolicinaMap(map);
             });
-        }).catch(err => {
-            if (err.response && err.response.status === 404) {
-                axios.get(`https://localhost:5001/api/home/izdatnica_info/${id}`, auth)
-                    .then(res2 => {
-                        setIsPrimka(false);
-                        setDokument(res2.data);
+        };
 
-                        if (res2.data.zaposlenikId) {
-                            axios.get(`https://localhost:5001/api/home/username/${res2.data.zaposlenikId}`, auth)
-                                .then(resp => setUsername(resp.data.userName))
-                                .catch(() => setUsername('Nepoznato'));
-                        }
-                    })
-                    .catch(() => alert("Greška pri učitavanju dokumenta."));
-            } else {
-                alert("Greška pri učitavanju dokumenta.");
+        const fetchIzdatnicaData = async () => {
+            const res = await axios.get(`https://localhost:5001/api/home/izdatnica_info/${id}`, auth);
+            setIsPrimka(false);
+            setDokument(res.data);
+
+            if (res.data.zaposlenikId) {
+                axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
+                    .then(resp => setUsername(resp.data.userName))
+                    .catch(() => setUsername('Nepoznato'));
             }
-        });
+        };
 
-        // Dohvati artikle
-        axios.get(`https://localhost:5001/api/home/joined_artikls_db`, auth).then(res => {
-            const filtered = res.data.filter(a => a.dokumentId.toString() === id);
-            setArtikli(filtered);
-        }).catch(() => alert("Greška pri učitavanju artikala."));
+        const determineTypeAndFetch = async () => {
+            try {
+                const tipRes = await axios.get(`https://localhost:5001/api/home/joined_dokument_tip`, auth);
+                const tipDoc = tipRes.data.find(d => d.dokumentId.toString() === id);
+                if (tipDoc && tipDoc.tipDokumenta === 'Primka') {
+                    await fetchPrimkaData();
+                } else if (tipDoc && tipDoc.tipDokumenta === 'Izdatnica') {
+                    await fetchIzdatnicaData();
+                } else {
+                    alert('Nepoznat tip dokumenta.');
+                }
+
+                const artRes = await axios.get(`https://localhost:5001/api/home/joined_artikls_db`, auth);
+                const filtered = artRes.data.filter(a => a.dokumentId.toString() === id);
+                setArtikli(filtered);
+            } catch (err) {
+                alert('Greška pri učitavanju dokumenta.');
+            }
+        };
+
+        determineTypeAndFetch();
     }, [id]);
 
     const ukupnaKolicina = artikli.reduce((acc, a) => acc + a.kolicina, 0);
@@ -83,6 +99,9 @@ function DokumentInfo() {
                     <p><strong>Tip:</strong> {dokument.tipDokumenta}</p>
                     <p><strong>Datum:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}</p>
                     <p><strong>Zaposlenik:</strong> {username}</p>
+                    {isPrimka && dostavioIme && (
+                        <p><strong>Dostavio:</strong> {dostavioIme}</p>
+                    )}
                     {isPrimka ? (
                         <p><strong>Narudžbenica:</strong> {oznakaNarudzbenice}</p>
                     ) : (

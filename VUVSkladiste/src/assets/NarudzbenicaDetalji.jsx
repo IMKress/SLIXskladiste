@@ -31,6 +31,7 @@ function NarudzbenicaDetalji() {
     const [statusDokumenta, setStatusDokumenta] = useState(null);
     const [detalji, setDetalji] = useState(null);
     const [nazivPlacanja, setNazivPlacanja] = useState(null);
+    const [dobavljacNaziv, setDobavljacNaziv] = useState('');
     const [loading, setLoading] = useState(true);
 
     const handleDownloadPDF = () => {
@@ -369,6 +370,13 @@ function NarudzbenicaDetalji() {
                 }
                 setNarudzbenica(target);
 
+                if (target.dobavljacId) {
+                    const dobRes = await axios.get(`https://localhost:5001/api/home/dobavljaciDTO/${target.dobavljacId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    setDobavljacNaziv(dobRes.data.dobavljacNaziv || dobRes.data.DobavljacNaziv);
+                }
+
                 if (target.zaposlenikId) {
                     const userResponse = await axios.get(`https://localhost:5001/api/home/username/${target.zaposlenikId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -434,6 +442,9 @@ function NarudzbenicaDetalji() {
                     <h3>Pregled Narudžbenice #{narudzbenica.oznakaDokumenta}</h3>
                     <p><strong>Datum:</strong> {new Date(narudzbenica.datumDokumenta).toLocaleDateString('hr-HR')}</p>
                     <p><strong>Zaposlenik:</strong> {zaposlenikIme}</p>
+                    {dobavljacNaziv && (
+                        <p><strong>Dobavljač:</strong> {dobavljacNaziv}</p>
+                    )}
                     <p><strong>Tip dokumenta:</strong> {narudzbenica.tipDokumenta}</p>
                     <p><strong>Status:</strong> {statusDokumenta || "Nepoznat"}</p>
 
