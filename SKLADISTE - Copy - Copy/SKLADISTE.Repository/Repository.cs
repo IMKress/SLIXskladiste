@@ -434,6 +434,7 @@ namespace SKLADISTE.Repository
             existing.DobavljacNaziv = dobavljac.DobavljacNaziv;
             existing.AdresaDobavljaca = dobavljac.AdresaDobavljaca;
             existing.brojTelefona = dobavljac.brojTelefona;
+            existing.Email = dobavljac.Email;
 
             try
             {
