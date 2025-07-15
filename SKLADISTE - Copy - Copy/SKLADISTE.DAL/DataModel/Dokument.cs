@@ -14,7 +14,7 @@ namespace SKLADISTE.DAL.DataModel
         public string Napomena { get; set; }
         public string MjestoTroska { get; set; }
         public int DobavljacId { get; set; }
-        public int Dostavio {  get; set; }
+        public string Dostavio {  get; set; }
         public ICollection<ArtikliDokumenata> ArtikliDokumenata { get; set; }
 
         public DokumentTip TipDokumenta { get; set; } // Navigacijsko svojstvo

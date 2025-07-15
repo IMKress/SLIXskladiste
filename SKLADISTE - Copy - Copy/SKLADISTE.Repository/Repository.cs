@@ -703,6 +703,7 @@ namespace SKLADISTE.Repository
                 .Select(d => new PrimkaInfoDto
                 {
                     DokumentId = d.DokumentId,
+                    Dostavio=d.Dostavio,
                     DatumDokumenta = d.DatumDokumenta,
                     TipDokumenta = "Primka",
                     ZaposlenikId = d.ZaposlenikId,

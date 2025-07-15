@@ -21,6 +21,7 @@ function DokumentInfo() {
             const res = await axios.get(`https://localhost:5001/api/home/primka_info/${id}`, auth);
             setIsPrimka(true);
             setDokument(res.data);
+            setDostavioIme(res.data.dostavio)
 
             if (res.data.zaposlenikId) {
                 axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
@@ -28,11 +29,7 @@ function DokumentInfo() {
                     .catch(() => setUsername('Nepoznato'));
             }
 
-            if (res.data.dostavio) {
-                axios.get(`https://localhost:5001/api/home/username/${res.data.dostavio}`, auth)
-                    .then(resp => setDostavioIme(resp.data.userName))
-                    .catch(() => setDostavioIme('Nepoznato'));
-            }
+            
 
             axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, auth).then(resp => {
                 const nar = resp.data.find(n => n.dokumentId === res.data.narudzbenicaId);

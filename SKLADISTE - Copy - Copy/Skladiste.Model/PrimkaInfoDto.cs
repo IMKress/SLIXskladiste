@@ -12,6 +12,7 @@ namespace Skladiste.Model
         public string ZaposlenikId { get; set; }
         public string OznakaDokumenta { get; set; }
         public int? NarudzbenicaId { get; set; }
+        public string Dostavio {  get; set; }
     }
 
 }
