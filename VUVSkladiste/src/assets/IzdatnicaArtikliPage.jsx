@@ -11,7 +11,7 @@ function IzdatnicaArtikliPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const {
+    const { 
         dodaniArtikli,
         datumIzdatnice,
         dokumentId,
@@ -20,6 +20,7 @@ function IzdatnicaArtikliPage() {
     } = location.state || {};
 
     const [selectedDate, setSelectedDate] = useState(datumIzdatnice || new Date());
+    const [napomena, setNapomena] = useState('');
     const oznaka = generirajOznakuDokumenta();
 
     if (!dodaniArtikli) {
@@ -43,7 +44,7 @@ function IzdatnicaArtikliPage() {
             DatumDokumenta: formattedDate,
             TipDokumentaId: 2,
             ZaposlenikId: UserId,
-            Napomena: "",
+            Napomena: napomena,
             DobavljacId: 1,
             OznakaDokumenta: oznaka,
             MjestoTroska: mjestoTroska
@@ -150,6 +151,17 @@ function IzdatnicaArtikliPage() {
                     onChange={(date) => setSelectedDate(date)}
                     dateFormat="dd.MM.yyyy"
                     className="form-control"
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Napomena</Form.Label>
+                <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={napomena}
+                    onChange={(e) => setNapomena(e.target.value)}
+                    placeholder="Unesite napomenu"
                 />
             </Form.Group>
 
