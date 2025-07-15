@@ -20,6 +20,7 @@ function PrimkaNova() {
     };
     const oznaka = generirajOznakuDokumenta();
     const [dostavio, setDostavio] = useState('');
+    const [napomena, setNapomena] = useState('');
     const filtriraniArtikli = dodaniArtikli?.filter(a => a.kolicina > 0) || [];
     const ukupniZbrojCijena = filtriraniArtikli.reduce((acc, item) => acc + item.ukupnaCijena, 0);
 
@@ -31,7 +32,7 @@ function PrimkaNova() {
             DatumDokumenta: formattedDate,
             TipDokumentaId: 1,
             ZaposlenikId: UserId,
-            Napomena: "",
+            Napomena: napomena,
             DobavljacId: dobavljacId,
             OznakaDokumenta: oznaka,
             PrimateljId: 0,
@@ -113,6 +114,17 @@ function PrimkaNova() {
                     value={dostavio}
                     onChange={(e) => setDostavio(e.target.value)}
                     placeholder="Unesite ime dostavljača"
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+                <Form.Label>Napomena</Form.Label>
+                <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={napomena}
+                    onChange={(e) => setNapomena(e.target.value)}
+                    placeholder="Unesite napomenu"
                 />
             </Form.Group>
 
