@@ -773,6 +773,39 @@ namespace SKLADISTE.Repository
             }
 
             await _appDbContext.SaveChangesAsync();
+
+            // Provjeri jesu li sve stavke narudžbenice u potpunosti isporučene
+            var narudzbenicaZavrsena = await _appDbContext.ArtikliDokumenata
+                .Where(ad => ad.DokumentId == narudzbenicaId)
+                .AllAsync(ad => ad.TrenutnaKolicina >= ad.Kolicina);
+
+            if (narudzbenicaZavrsena)
+            {
+                // Deaktiviraj stare statuse
+                var stariStatusi = _appDbContext.StatusiDokumenata
+                    .Where(s => s.DokumentId == narudzbenicaId && s.aktivan);
+
+                await stariStatusi.ForEachAsync(s => s.aktivan = false);
+
+                // Dohvati zaposlenika s primke kako bi se zabilježilo tko je zatvorio narudžbenicu
+                var zaposlenikId = await _appDbContext.Dokumenti
+                    .Where(d => d.DokumentId == primkaId)
+                    .Select(d => d.ZaposlenikId)
+                    .FirstOrDefaultAsync();
+
+                var noviStatus = new StatusDokumenta
+                {
+                    DokumentId = narudzbenicaId,
+                    StatusId = 2, // 2 = zatvorena
+                    Datum = DateTime.Now,
+                    ZaposlenikId = zaposlenikId,
+                    aktivan = true
+                };
+
+                await _appDbContext.StatusiDokumenata.AddAsync(noviStatus);
+                await _appDbContext.SaveChangesAsync();
+            }
+
             return true;
         }
         public async Task<int> ObrisiStareOtvoreneNarudzbeniceAsync()
