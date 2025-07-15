@@ -30,6 +30,11 @@ function IzdatnicaArtikliPage() {
 
     const formatDateForAPI = (date) => format(date, 'MM.dd.yyyy');
 
+    const handleButtonClick = async () => {
+        await handleCreateIzdatnica();
+        await FIFOalg();
+    };
+
     const handleCreateIzdatnica = async () => {
         const formattedDate = formatDateForAPI(selectedDate);
 
@@ -74,8 +79,6 @@ function IzdatnicaArtikliPage() {
                         return;
                     }
                 }
-
-                await FIFOalg();
 
                 alert('Izdatnica uspješno kreirana!');
                 navigate('/Dokumenti');
@@ -180,7 +183,7 @@ function IzdatnicaArtikliPage() {
             </Table>
 
             <div className="d-flex justify-content-end mt-4">
-                <Button variant="success" onClick={handleCreateIzdatnica}>
+                <Button variant="success" onClick={handleButtonClick}>
                     Napravi izdatnicu
                 </Button>
             </div>
