@@ -52,7 +52,7 @@ function DokumentInfo() {
             const res = await axios.get(`https://localhost:5001/api/home/izdatnica_info/${id}`, auth);
             setIsPrimka(false);
             setDokument(res.data);
-
+            console.log(isPrimka)
             if (res.data.zaposlenikId) {
                 axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
                     .then(resp => setUsername(resp.data.userName))

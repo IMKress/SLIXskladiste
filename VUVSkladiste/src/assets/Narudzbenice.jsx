@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-import { Button, Form, ButtonGroup } from 'react-bootstrap';
+import { Button, Card, Form, ButtonGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function Narudzbenice() {
@@ -126,89 +126,96 @@ function Narudzbenice() {
 
     return (
         <>
-            <h3 className="mt-4">Popis Narudžbenica</h3>
 
             <div className="d-flex justify-content-center mt-4 gap-2">
                 <Button
-                    variant={filterStatus === "sve" ? "dark" : "secondary"}
+                    variant={filterStatus === "sve" ? "primary" : "info"}
                     onClick={() => setFilterStatus("sve")}
                 >
                     Sve
                 </Button>
                 <Button
-                    variant={filterStatus === "otvorene" ? "dark" : "secondary"}
+                    variant={filterStatus === "otvorene" ? "primary" : "info"}
                     onClick={() => setFilterStatus("otvorene")}
                 >
                     Otvorene
                 </Button>
                 <Button
-                    variant={filterStatus === "zatvorene" ? "dark" : "secondary"}
+                    variant={filterStatus === "zatvorene" ? "primary" : "info"}
                     onClick={() => setFilterStatus("zatvorene")}
                 >
                     Zatvorene
                 </Button>
             </div>
 
-            <Form.Group controlId="searchNarudzbenica" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Form.Control
-                    type="text"
-                    placeholder="Pretraži po Šifri ili Datumu..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ width: '80%' }}
-                />
-            </Form.Group>
+            <Card className="form-card">
+                <Card.Header className="text-light" as="h4">Popis Narudžbenica</Card.Header>
+                <Card.Body>
 
-            <Table className="centered-table mt-3" striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>Id dokumenta</th>
-                        <th>Datum dokumenta</th>
-                        <th>Tip dokumenta</th>
-                        <th>Kreirao</th>
-                        <th>Status</th>
-                        <th>Rok isporuke</th>
-                        <th>Info</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredNarudzbenice.map((art, index) => {
-                        const rok = rokovi[art.dokumentId] ? new Date(rokovi[art.dokumentId]) : null;
-                        let rowClass = '';
-                        const statusNaziv = statusi[art.dokumentId]?.toLowerCase();
-                        if (rok && statusNaziv === 'isporuka') {
-                            const today = new Date();
-                            today.setHours(0,0,0,0);
-                            const rokDate = new Date(rok);
-                            rokDate.setHours(0,0,0,0);
-                            if (rokDate.getTime() === today.getTime()) rowClass = 'table-warning';
-                            else if (rokDate < today) rowClass = 'table-danger';
-                        }
-                        return (
-                        <tr key={index} className={rowClass}>
-                            <td>{art.oznakaDokumenta}</td>
-                            <td>{new Date(art.datumDokumenta).toLocaleDateString('en-GB', {
-                                day: '2-digit', month: '2-digit', year: 'numeric'
-                            })}</td>
-                            <td>{art.tipDokumenta}</td>
-                            <td>{usernames[art.zaposlenikId] || <span className="text-muted">Učitavanje...</span>}</td>
-                            <td>{statusi[art.dokumentId] || <span className="text-muted">Učitavanje...</span>}</td>
-                            <td>{rok ? new Date(rok).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}</td>
-                            <td>
-                                <Button
-                                    variant="info"
-                                    onClick={() => handleShowInfoPage(art.dokumentId)}
-                                    size="sm"
-                                >
-                                    Detalji
-                                </Button>
-                            </td>
-                        </tr>
-                        );
-                    })}
-                </tbody>
-            </Table>
+                    <Form.Group controlId="searchNarudzbenica" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <Form.Control
+                            type="text"
+                            placeholder="Pretraži po Šifri ili Datumu..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{ width: '80%' }}
+                        />
+                    </Form.Group>
+
+                    <Table className="centered-table mt-3" striped bordered hover variant="light">
+                        <thead>
+                            <tr>
+                                <th>Id dokumenta</th>
+                                <th>Datum dokumenta</th>
+                                <th>Tip dokumenta</th>
+                                <th>Kreirao</th>
+                                <th>Status</th>
+                                <th>Rok isporuke</th>
+                                <th>Info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredNarudzbenice.map((art, index) => {
+                                const rok = rokovi[art.dokumentId] ? new Date(rokovi[art.dokumentId]) : null;
+                                let rowClass = '';
+                                const statusNaziv = statusi[art.dokumentId]?.toLowerCase();
+                                if (rok && statusNaziv === 'isporuka') {
+                                    const today = new Date();
+                                    today.setHours(0, 0, 0, 0);
+                                    const rokDate = new Date(rok);
+                                    rokDate.setHours(0, 0, 0, 0);
+                                    if (rokDate.getTime() === today.getTime()) rowClass = 'table-warning';
+                                    else if (rokDate < today) rowClass = 'table-danger';
+                                }
+                                return (
+                                    <tr key={index} className={rowClass}>
+                                        <td>{art.oznakaDokumenta}</td>
+                                        <td>{new Date(art.datumDokumenta).toLocaleDateString('en-GB', {
+                                            day: '2-digit', month: '2-digit', year: 'numeric'
+                                        })}</td>
+                                        <td>{art.tipDokumenta}</td>
+                                        <td>{usernames[art.zaposlenikId] || <span className="text-muted">Učitavanje...</span>}</td>
+                                        <td>{statusi[art.dokumentId] || <span className="text-muted">Učitavanje...</span>}</td>
+                                        <td>{rok ? new Date(rok).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '-'}</td>
+                                        <td>
+                                            <Button
+                                                variant="info"
+                                                onClick={() => handleShowInfoPage(art.dokumentId)}
+                                                size="sm"
+                                            >
+                                                Detalji
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+
+            </Card >
         </>
+
     );
 }
 

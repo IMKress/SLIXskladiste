@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SKLADISTE.WebAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1dfdcddcbcd93e4cfb2fdb05cf3e0438a42c03ec")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1ea604d18401a5e20e962c64920c2622613dd1ed")]
 [assembly: System.Reflection.AssemblyProductAttribute("SKLADISTE.WebAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SKLADISTE.WebAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

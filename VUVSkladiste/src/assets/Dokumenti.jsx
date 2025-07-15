@@ -61,25 +61,27 @@ function Dokumenti() {
         <>
             <div className="d-flex justify-content-center mt-4 gap-2">
                 <Button
-                    variant={filterType === "all" ? "dark" : "secondary"}
+                    variant={filterType === "all" ? "primary" : "info"}
                     onClick={() => setFilterType("all")}
                 >
                     Sve
                 </Button>
                 <Button
-                    variant={filterType === "Primka" ? "dark" : "secondary"}
+                    variant={filterType === "Primka" ? "primary" : "info"}
                     onClick={() => setFilterType("Primka")}
                 >
                     Primke
                 </Button>
                 <Button
-                    variant={filterType === "Izdatnica" ? "dark" : "secondary"}
+                    variant={filterType === "Izdatnica" ? "primary" : "info"}
                     onClick={() => setFilterType("Izdatnica")}
                 >
                     Izdatnice
                 </Button>
             </div>
             <Card className="form-card">
+                <Card.Header className="text-light" as="h4">Popis Dokumenata</Card.Header>
+
                 <Card.Body>
 
 
@@ -93,7 +95,7 @@ function Dokumenti() {
                         />
                     </Form.Group>
 
-                    <Table striped bordered hover variant="light">
+                    <Table className="centered-table mt-3" striped bordered hover variant="light">
                         <thead>
                             <tr>
                                 <th>Id dokumenta</th>

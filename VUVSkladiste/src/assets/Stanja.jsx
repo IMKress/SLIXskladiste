@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Form,Card, Container } from 'react-bootstrap';
+import { Button, Table, Form, Card, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { InfoArtiklModal, AddKategorijaModal } from './modals';
 import { useNavigate } from 'react-router-dom';
@@ -191,30 +191,34 @@ function Stanja() {
             {userDetails.roles.includes('Administrator') && (
                 <>
                     <Button
-                        variant="secondary"
+                        variant="info"
                         onClick={() => navigate('/DodajNoviArtikl')}
-                        className="small-button-Stanja"
+                        className="small-button-Stanja me-2"
                         size="sm"
                     >
                         Dodaj Artikl
                     </Button>
+
                     <Button
-                        variant="secondary"
+                        variant="info"
                         onClick={() => navigate('/dodajkategoriju')}
-                        className="small-button-Stanja ml-2"
+                        className="small-button-Stanja"
                         size="sm"
                     >
                         Dodaj Kategoriju
                     </Button>
+                    
 
                 </>
             )}
             <Card className="form-card">
-               
+
                 <Card.Body>
 
+                    <Card.Header className="text-light" as="h4">Artikli</Card.Header>
 
                     <Form.Group controlId="searchArtikl" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+
                         <Form.Control
                             type="text"
                             placeholder="Pretraži po Šifri, Nazivu, Jmj, Kategoriji ili Količini..."
@@ -222,9 +226,10 @@ function Stanja() {
                             onChange={handleSearch}
                             style={{ width: '80%' }}
                         />
+
                     </Form.Group>
 
-                            <Table striped bordered hover variant="light">
+                    <Table striped bordered hover variant="light">
                         <thead>
                             <tr>
                                 <th>Oznaka</th>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-import { Form } from 'react-bootstrap';
+import { Form, Card, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 
@@ -51,58 +51,63 @@ function Dobavljaci() {
 
     return (
         <>
-            <h3 className="mt-4">Popis Dobavljača</h3>
+            <Container>
+                <Button
+                    className="small-button-Stanja me-2"
+                    onClick={() => navigate("/dobavljaci/novi")}
+                    variant="info"
+                    size="sm"
+                >
+                    Dodaj dobavljača
+                </Button>
 
-            <Button
-                className="mb-3"
-                onClick={() => navigate("/dobavljaci/novi")}
-                variant="success"
-            >
-                Dodaj dobavljača
-            </Button>
+                <Card className="form-card">
+                    <Card.Header className="text-light" as="h4">Popis Dobavljača</Card.Header>
+                    <Card.Body>
 
+                        <Form.Group controlId="searchDobavljac" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                            <Form.Control
+                                type="text"
+                                placeholder="Pretraži po nazivu, adresi ili telefonu..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                style={{ width: '80%' }}
+                            />
+                        </Form.Group>
 
-            <Form.Group controlId="searchDobavljac" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Form.Control
-                    type="text"
-                    placeholder="Pretraži po nazivu, adresi ili telefonu..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ width: '80%' }}
-                />
+                        <Table className="centered-table mt-3" striped bordered hover variant="light">
+                            <thead>
+                                <tr>
+                                    <th>Naziv</th>
+                                    <th>Adresa</th>
+                                    <th>Telefon</th>
+                                    <th>Email</th>
+                                    <th>Dokumenti</th>
+                                </tr>
+                            </thead>
 
-            </Form.Group>
-
-
-            <Table className="centered-table mt-3" striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>Naziv</th>
-                        <th>Adresa</th>
-                        <th>Telefon</th>
-                        <th>Email</th>
-                        <th>Dokumenti</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredDobavljaci.map((d, index) => (
-                        <tr key={index}>
-                            <td>{d.dobavljacNaziv}</td>
-                            <td>{d.adresaDobavljaca}</td>
-                            <td>{d.brojTelefona}</td>
-                            <td>{d.email}</td>
-                            <td>
-                                <button
-                                    className="btn btn-info btn-sm"
-                                    onClick={() => handleShowDokumenti(d.dobavljacId)}
-                                >
-                                    Prikaži
-                                </button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+                            <tbody>
+                                {filteredDobavljaci.map((d, index) => (
+                                    <tr key={index}>
+                                        <td>{d.dobavljacNaziv}</td>
+                                        <td>{d.adresaDobavljaca}</td>
+                                        <td>{d.brojTelefona}</td>
+                                        <td>{d.email}</td>
+                                        <td>
+                                            <button
+                                                className="btn btn-info btn-sm"
+                                                onClick={() => handleShowDokumenti(d.dobavljacId)}
+                                            >
+                                                Prikaži
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </Card.Body>
+                </Card>
+            </Container>
         </>
     );
 }
