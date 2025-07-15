@@ -1,2 +1,4 @@
 .vs/
-node_modules
+node_modules/
+VUVSkladiste/node_modules/
+VUVSkladiste/dist/
