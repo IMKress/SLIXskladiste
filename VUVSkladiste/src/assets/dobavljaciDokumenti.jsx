@@ -88,7 +88,7 @@ function DobavljaciDokumenti() {
                             <tr key={idx}>
                                 <td>{d.oznakaDokumenta}</td>
                                 <td>{new Date(d.datumDokumenta).toLocaleDateString('hr-HR')}</td>
-                                <td>{d.tipDokumenta?.tipDokumenta || 'Nepoznato'}</td>
+                                <td>{d.tipDokumenta || 'Nepoznato'}</td>
                                 <td>{d.napomena || '—'}</td>
                             </tr>
                         ))}
