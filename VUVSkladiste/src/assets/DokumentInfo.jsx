@@ -122,8 +122,8 @@ function DokumentInfo() {
                             <th>Cijena (€)</th>
                             <th>Ukupno (€)</th>
                             {isPrimka && <th>Naručena količina</th>}
-                            <th>Trenutna Količina</th>
-                            <th>Trenutna Cijena (€)</th>
+                            {isPrimka && <th>Trenutna Količina</th>}
+                            {isPrimka && <th>Trenutna Cijena (€)</th>}
                             <th></th>
                         </tr>
                     </thead>
@@ -137,8 +137,8 @@ function DokumentInfo() {
                                 <td>{a.cijena.toFixed(2)}</td>
                                 <td>{a.ukupnaCijena.toFixed(2)}</td>
                                 {isPrimka && <td>{narucenaKolicinaMap[a.artiklId] || '-'}</td>}
-                                <td>{a.trenutnaKolicina}</td>
-                                <td>{(a.trenutnaKolicina * a.cijena).toFixed(2)}</td>
+                                {isPrimka && <td>{a.trenutnaKolicina}</td>}
+                                {isPrimka && <td>{(a.trenutnaKolicina * a.cijena).toFixed(2)}</td>}
                                 <td></td>
                             </tr>
                         ))}
@@ -147,7 +147,7 @@ function DokumentInfo() {
                             {isPrimka && <td></td>}
                             <td><strong>{ukupnaKolicina}</strong></td>
                             <td><strong>{ukupnaCijena.toFixed(2)} €</strong></td>
-                            <td><strong>{ukupnaTrenutnaCijena.toFixed(2)} €</strong></td>
+                            {isPrimka && <td><strong>{ukupnaTrenutnaCijena.toFixed(2)} €</strong></td>}
                         </tr>
                     </tbody>
                 </Table>
