@@ -29,6 +29,10 @@ export function Statistika() {
     const [modalPriceChartData, setModalPriceChartData] = useState({ labels: [], datasets: [] });
     const [modalValueChartData, setModalValueChartData] = useState({ labels: [], datasets: [] });
     const [mainValueChartData, setMainValueChartData] = useState({ labels: [], datasets: [] });
+    const [entryQty, setEntryQty] = useState(0);
+    const [exitQty, setExitQty] = useState(0);
+    const [avgEntryPrice, setAvgEntryPrice] = useState(0);
+    const [avgExitPrice, setAvgExitPrice] = useState(0);
 
     useEffect(() => {
         async function getData() {
@@ -123,6 +127,11 @@ export function Statistika() {
             let priceIzdatnicaData = [];
             let valueDataSet = [];
 
+            let entryQtySum = 0;
+            let exitQtySum = 0;
+            let entryPrices = [];
+            let exitPrices = [];
+
             modalGraphData.forEach((item) => {
                 const date = new Date(item.datumDokumenta).toLocaleDateString('en-GB');
                 if (!labels.includes(date)) labels.push(date);
@@ -130,17 +139,28 @@ export function Statistika() {
                 // Quantity data (for the FIFO chart)
                 fifoDataSet.push(item.kolicina);
 
-                // Price data (for the price chart)
+                // Price data (for the price chart) and totals
                 if (item.tipDokumentaId === 1) {
                     pricePrimkaData.push(item.cijena); // Primka prices
+                    entryQtySum += item.kolicina;
+                    entryPrices.push(item.cijena);
                 } else if (item.tipDokumentaId === 2) {
                     priceIzdatnicaData.push(item.cijena); // Izdatnica prices
+                    exitQtySum += item.kolicina;
+                    exitPrices.push(item.cijena);
                 }
 
                 // Value data (for the value chart in the modal)
                 const value = item.tipDokumenta === 'Primka' ? item.cijena : -item.cijena;
                 valueDataSet.push(value);
             });
+
+            setEntryQty(entryQtySum);
+            setExitQty(exitQtySum);
+            const avgEntry = entryPrices.length ? entryPrices.reduce((a,b) => a + b, 0) / entryPrices.length : 0;
+            const avgExit = exitPrices.length ? exitPrices.reduce((a,b) => a + b, 0) / exitPrices.length : 0;
+            setAvgEntryPrice(avgEntry.toFixed(2));
+            setAvgExitPrice(avgExit.toFixed(2));
 
             // Update FIFO chart data
             setFifoChartData({
@@ -381,6 +401,10 @@ export function Statistika() {
                         <p><strong>Naziv:</strong> {selectedArtikl.artiklNaziv}</p>
                         <p><strong>Jedinica mjere:</strong> {selectedArtikl.artiklJmj}</p>
                         <p><strong>Kategorija:</strong> {selectedArtikl.kategorijaNaziv}</p>
+                        <p><strong>Količina ulaza:</strong> {entryQty}</p>
+                        <p><strong>Količina izlaza:</strong> {exitQty}</p>
+                        <p><strong>Prosječna cijena ulaza:</strong> {avgEntryPrice}</p>
+                        <p><strong>Prosječna cijena izlaza:</strong> {avgExitPrice}</p>
                         
                         <div className='chart-container' style={{ width: '100%', height: '300px' }}>
                             <h3 className="d-flex justify-content-center mt-3">Stanje za: "{selectedArtikl.artiklNaziv}"</h3>
