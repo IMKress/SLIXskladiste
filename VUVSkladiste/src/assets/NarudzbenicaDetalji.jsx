@@ -33,6 +33,7 @@ function NarudzbenicaDetalji() {
     const [nazivPlacanja, setNazivPlacanja] = useState(null);
     const [dobavljacNaziv, setDobavljacNaziv] = useState('');
     const [loading, setLoading] = useState(true);
+    const [primke, setPrimke] = useState([]);
 
     const handleDownloadPDF = () => {
 
@@ -148,6 +149,28 @@ function NarudzbenicaDetalji() {
         };
         fetchAllArtikli();
     }, []);
+
+    useEffect(() => {
+        const fetchPrimke = async () => {
+            try {
+                const auth = { headers: { Authorization: `Bearer ${sessionStorage.getItem('token')}` } };
+                const docsRes = await axios.get('https://localhost:5001/api/home/joined_dokument_tip', auth);
+                const primkeDocs = docsRes.data.filter(d => d.tipDokumenta === 'Primka');
+                const infos = await Promise.all(
+                    primkeDocs.map(doc =>
+                        axios.get(`https://localhost:5001/api/home/primka_info/${doc.dokumentId}`, auth)
+                            .then(r => r.data)
+                            .catch(() => null)
+                    )
+                );
+                const filt = infos.filter(p => p && p.narudzbenicaId === parseInt(id));
+                setPrimke(filt);
+            } catch (err) {
+                console.error('Greška pri dohvaćanju primki:', err);
+            }
+        };
+        fetchPrimke();
+    }, [id]);
 
     useEffect(() => {
         if (kolicinaArtikla && cijenaArtikla) {
@@ -567,6 +590,36 @@ function NarudzbenicaDetalji() {
                                 </Button>
                             </div>
                         </div>
+                    )}
+
+                    <h5 className="mt-4">Primke povezane s ovom narudžbenicom</h5>
+                    {primke.length > 0 ? (
+                        <Table striped bordered hover>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Oznaka</th>
+                                    <th>Datum</th>
+                                    <th>Detalji</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {primke.map(p => (
+                                    <tr key={p.dokumentId}>
+                                        <td>{p.dokumentId}</td>
+                                        <td>{p.oznakaDokumenta}</td>
+                                        <td>{new Date(p.datumDokumenta).toLocaleDateString('hr-HR')}</td>
+                                        <td>
+                                            <Button variant="info" size="sm" onClick={() => navigate(`/dokument-info/${p.dokumentId}`)}>
+                                                Detalji
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    ) : (
+                        <p>Nema povezanih primki.</p>
                     )}
 
                     <Button variant="danger" className="ms-2" onClick={() => setShowModal(true)}>
