@@ -1,6 +1,6 @@
 /* ItemForm.css */
 body {
-  background-color: #f8f9fa;
+  background-color: #88a5c0;
   font-size: 0.85rem;
 }
 
@@ -176,11 +176,13 @@ body {
 }
 
 .form-card {
-  background-color: #ffffff;
-  padding: 20px;
+  background-color: #647d95;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  max-width: 1300px; /* ograničenje širine */
   margin-top: 20px;
+
+   margin: 20px auto
 }
 
 .form-group {
@@ -236,7 +238,7 @@ body {
   left: 0;
   width: 220px;
   height: calc(100vh - 56px);
-  background-color: #e9ecef;
+  background-color: #6c869e;
   color: black;
   padding-top: 1rem;
   z-index: 1000;
@@ -280,7 +282,7 @@ body {
   left: 0;
   height: 56px;
   width: 100%;
-  background-color: #f8f9fa;
+  background-color: #647d95;
   display: flex;
   align-items: center;
   padding: 0 1rem;
@@ -294,3 +296,8 @@ body {
   margin-left: 220px; /* zbog sidebar-a */
   padding: 1rem;
 }
+.centered-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+

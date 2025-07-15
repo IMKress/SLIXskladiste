@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function Dokumenti() {
@@ -79,51 +79,56 @@ function Dokumenti() {
                     Izdatnice
                 </Button>
             </div>
+            <Card className="form-card">
+                <Card.Body>
 
-            <Form.Group controlId="searchDokument" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Form.Control
-                    type="text"
-                    placeholder="Pretraži po Šifri ili Nazivu..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{ width: '80%' }}
-                />
-            </Form.Group>
 
-            <Table className="centered-table mt-3" striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>Id dokumenta</th>
-                        <th>Tip dokumenta</th>
-                        <th>Datum dokumenta</th>
-                        <th>Info</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        filteredArtikli.map((art, index) => (
-                            <tr key={index}>
-                                <td>{art.dokumentId}</td>
-                                <td>{art.tipDokumenta}</td>
-                                <td>{new Date(art.datumDokumenta).toLocaleDateString('en-GB', {
-                                    day: '2-digit',
-                                    month: '2-digit',
-                                    year: 'numeric'
-                                })}</td>
-                                <td>
-                                    <Button
-                                        variant="info"
-                                        onClick={() => handleInfoClick(art.dokumentId)}
-                                        size="sm"
-                                    >
-                                        Detalji
-                                    </Button>
-                                </td>
+                    <Form.Group controlId="searchDokument" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <Form.Control
+                            type="text"
+                            placeholder="Pretraži po Šifri ili Nazivu..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            style={{ width: '80%' }}
+                        />
+                    </Form.Group>
+
+                    <Table striped bordered hover variant="light">
+                        <thead>
+                            <tr>
+                                <th>Id dokumenta</th>
+                                <th>Tip dokumenta</th>
+                                <th>Datum dokumenta</th>
+                                <th>Info</th>
                             </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
+                        </thead>
+                        <tbody>
+                            {
+                                filteredArtikli.map((art, index) => (
+                                    <tr key={index}>
+                                        <td>{art.dokumentId}</td>
+                                        <td>{art.tipDokumenta}</td>
+                                        <td>{new Date(art.datumDokumenta).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric'
+                                        })}</td>
+                                        <td>
+                                            <Button
+                                                variant="info"
+                                                onClick={() => handleInfoClick(art.dokumentId)}
+                                                size="sm"
+                                            >
+                                                Detalji
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
         </>
     );
 }

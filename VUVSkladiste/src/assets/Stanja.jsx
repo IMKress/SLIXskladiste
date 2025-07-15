@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Form, Container } from 'react-bootstrap';
+import { Button, Table, Form,Card, Container } from 'react-bootstrap';
 import axios from 'axios';
 import { InfoArtiklModal, AddKategorijaModal } from './modals';
 import { useNavigate } from 'react-router-dom';
@@ -209,52 +209,58 @@ function Stanja() {
 
                 </>
             )}
+            <Card className="form-card">
+               
+                <Card.Body>
 
-            <Form.Group controlId="searchArtikl" className="mt-3">
-                <Form.Control
-                    type="text"
-                    placeholder="Pretraži po Šifri, Nazivu, Jmj, Kategoriji ili Količini..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                />
-            </Form.Group>
 
-            <Table className="centered-table mt-3" striped bordered hover variant="light">
-                <thead>
-                    <tr>
-                        <th>Oznaka</th>
-                        <th>Naziv artikla</th>
-                        <th>Jedinična mjerna jedinica</th>
-                        <th>Kategorija</th>
-                        <th>Stanje</th>
-                        <th>Stanje Cijena</th>
-                        <th>Info</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredArtikli.map((art) => (
-                        <tr key={art.artiklId}>
-                            <td>{art.artiklOznaka}</td>
-                            <td>{art.artiklNaziv}</td>
-                            <td>{art.artiklJmj}</td>
-                            <td>{art.kategorijaNaziv}</td>
-                            <td>{art.stanje}</td>
-                            <td>{stanjaFix(art.stanjeCijena).toFixed(2)} kn</td>
-                            <td>
-                                <Button
-                                    variant="info"
-                                    size="sm"
-                                    onClick={() => navigate(`/artikl/${art.artiklId}`)}
-                                >
-                                    Prikaz
-                                </Button>
+                    <Form.Group controlId="searchArtikl" className="mt-3" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                        <Form.Control
+                            type="text"
+                            placeholder="Pretraži po Šifri, Nazivu, Jmj, Kategoriji ili Količini..."
+                            value={searchTerm}
+                            onChange={handleSearch}
+                            style={{ width: '80%' }}
+                        />
+                    </Form.Group>
 
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+                            <Table striped bordered hover variant="light">
+                        <thead>
+                            <tr>
+                                <th>Oznaka</th>
+                                <th>Naziv artikla</th>
+                                <th>Jedinična mjerna jedinica</th>
+                                <th>Kategorija</th>
+                                <th>Stanje</th>
+                                <th>Stanje Cijena</th>
+                                <th>Info</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredArtikli.map((art) => (
+                                <tr key={art.artiklId}>
+                                    <td>{art.artiklOznaka}</td>
+                                    <td>{art.artiklNaziv}</td>
+                                    <td>{art.artiklJmj}</td>
+                                    <td>{art.kategorijaNaziv}</td>
+                                    <td>{art.stanje}</td>
+                                    <td>{stanjaFix(art.stanjeCijena).toFixed(2)} kn</td>
+                                    <td>
+                                        <Button
+                                            variant="info"
+                                            size="sm"
+                                            onClick={() => navigate(`/artikl/${art.artiklId}`)}
+                                        >
+                                            Prikaz
+                                        </Button>
 
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </Card.Body>
+            </Card>
             <InfoArtiklModal
                 show={showInfoModal}
                 handleClose={() => setShowInfoModal(false)}
