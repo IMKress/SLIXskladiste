@@ -11,7 +11,7 @@ function DokumentInfo() {
     const { id } = useParams();
     const [dokument, setDokument] = useState(null);
     const [artikli, setArtikli] = useState([]);
-    const [username, setUsername] = useState('');
+    const [zaposlenikIme, setZaposlenikIme] = useState('');
     const [oznakaNarudzbenice, setOznakaNarudzbenice] = useState('');
     const [narucenaKolicinaMap, setNarucenaKolicinaMap] = useState({});
     const [isPrimka, setIsPrimka] = useState(null);
@@ -108,13 +108,13 @@ function DokumentInfo() {
                         doc.text(`${dokument.dostavio}`, 140, lineY - 1);
                         doc.text(`Preuzeo:`, 40, lineY - 6);
                         doc.line(30, lineY, 75, lineY);
-                        doc.text(`${username}`, 35, lineY - 1);
+                        doc.text(`${zaposlenikIme}`, 35, lineY - 1);
                     }
                     else {
                         doc.setDrawColor(0);
                         doc.text(`Izdao:`, 140, lineY - 6);
                         doc.line(130, lineY, 175, lineY);
-                        doc.text(`${username}`, 140, lineY - 1);
+                        doc.text(`${zaposlenikIme}`, 140, lineY - 1);
                     }
                 }
 
@@ -139,8 +139,8 @@ function DokumentInfo() {
 
             if (res.data.zaposlenikId) {
                 axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
-                    .then(resp => setUsername(resp.data.userName))
-                    .catch(() => setUsername('Nepoznato'));
+                    .then(resp => setZaposlenikIme(`${resp.data.firstName} ${resp.data.lastName}`))
+                    .catch(() => setZaposlenikIme('Nepoznato'));
             }
 
 
@@ -172,8 +172,8 @@ function DokumentInfo() {
             console.log(isPrimka)
             if (res.data.zaposlenikId) {
                 axios.get(`https://localhost:5001/api/home/username/${res.data.zaposlenikId}`, auth)
-                    .then(resp => setUsername(resp.data.userName))
-                    .catch(() => setUsername('Nepoznato'));
+                    .then(resp => setZaposlenikIme(`${resp.data.firstName} ${resp.data.lastName}`))
+                    .catch(() => setZaposlenikIme('Nepoznato'));
             }
         };
 
@@ -215,7 +215,7 @@ function DokumentInfo() {
                     <p><strong>Oznaka:</strong> {dokument.oznakaDokumenta}</p>
                     <p><strong>Tip:</strong> {dokument.tipDokumenta}</p>
                     <p><strong>Datum:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}</p>
-                    <p><strong>Zaposlenik:</strong> {username}</p>
+                    <p><strong>Zaposlenik:</strong> {zaposlenikIme}</p>
                     <p><strong>Napomena:</strong> {dokument.napomena}</p>
 
                     {isPrimka && dostavioIme && (
