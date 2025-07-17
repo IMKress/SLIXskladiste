@@ -684,6 +684,11 @@ namespace SKLADISTE.WebAPI.Controllers
             if (!result)
                 return NotFound("Status nije pronađen.");
 
+            if (status.StatusId == 3) // isporuka
+            {
+                await _service.PosaljiNarudzbenicuMailAsync(status.DokumentId);
+            }
+
             return Ok("Status uspješno ažuriran.");
         }
         [HttpGet("statusi_tipovi")]

@@ -79,5 +79,7 @@ namespace SKLADISTE.Service.Common
         IEnumerable<DailyStatsDto> GetDailyStatsLast30Days();
         IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month);
 
+        Task<bool> PosaljiNarudzbenicuMailAsync(int dokumentId);
+
     }
 }
