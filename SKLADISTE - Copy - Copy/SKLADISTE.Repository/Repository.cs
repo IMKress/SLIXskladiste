@@ -843,12 +843,15 @@ namespace SKLADISTE.Repository
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStats()
         {
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-11);
+
             var grouped = _appDbContext.ArtikliDokumenata
                 .Join(
                     _appDbContext.Dokumenti,
                     ad => ad.DokumentId,
                     d => d.DokumentId,
                     (ad, d) => new { ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .Where(x => x.DatumDokumenta >= startDate)
                 .GroupBy(x => new { x.DatumDokumenta.Year, x.DatumDokumenta.Month })
                 .Select(g => new
                 {
@@ -894,6 +897,65 @@ namespace SKLADISTE.Repository
             return grouped.Select(g => new MonthlyStatsDto
             {
                 Mjesec = $"{g.Year}-{g.Month:D2}",
+                Primke = (double)g.Primke,
+                Izdatnice = (double)g.Izdatnice
+            });
+
+        }
+
+        public IEnumerable<DailyStatsDto> GetDailyStatsLast30Days()
+        {
+            var fromDate = DateTime.Now.Date.AddDays(-29);
+            var toDate = DateTime.Now.Date;
+
+            var grouped = _appDbContext.ArtikliDokumenata
+                .Join(
+                    _appDbContext.Dokumenti,
+                    ad => ad.DokumentId,
+                    d => d.DokumentId,
+                    (ad, d) => new { ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .Where(x => x.DatumDokumenta.Date >= fromDate && x.DatumDokumenta.Date <= toDate)
+                .GroupBy(x => x.DatumDokumenta.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Primke = g.Sum(x => x.TipDokumentaId == 1 ? x.UkupnaCijena : 0),
+                    Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? x.UkupnaCijena : 0)
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            return grouped.Select(g => new DailyStatsDto
+            {
+                Dan = g.Date.ToString("yyyy-MM-dd"),
+                Primke = (double)g.Primke,
+                Izdatnice = (double)g.Izdatnice
+            });
+
+        }
+
+        public IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month)
+        {
+            var grouped = _appDbContext.ArtikliDokumenata
+                .Join(
+                    _appDbContext.Dokumenti,
+                    ad => ad.DokumentId,
+                    d => d.DokumentId,
+                    (ad, d) => new { ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .Where(x => x.DatumDokumenta.Year == year && x.DatumDokumenta.Month == month)
+                .GroupBy(x => x.DatumDokumenta.Date)
+                .Select(g => new
+                {
+                    Date = g.Key,
+                    Primke = g.Sum(x => x.TipDokumentaId == 1 ? x.UkupnaCijena : 0),
+                    Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? x.UkupnaCijena : 0)
+                })
+                .OrderBy(x => x.Date)
+                .ToList();
+
+            return grouped.Select(g => new DailyStatsDto
+            {
+                Dan = g.Date.ToString("yyyy-MM-dd"),
                 Primke = (double)g.Primke,
                 Izdatnice = (double)g.Izdatnice
             });

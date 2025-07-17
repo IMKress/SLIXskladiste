@@ -253,5 +253,15 @@ namespace SKLADISTE.Service
             return _repository.GetMonthlyStatsForArtikl(artiklId);
         }
 
+        public IEnumerable<DailyStatsDto> GetDailyStatsLast30Days()
+        {
+            return _repository.GetDailyStatsLast30Days();
+        }
+
+        public IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month)
+        {
+            return _repository.GetDailyStatsForMonth(year, month);
+        }
+
     }
 }
