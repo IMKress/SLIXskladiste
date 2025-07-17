@@ -13,7 +13,7 @@ namespace SKLADISTE.DAL.DataModel
         public string ZaposlenikId { get; set; }
         public string Napomena { get; set; }
         public string MjestoTroska { get; set; }
-        public int DobavljacId { get; set; }
+        public int? DobavljacId { get; set; }
         public string Dostavio {  get; set; }
         public ICollection<ArtikliDokumenata> ArtikliDokumenata { get; set; }
 
