@@ -321,7 +321,7 @@ namespace SKLADISTE.DAL.Migrations
                     b.Property<DateTime>("DatumDokumenta")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DobavljacId")
+                    b.Property<int?>("DobavljacId")
                         .HasColumnType("int");
 
                     b.Property<string>("Dostavio")
@@ -514,8 +514,7 @@ namespace SKLADISTE.DAL.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -589,8 +588,7 @@ namespace SKLADISTE.DAL.Migrations
                     b.HasOne("SKLADISTE.DAL.DataModel.Dobavljac", null)
                         .WithMany("Dokumenti")
                         .HasForeignKey("DobavljacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("SKLADISTE.DAL.DataModel.DokumentTip", "TipDokumenta")
                         .WithMany("Dokumenti")

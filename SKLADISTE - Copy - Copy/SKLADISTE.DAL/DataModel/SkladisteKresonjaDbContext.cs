@@ -64,7 +64,8 @@ namespace SKLADISTE.DAL.DataModel
 
 
             modelBuilder.Entity<Dokument>()
-                .Property(d => d.DobavljacId);
+                .Property(d => d.DobavljacId)
+                .IsRequired(false);
                 
 
             modelBuilder.Entity<Dokument>()

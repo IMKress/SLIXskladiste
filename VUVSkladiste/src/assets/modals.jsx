@@ -750,6 +750,7 @@ export const IzdatnicaArtikliModal = ({ show, handleClose, dodaniArtikli, datumI
             DokumentId: 0,
             DatumDokumenta: formattedDate, // Use the formatted date here
             TipDokumentaId: 2,
+            DobavljacId: null,
             ZaposlenikId: UserId
         };
 
