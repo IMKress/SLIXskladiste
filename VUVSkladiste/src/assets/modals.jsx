@@ -332,7 +332,7 @@ export function InfoArtiklModal({ show, handleClose, artiklData, artiklName, kol
 
 
 
-function EditModal({ show, handleClose, jmjOptions, artiklName, artJmj, artKat, artiklId }) {
+export function EditModal({ show, handleClose, jmjOptions, artiklName, artJmj, artKat, artiklId }) {
     // States for form fields
     const [newName, setNewName] = useState('');
     const [jmj, setJmj] = useState('');

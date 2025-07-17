@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Table, Form, Button, Container, Card } from 'react-bootstrap';
+import { EditModal } from './modals';
 import axios from 'axios';
 
 function ArtiklInfo() {
@@ -8,7 +9,13 @@ function ArtiklInfo() {
     const [artiklData, setArtiklData] = useState([]);
     const [artiklDetails, setArtiklDetails] = useState({});
     const [searchTerm, setSearchTerm] = useState('');
+    const [jmjOptions, setJmjOptions] = useState([]);
+    const [kategorijeOptions, setKategorijeOptions] = useState([]);
+    const [showEditModal, setShowEditModal] = useState(false);
     const navigate = useNavigate();
+
+    const handleShowEditModal = () => setShowEditModal(true);
+    const handleCloseEditModal = () => setShowEditModal(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -37,6 +44,29 @@ function ArtiklInfo() {
 
         fetchData();
     }, [id]);
+
+    useEffect(() => {
+        const fetchOptions = async () => {
+            const token = sessionStorage.getItem('token');
+            try {
+                const [artikliRes, kategorijeRes] = await Promise.all([
+                    axios.get('https://localhost:5001/api/home/artikli_db', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    }),
+                    axios.get('https://localhost:5001/api/home/kategorije', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    })
+                ]);
+                const uniqueJmj = [...new Set(artikliRes.data.map(a => a.artiklJmj))];
+                setJmjOptions(uniqueJmj);
+                setKategorijeOptions(kategorijeRes.data);
+            } catch (error) {
+                console.error('Greška pri dohvaćanju opcija:', error);
+            }
+        };
+
+        fetchOptions();
+    }, []);
 
     const filteredResults = artiklData.filter(item =>
         item.dokumentId.toString().includes(searchTerm) ||
@@ -91,10 +121,24 @@ function ArtiklInfo() {
                 </Table>
 
                 <div className="d-flex justify-content-end mt-3">
+                    <Button variant="primary" className="me-2" onClick={handleShowEditModal}>Uredi</Button>
                     <Button variant="secondary" onClick={() => navigate('/stanja')}>Natrag</Button>
                 </div>
             </Card>
         </Container>
+
+        {showEditModal && (
+            <EditModal
+                show={showEditModal}
+                handleClose={handleCloseEditModal}
+                jmjOptions={jmjOptions}
+                kategorijeOptions={kategorijeOptions}
+                artiklName={artiklDetails.artiklNaziv}
+                artJmj={artiklDetails.artiklJmj}
+                artKat={artiklDetails.kategorijaNaziv}
+                artiklId={artiklDetails.artiklId}
+            />
+        )}
     );
 }
 
