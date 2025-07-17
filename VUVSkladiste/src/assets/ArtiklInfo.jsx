@@ -12,10 +12,36 @@ function ArtiklInfo() {
     const [jmjOptions, setJmjOptions] = useState([]);
     const [kategorijeOptions, setKategorijeOptions] = useState([]);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [userDetails, setUserDetails] = useState({ username: '', roles: [] });
     const navigate = useNavigate();
 
     const handleShowEditModal = () => setShowEditModal(true);
     const handleCloseEditModal = () => setShowEditModal(false);
+
+    const handleDeleteArtikl = async () => {
+        try {
+            await axios.delete(`https://localhost:5001/api/home/delete_artikl/${artiklDetails.artiklId}`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+                }
+            });
+            alert(`Artikl s ID-om ${artiklDetails.artiklId} je obrisan.`);
+            navigate('/stanja');
+        } catch (error) {
+            console.error("Greška prilikom brisanja artikla:", error);
+            alert("Greška prilikom brisanja artikla");
+        }
+    };
+
+    useEffect(() => {
+        const token = sessionStorage.getItem('token');
+        const username = sessionStorage.getItem('Username');
+        const roles = JSON.parse(sessionStorage.getItem('Role') || '[]');
+
+        if (token) {
+            setUserDetails({ username, roles });
+        }
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -121,6 +147,9 @@ function ArtiklInfo() {
                 </Table>
 
                 <div className="d-flex justify-content-end mt-3">
+                    {userDetails.roles.includes('Administrator') && artiklData.length === 0 && (
+                        <Button variant="danger" className="me-2" onClick={handleDeleteArtikl}>Obriši</Button>
+                    )}
                     <Button variant="primary" className="me-2" onClick={handleShowEditModal}>Uredi</Button>
                     <Button variant="secondary" onClick={() => navigate('/stanja')}>Natrag</Button>
                 </div>

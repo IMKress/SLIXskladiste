@@ -389,6 +389,7 @@ namespace SKLADISTE.WebAPI.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+        [Authorize(Roles = "Administrator")]
         [HttpDelete("delete_artikl/{id}")]
         public async Task<IActionResult> DeleteArtikl(int id)
         {
@@ -399,7 +400,7 @@ namespace SKLADISTE.WebAPI.Controllers
                 return NoContent(); // 204 No Content on successful delete
             }
 
-            return NotFound(); // 404 Not Found if Artikl doesn't exist
+            return BadRequest("Ne može se obrisati artikl. Možda postoje povezani dokumenti ili artikl ne postoji.");
         }
 
         [HttpGet("joined_narudzbenice")]
