@@ -64,7 +64,7 @@ function ArtiklStatModal({ show, handleClose, artiklName, monthData }) {
 }
 
 function Statistika() {
-  const [joinedData, setJoinedData] = useState([]);
+
   const [artikli, setArtikli] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [warehouseValue, setWarehouseValue] = useState(0);
@@ -77,11 +77,26 @@ function Statistika() {
 
     async function fetchData() {
       try {
-        const [joinedRes, artikliRes] = await Promise.all([
-          axios.get('https://localhost:5001/api/home/joined_artikls_db', { headers }),
+        const [statsRes, artikliRes] = await Promise.all([
+          axios.get('https://localhost:5001/api/home/monthly_stats', { headers }),
           axios.get('https://localhost:5001/api/home/artikli_db', { headers }),
         ]);
-        setJoinedData(joinedRes.data);
+
+        const data = statsRes.data.map((m) => ({
+          month: m.mjesec,
+          primke: m.primke,
+          izdatnice: m.izdatnice,
+          profit: m.izdatnice - m.primke,
+        }));
+        let totalPrimke = 0;
+        let totalIzdatnice = 0;
+        data.forEach((d) => {
+          totalPrimke += d.primke;
+          totalIzdatnice += d.izdatnice;
+        });
+        setWarehouseValue(totalPrimke - totalIzdatnice);
+        setMonthlyData(data);
+
         setArtikli(artikliRes.data);
       } catch (err) {
         console.error(err);
@@ -91,63 +106,26 @@ function Statistika() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (joinedData.length === 0) return;
-    const monthMap = {};
-    let totalPrimke = 0;
-    let totalIzdatnice = 0;
+  const handleArtiklInfo = async (artikl) => {
+    const token = sessionStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    try {
+      const res = await axios.get(
+        `https://localhost:5001/api/home/monthly_stats/${artikl.artiklId}`,
+        { headers }
+      );
+      const data = res.data.map((m) => ({
+        month: m.mjesec,
+        primke: m.primke,
+        izdatnice: m.izdatnice,
+        profit: m.izdatnice - m.primke,
+      }));
+      setSelectedArtikl({ name: artikl.artiklNaziv, data });
+      setShowModal(true);
+    } catch (err) {
+      console.error(err);
+    }
 
-    joinedData.forEach((item) => {
-      const date = new Date(item.datumDokumenta);
-      const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-      if (!monthMap[monthKey]) {
-        monthMap[monthKey] = { primke: 0, izdatnice: 0 };
-      }
-      if (item.tipDokumenta === 'Primka') {
-        monthMap[monthKey].primke += item.ukupnaCijena;
-        totalPrimke += item.ukupnaCijena;
-      } else if (item.tipDokumenta === 'Izdatnica') {
-        monthMap[monthKey].izdatnice += item.ukupnaCijena;
-        totalIzdatnice += item.ukupnaCijena;
-      }
-    });
-
-    const data = Object.entries(monthMap).map(([month, vals]) => ({
-      month,
-      primke: vals.primke,
-      izdatnice: vals.izdatnice,
-      profit: vals.primke - vals.izdatnice,
-    }));
-    data.sort((a, b) => (a.month > b.month ? 1 : -1));
-    setMonthlyData(data);
-    setWarehouseValue(totalPrimke - totalIzdatnice);
-  }, [joinedData]);
-
-  const handleArtiklInfo = (artikl) => {
-    const monthMap = {};
-    joinedData
-      .filter((i) => i.artiklId === artikl.artiklId)
-      .forEach((item) => {
-        const date = new Date(item.datumDokumenta);
-        const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-        if (!monthMap[monthKey]) {
-          monthMap[monthKey] = { primke: 0, izdatnice: 0 };
-        }
-        if (item.tipDokumenta === 'Primka') {
-          monthMap[monthKey].primke += item.ukupnaCijena;
-        } else if (item.tipDokumenta === 'Izdatnica') {
-          monthMap[monthKey].izdatnice += item.ukupnaCijena;
-        }
-      });
-    const data = Object.entries(monthMap).map(([month, vals]) => ({
-      month,
-      primke: vals.primke,
-      izdatnice: vals.izdatnice,
-      profit: vals.primke - vals.izdatnice,
-    }));
-    data.sort((a, b) => (a.month > b.month ? 1 : -1));
-    setSelectedArtikl({ name: artikl.artiklNaziv, data });
-    setShowModal(true);
   };
 
   const chartData = {

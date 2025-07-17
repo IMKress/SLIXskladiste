@@ -841,6 +841,37 @@ namespace SKLADISTE.Repository
             return otvorene.Count;
         }
 
+        public IEnumerable<MonthlyStatsDto> GetMonthlyStats()
+        {
+            var stats = from ad in _appDbContext.ArtikliDokumenata
+                         join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
+                         group new { ad.UkupnaCijena, d.TipDokumentaId } by new { d.DatumDokumenta.Year, d.DatumDokumenta.Month } into g
+                         select new MonthlyStatsDto
+                         {
+                             Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
+                             Primke = g.Where(x => x.TipDokumentaId == 1).Sum(x => (double)x.UkupnaCijena),
+                             Izdatnice = g.Where(x => x.TipDokumentaId == 2).Sum(x => (double)x.UkupnaCijena)
+                         };
+
+            return stats.OrderBy(s => s.Mjesec).ToList();
+        }
+
+        public IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId)
+        {
+            var stats = from ad in _appDbContext.ArtikliDokumenata
+                         join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
+                         where ad.ArtiklId == artiklId
+                         group new { ad.UkupnaCijena, d.TipDokumentaId } by new { d.DatumDokumenta.Year, d.DatumDokumenta.Month } into g
+                         select new MonthlyStatsDto
+                         {
+                             Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
+                             Primke = g.Where(x => x.TipDokumentaId == 1).Sum(x => (double)x.UkupnaCijena),
+                             Izdatnice = g.Where(x => x.TipDokumentaId == 2).Sum(x => (double)x.UkupnaCijena)
+                         };
+
+            return stats.OrderBy(s => s.Mjesec).ToList();
+        }
+
     }
 
 }
