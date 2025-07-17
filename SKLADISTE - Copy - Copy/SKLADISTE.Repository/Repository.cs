@@ -843,35 +843,61 @@ namespace SKLADISTE.Repository
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStats()
         {
-            var stats = from ad in _appDbContext.ArtikliDokumenata
-                         join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
-                         group new { ad.UkupnaCijena, d.TipDokumentaId } by new { d.DatumDokumenta.Year, d.DatumDokumenta.Month } into g
-                         select new MonthlyStatsDto
-                         {
-                             Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
-                             Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
-                             Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+            var grouped = _appDbContext.ArtikliDokumenata
+                .Join(
+                    _appDbContext.Dokumenti,
+                    ad => ad.DokumentId,
+                    d => d.DokumentId,
+                    (ad, d) => new { ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .GroupBy(x => new { x.DatumDokumenta.Year, x.DatumDokumenta.Month })
+                .Select(g => new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+                    Primke = g.Sum(x => x.TipDokumentaId == 1 ? x.UkupnaCijena : 0),
+                    Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? x.UkupnaCijena : 0)
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToList();
 
-                         };
+            return grouped.Select(g => new MonthlyStatsDto
+            {
+                Mjesec = $"{g.Year}-{g.Month:D2}",
+                Primke = (double)g.Primke,
+                Izdatnice = (double)g.Izdatnice
+            });
 
-            return stats.OrderBy(s => s.Mjesec).ToList();
         }
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId)
         {
-            var stats = from ad in _appDbContext.ArtikliDokumenata
-                         join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
-                         where ad.ArtiklId == artiklId
-                         group new { ad.UkupnaCijena, d.TipDokumentaId } by new { d.DatumDokumenta.Year, d.DatumDokumenta.Month } into g
-                         select new MonthlyStatsDto
-                         {
-                             Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
-                             Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
-                             Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+            var grouped = _appDbContext.ArtikliDokumenata
+                .Join(
+                    _appDbContext.Dokumenti,
+                    ad => ad.DokumentId,
+                    d => d.DokumentId,
+                    (ad, d) => new { ad.ArtiklId, ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .Where(x => x.ArtiklId == artiklId)
+                .GroupBy(x => new { x.DatumDokumenta.Year, x.DatumDokumenta.Month })
+                .Select(g => new
+                {
+                    g.Key.Year,
+                    g.Key.Month,
+                    Primke = g.Sum(x => x.TipDokumentaId == 1 ? x.UkupnaCijena : 0),
+                    Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? x.UkupnaCijena : 0)
+                })
+                .OrderBy(x => x.Year)
+                .ThenBy(x => x.Month)
+                .ToList();
 
-                         };
+            return grouped.Select(g => new MonthlyStatsDto
+            {
+                Mjesec = $"{g.Year}-{g.Month:D2}",
+                Primke = (double)g.Primke,
+                Izdatnice = (double)g.Izdatnice
+            });
 
-            return stats.OrderBy(s => s.Mjesec).ToList();
         }
 
     }
