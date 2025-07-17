@@ -93,7 +93,7 @@ function Navigacija() {
           </li>
           <li><Link to="/Dobavljaci">Dobavljači</Link></li>
           <li><Link to="/Zaposlenici">Zaposlenici</Link></li>
-          <li><Link to="/Statistika">Statistika</Link></li>
+          <li><Link to="/statistika">Statistika</Link></li>
 
         </ul>
       </div>

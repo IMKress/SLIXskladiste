@@ -243,5 +243,15 @@ namespace SKLADISTE.Service
             return await _repository.ObrisiStareOtvoreneNarudzbeniceAsync();
         }
 
+        public IEnumerable<MonthlyStatsDto> GetMonthlyStats()
+        {
+            return _repository.GetMonthlyStats();
+        }
+
+        public IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId)
+        {
+            return _repository.GetMonthlyStatsForArtikl(artiklId);
+        }
+
     }
 }

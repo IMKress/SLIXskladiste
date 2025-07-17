@@ -73,5 +73,8 @@ namespace SKLADISTE.Service.Common
         Task<bool> AzurirajNarudzbenicaKolicineAsync(int narudzbenicaId, int primkaId);
         Task<int> ObrisiStareOtvoreneNarudzbeniceAsync();
 
+        IEnumerable<MonthlyStatsDto> GetMonthlyStats();
+        IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId);
+
     }
 }
