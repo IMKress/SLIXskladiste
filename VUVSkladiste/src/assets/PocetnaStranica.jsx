@@ -161,7 +161,7 @@ function Pocetna() {
                             <Table striped bordered hover variant="light">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Oznaka</th>
                                         <th>Naziv artikla</th>
                                         <th>JMJ</th>
                                         <th>Količina</th>
@@ -171,7 +171,7 @@ function Pocetna() {
                                 <tbody>
                                     {artikliMalo.map((a, idx) => (
                                         <tr key={idx}>
-                                            <td>{a.artiklId}</td>
+                                            <td>{a.artiklOznaka}</td>
                                             <td>{a.artiklNaziv}</td>
                                             <td>{a.artiklJmj}</td>
                                             <td>{a.stanje}</td>

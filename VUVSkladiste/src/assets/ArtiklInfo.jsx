@@ -98,7 +98,7 @@ function ArtiklInfo() {
                 <Table striped bordered hover className="mt-4">
                     <thead>
                         <tr>
-                            <th>Dokument ID</th>
+                            <th>Oznaka dokumenta</th>
                             <th>Datum</th>
                             <th>Tip</th>
                             <th>Količina</th>
@@ -109,7 +109,7 @@ function ArtiklInfo() {
                     <tbody>
                         {filteredResults.map((item, index) => (
                             <tr key={index}>
-                                <td>{item.dokumentId}</td>
+                                <td>{item.oznakaDokumenta}</td>
                                 <td>{new Date(item.datumDokumenta).toLocaleDateString()}</td>
                                 <td>{item.tipDokumenta}</td>
                                 <td>{item.kolicina}</td>

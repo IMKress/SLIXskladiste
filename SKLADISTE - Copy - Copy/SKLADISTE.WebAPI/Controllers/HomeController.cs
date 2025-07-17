@@ -628,6 +628,13 @@ namespace SKLADISTE.WebAPI.Controllers
         [HttpDelete("obrisiDokument/{id}")]
         public async Task<IActionResult> ObrisiDokument(int id)
         {
+            var statusId = await _service.GetAktivniStatusIdAsync(id);
+            if (statusId == null)
+                return NotFound();
+
+            if (statusId != 1)
+                return BadRequest("Dokument nije moguće obrisati jer nije otvoren.");
+
             var uspjeh = await _service.ObrisiDokumentAsync(id);
             if (!uspjeh)
                 return NotFound();
@@ -641,6 +648,9 @@ namespace SKLADISTE.WebAPI.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest("Neispravni podaci.");
+
+            if (dto.RokIsporuke.Date < DateTime.Today)
+                return BadRequest("Rok isporuke ne može biti u prošlosti.");
 
             var success = await _service.KreirajNarudzbenicaDetaljeAsync(dto);
 
@@ -658,6 +668,21 @@ namespace SKLADISTE.WebAPI.Controllers
                 return NotFound("Detalji narudžbenice nisu pronađeni.");
 
             return Ok(detalji);
+        }
+
+        [HttpPut("narudzbenica_rok")]
+        public async Task<IActionResult> UpdateNarudzbenicaRok([FromBody] NarudzbenicaRokUpdateDto dto)
+        {
+            if (dto.RokIsporuke.Date < DateTime.Today)
+                return BadRequest("Rok isporuke ne može biti u prošlosti.");
+
+            var statusId = await _service.GetAktivniStatusIdAsync(dto.DokumentId);
+            if (statusId != 1)
+                return BadRequest("Rok je moguće mijenjati samo za otvorene narudžbenice.");
+
+            var ok = await _service.UpdateRokIsporukeAsync(dto.DokumentId, dto.RokIsporuke);
+            if (!ok) return NotFound();
+            return Ok();
         }
         [HttpGet("nacini_placanja")]
         public async Task<IActionResult> GetNaciniPlacanja()

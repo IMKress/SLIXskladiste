@@ -97,9 +97,11 @@ namespace SKLADISTE.Repository
                              select new
                              {
                                  d.DokumentId,
+                                 d.OznakaDokumenta,
                                  d.DatumDokumenta,
                                  dt.TipDokumenta,
                                  a.ArtiklId,
+                                 a.ArtiklOznaka,
                                  a.ArtiklNaziv,
                                  a.ArtiklJmj,
                                  ad.Kolicina,
@@ -355,6 +357,7 @@ namespace SKLADISTE.Repository
                       (ad, a) => new
                       {
                           a.ArtiklId,
+                          a.ArtiklOznaka,
                           a.ArtiklNaziv,
                           a.ArtiklJmj,
                           ad.Kolicina,
@@ -839,6 +842,24 @@ namespace SKLADISTE.Repository
             }
 
             return otvorene.Count;
+        }
+
+        public async Task<bool> UpdateRokIsporukeAsync(int dokumentId, DateTime rokIsporuke)
+        {
+            var detalji = await _appDbContext.NarudzbenicaDetalji.FindAsync(dokumentId);
+            if (detalji == null) return false;
+            detalji.RokIsporuke = rokIsporuke;
+            await _appDbContext.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<int?> GetAktivniStatusIdAsync(int dokumentId)
+        {
+            var status = await _appDbContext.StatusiDokumenata
+                .Where(s => s.DokumentId == dokumentId && s.aktivan)
+                .OrderByDescending(s => s.Datum)
+                .FirstOrDefaultAsync();
+            return status?.StatusId;
         }
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStats()

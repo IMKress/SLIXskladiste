@@ -376,6 +376,19 @@ function NarudzbenicaDetalji() {
         setEditCijena('');
     };
 
+    const handleRokSave = async () => {
+        try {
+            const token = sessionStorage.getItem('token');
+            await axios.put('https://localhost:5001/api/home/narudzbenica_rok', {
+                dokumentId: parseInt(id),
+                rokIsporuke: detalji.rokIsporuke
+            }, { headers: { Authorization: `Bearer ${token}` } });
+            alert('Rok isporuke ažuriran.');
+        } catch (err) {
+            alert('Greška pri spremanju roka.');
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -474,7 +487,15 @@ function NarudzbenicaDetalji() {
                     {detalji && (
                         <>
                             <p><strong>Mjesto isporuke:</strong> {detalji.mjestoIsporuke}</p>
-                            <p><strong>Rok isporuke:</strong> {new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}</p>
+                            {aktivniStatusId === 1 ? (
+                                <div className="mb-2">
+                                    <strong>Rok isporuke:</strong>{' '}
+                                    <input type="date" min={new Date().toISOString().split('T')[0]} value={new Date(detalji.rokIsporuke).toISOString().split('T')[0]} onChange={e => setDetalji(prev=>({...prev, rokIsporuke:e.target.value}))} />
+                                    <Button size="sm" className="ms-2" onClick={handleRokSave}>Spremi</Button>
+                                </div>
+                            ) : (
+                                <p><strong>Rok isporuke:</strong> {new Date(detalji.rokIsporuke).toLocaleDateString('hr-HR')}</p>
+                            )}
                             <p><strong>Način plaćanja:</strong> {nazivPlacanja || `ID: ${detalji.nP_Id}`}</p>
                         </>
                     )}
@@ -485,7 +506,7 @@ function NarudzbenicaDetalji() {
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Artikl ID</th>
+                                    <th>Oznaka</th>
                                     <th>Naziv</th>
                                     <th>Jmj</th>
                                     <th>Količina</th>
@@ -498,7 +519,7 @@ function NarudzbenicaDetalji() {
                                 {artikli.map((a, i) => (
                                     <tr key={i}>
                                         <td>{i + 1}</td>
-                                        <td>{a.artiklId}</td>
+                                        <td>{a.artiklOznaka}</td>
                                         <td>{a.artiklNaziv}</td>
                                         <td>{a.artiklJmj}</td>
                                         <td>
@@ -622,9 +643,11 @@ function NarudzbenicaDetalji() {
                         <p>Nema povezanih primki.</p>
                     )}
 
-                    <Button variant="danger" className="ms-2" onClick={() => setShowModal(true)}>
-                        Obriši narudžbenicu
-                    </Button>
+                    {aktivniStatusId === 1 && (
+                        <Button variant="danger" className="ms-2" onClick={() => setShowModal(true)}>
+                            Obriši narudžbenicu
+                        </Button>
+                    )}
 
                     {aktivniStatusId !== 3 && aktivniStatusId !== 2 && (
                         <Button

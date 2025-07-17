@@ -137,7 +137,7 @@ function PregledNarudzbenice() {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>ID</th>
+                                <th>Oznaka</th>
                                 <th>Naziv Artikla</th>
                                 <th>Količina</th>
                                 <th>Cijena</th>
@@ -148,7 +148,7 @@ function PregledNarudzbenice() {
                             {artikli.map((a, index) => (
                                 <tr key={index}>
                                     <td>{a.redniBroj}</td>
-                                    <td>{a.artiklId}</td>
+                                    <td>{a.artiklOznaka}</td>
                                     <td>{a.artiklNaziv}</td>
                                     <td>{a.kolicina}</td>
                                     <td>{parseFloat(a.cijena).toFixed(2)} €</td>

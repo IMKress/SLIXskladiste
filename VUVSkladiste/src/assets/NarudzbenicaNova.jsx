@@ -92,6 +92,7 @@ function NarudzbenicaNova() {
         const novi = {
             redniBroj: dodaniArtikli.length + 1,
             artiklId: artikl.artiklId,
+            artiklOznaka: artikl.artiklOznaka,
             artiklNaziv: artikl.artiklNaziv,
             kolicina: parseFloat(kolicina),
             cijena: parseFloat(cijena),
@@ -116,6 +117,11 @@ function NarudzbenicaNova() {
     };
 
     const handlePregled = () => {
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (rokIsporuke && rokIsporuke < todayStr) {
+            alert('Rok isporuke mora biti danas ili kasnije.');
+            return;
+        }
         const dobavljacObj = dobavljaci.find(d => d.dobavljacId === parseInt(selectedDobavljacId));
         const nacinPlacanjaObj = naciniPlacanja.find(np => np.nP_Id === parseInt(npId));
 
@@ -181,6 +187,7 @@ function NarudzbenicaNova() {
                             <Form.Label>Rok isporuke</Form.Label>
                             <Form.Control
                                 type="date"
+                                min={new Date().toISOString().split('T')[0]}
                                 value={rokIsporuke}
                                 onChange={(e) => setRokIsporuke(e.target.value)}
                             />
@@ -265,7 +272,7 @@ function NarudzbenicaNova() {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>ID</th>
+                        <th>Oznaka</th>
                         <th>Naziv</th>
                         <th>Količina</th>
                         <th>Cijena</th>
@@ -277,7 +284,7 @@ function NarudzbenicaNova() {
                     {dodaniArtikli.map((a) => (
                         <tr key={a.redniBroj}>
                             <td>{a.redniBroj}</td>
-                            <td>{a.artiklId}</td>
+                            <td>{a.artiklOznaka}</td>
                             <td>{a.artiklNaziv}</td>
                             <td>{a.kolicina}</td>
                             <td>{a.cijena}</td>
