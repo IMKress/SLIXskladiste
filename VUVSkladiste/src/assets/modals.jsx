@@ -283,7 +283,7 @@ export function InfoArtiklModal({ show, handleClose, artiklData, artiklName, kol
                     <Table striped bordered hover className="mt-3">
                         <thead>
                             <tr>
-                                <th>Dokument ID</th>
+                                <th>Oznaka dokumenta</th>
                                 <th>Datum Dokumenta</th>
                                 <th>Tip Dokumenta</th>
                                 <th>Količina</th>
@@ -568,7 +568,7 @@ export const DatumArtikliModal = ({ show, handleClose, dokumentId, datumPrimke, 
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Artikl ID</th>
+                            <th>Oznaka</th>
                             <th>Naziv Artikla</th>
                             <th>Količina</th>
                             <th>Cijena</th>
@@ -579,7 +579,7 @@ export const DatumArtikliModal = ({ show, handleClose, dokumentId, datumPrimke, 
                         {dodaniArtikli.map((artikl, index) => (
                             <tr key={index}>
                                 <td>{artikl.redniBroj}</td>
-                                <td>{artikl.artiklId}</td>
+                                <td>{artikl.artiklOznaka}</td>
                                 <td>{artikl.artiklNaziv}</td>
                                 <td>{artikl.kolicina}</td>
                                 <td>{artikl.cijena}</td>
@@ -661,7 +661,7 @@ export function DokumentInfoModal({ show, handleClose, dokument }) {
             </Modal.Header>
             <Modal.Body>
 
-                <p><strong>Dokument ID:</strong> {dokument.dokumentId}</p>
+                <p><strong>Oznaka dokumenta:</strong> {dokument.oznakaDokumenta}</p>
                 <p><strong>Tip Dokumenta:</strong> {dokument.tipDokumenta}</p>
                 <p><strong>Datum Dokumenta:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString()}</p>
 
@@ -673,7 +673,7 @@ export function DokumentInfoModal({ show, handleClose, dokument }) {
                     <Table striped bordered hover>
                         <thead>
                             <tr>
-                                <th>Artikl ID</th>
+                                <th>Oznaka</th>
                                 <th>Naziv Artikla</th>
                                 <th>JMJ</th>
                                 <th>Količina</th>
@@ -690,7 +690,7 @@ export function DokumentInfoModal({ show, handleClose, dokument }) {
                         <tbody>
                             {artikli.map((artikl, index) => (
                                 <tr key={index}>
-                                    <td>{artikl.artiklId}</td>
+                                    <td>{artikl.artiklOznaka}</td>
                                     <td>{artikl.artiklNaziv}</td>
                                     <td>{artikl.artiklJmj}</td>
                                     <td>{artikl.kolicina}</td>
@@ -873,7 +873,7 @@ export const IzdatnicaArtikliModal = ({ show, handleClose, dodaniArtikli, datumI
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Artikl ID</th>
+                            <th>Oznaka</th>
                             <th>Naziv Artikla</th>
                             <th>Količina</th>
                             <th>Cijena</th>
@@ -884,7 +884,7 @@ export const IzdatnicaArtikliModal = ({ show, handleClose, dodaniArtikli, datumI
                         {dodaniArtikli.map((artikl) => (
                             <tr key={artikl.redniBroj}>
                                 <td>{artikl.redniBroj}</td>
-                                <td>{artikl.artiklId}</td>
+                                <td>{artikl.artiklOznaka}</td>
                                 <td>{artikl.artiklNaziv}</td>
                                 <td>{artikl.kolicina}</td>
                                 <td>{artikl.cijena}</td>

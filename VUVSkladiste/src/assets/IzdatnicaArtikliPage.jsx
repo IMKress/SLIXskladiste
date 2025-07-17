@@ -172,7 +172,7 @@ function IzdatnicaArtikliPage() {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Artikl ID</th>
+                                <th>Oznaka</th>
                                 <th>Naziv Artikla</th>
                                 <th>Količina</th>
                                 <th>Cijena</th>
@@ -183,7 +183,7 @@ function IzdatnicaArtikliPage() {
                             {dodaniArtikli.map((artikl) => (
                                 <tr key={artikl.redniBroj}>
                                     <td>{artikl.redniBroj}</td>
-                                    <td>{artikl.artiklId}</td>
+                                    <td>{artikl.artiklOznaka}</td>
                                     <td>{artikl.artiklNaziv}</td>
                                     <td>{artikl.kolicina}</td>
                                     <td>{artikl.cijena}</td>

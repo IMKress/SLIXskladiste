@@ -211,7 +211,6 @@ function DokumentInfo() {
             <Card className="mb-4">
                 <Card.Body>
                     <Card.Title>Detalji dokumenta</Card.Title>
-                    <p><strong>ID:</strong> {dokument.dokumentId}</p>
                     <p><strong>Oznaka:</strong> {dokument.oznakaDokumenta}</p>
                     <p><strong>Tip:</strong> {dokument.tipDokumenta}</p>
                     <p><strong>Datum:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}</p>
@@ -234,7 +233,7 @@ function DokumentInfo() {
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Artikl ID</th>
+                            <th>Oznaka</th>
                             <th>Naziv</th>
                             <th>JMJ</th>
                             <th>Količina</th>
@@ -249,7 +248,7 @@ function DokumentInfo() {
                     <tbody>
                         {artikli.map((a, i) => (
                             <tr key={i}>
-                                <td>{a.artiklId}</td>
+                                <td>{a.artiklOznaka}</td>
                                 <td>{a.artiklNaziv}</td>
                                 <td>{a.artiklJmj}</td>
                                 <td>{a.kolicina}</td>

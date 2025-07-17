@@ -263,5 +263,15 @@ namespace SKLADISTE.Service
             return _repository.GetDailyStatsForMonth(year, month);
         }
 
+        public async Task<bool> UpdateRokIsporukeAsync(int dokumentId, DateTime rokIsporuke)
+        {
+            return await _repository.UpdateRokIsporukeAsync(dokumentId, rokIsporuke);
+        }
+
+        public async Task<int?> GetAktivniStatusIdAsync(int dokumentId)
+        {
+            return await _repository.GetAktivniStatusIdAsync(dokumentId);
+        }
+
     }
 }

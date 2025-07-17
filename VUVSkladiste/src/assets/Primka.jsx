@@ -131,6 +131,7 @@ function Primka() {
         .map((a, index) => ({
             redniBroj: index + 1,
             artiklId: a.artiklId,
+            artiklOznaka: a.artiklOznaka,
             artiklNaziv: a.artiklNaziv,
             kolicina: a.odabranaKolicina,
             cijena: a.cijena,
@@ -170,7 +171,7 @@ function Primka() {
                                 <thead>
                                     <tr>
                                         <th>Odaberi</th>
-                                        <th>ID</th>
+                                        <th>Oznaka</th>
                                         <th>Naziv Artikla</th>
                                         <th>Cijena</th>
                                         <th>Količina</th>
@@ -188,7 +189,7 @@ function Primka() {
                                                     }}
                                                 />
                                             </td>
-                                            <td>{art.artiklId}</td>
+                                            <td>{art.artiklOznaka}</td>
                                             <td>{art.artiklNaziv}</td>
                                             <td>{art.cijena}</td>
                                             <td>

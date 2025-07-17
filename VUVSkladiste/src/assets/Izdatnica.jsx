@@ -85,9 +85,10 @@ function Izdatnice() {
             return;
         }
 
-        const novi = {
+       const novi = {
             redniBroj: dodaniArtikli.length + 1,
             artiklId: artikl.artiklId,
+            artiklOznaka: artikl.artiklOznaka,
             artiklNaziv: artikl.artiklNaziv,
             kolicina: parseFloat(kolicina),
             cijena: parseFloat(cijena),
@@ -205,7 +206,7 @@ function Izdatnice() {
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>ID</th>
+                        <th>Oznaka</th>
                         <th>Naziv</th>
                         <th>Količina</th>
                         <th>Cijena</th>
@@ -217,7 +218,7 @@ function Izdatnice() {
                     {dodaniArtikli.map((a) => (
                         <tr key={a.redniBroj}>
                             <td>{a.redniBroj}</td>
-                            <td>{a.artiklId}</td>
+                            <td>{a.artiklOznaka}</td>
                             <td>{a.artiklNaziv}</td>
                             <td>{a.kolicina}</td>
                             <td>{a.cijena}</td>
