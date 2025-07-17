@@ -711,7 +711,8 @@ namespace SKLADISTE.Repository
                     NarudzbenicaId = _appDbContext.PrimNaruVeze
                         .Where(p => p.PrimkaId == d.DokumentId)
                         .Select(p => (int?)p.NarudzbenicaId)
-                        .FirstOrDefault()
+                        .FirstOrDefault(),
+                    Napomena=d.Napomena
                 })
                 .FirstOrDefaultAsync();
 
@@ -728,7 +729,8 @@ namespace SKLADISTE.Repository
                     TipDokumenta = "Izdatnica",
                     ZaposlenikId = d.ZaposlenikId,
                     OznakaDokumenta = d.OznakaDokumenta,
-                    MjestoTroska = d.MjestoTroska
+                    MjestoTroska = d.MjestoTroska,
+                    Napomena=d.Napomena
                 })
                 .FirstOrDefaultAsync();
 

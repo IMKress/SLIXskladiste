@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Container, Table, Button, Form } from 'react-bootstrap';
+import { Container, Table, Button, Form, Card } from 'react-bootstrap';
 import axios from 'axios';
 import { generirajOznakuDokumenta } from './oznakaDokumenta';
 
@@ -36,7 +36,7 @@ function PrimkaNova() {
             DobavljacId: dobavljacId,
             OznakaDokumenta: oznaka,
             PrimateljId: 0,
-            Dostavio: parseInt(dostavio) || 0
+            Dostavio: dostavio || 0
         };
         console.log('Dokument koji se šalje:', dokumentBody);
         try {
@@ -100,68 +100,74 @@ function PrimkaNova() {
     }
 
     return (
+
         <Container className="mt-5">
-            <h2>Pregled nove primke</h2>
-            <Form.Group className="mb-3">
-                <Form.Label>Datum Primke</Form.Label>
-                <Form.Control type="text" readOnly value={new Date(datumPrimke).toLocaleDateString('hr-HR')} />
-            </Form.Group>
+            <Card className="form-card">
+                <Card.Header className="text-light" as="h4">Pregled Primke</Card.Header>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Dostavio</Form.Label>
-                <Form.Control
-                    type="text"
-                    value={dostavio}
-                    onChange={(e) => setDostavio(e.target.value)}
-                    placeholder="Unesite ime dostavljača"
-                />
-            </Form.Group>
+                <Card.Body>
+                <Form.Group className="mb-3">
+                    <Form.Label>Datum Primke</Form.Label>
+                    <Form.Control type="text" readOnly value={new Date(datumPrimke).toLocaleDateString('hr-HR')} />
+                </Form.Group>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Napomena</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={napomena}
-                    onChange={(e) => setNapomena(e.target.value)}
-                    placeholder="Unesite napomenu"
-                />
-            </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Dostavio</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={dostavio}
+                        onChange={(e) => setDostavio(e.target.value)}
+                        placeholder="Unesite ime dostavljača"
+                    />
+                </Form.Group>
 
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Artikl ID</th>
-                        <th>Naziv Artikla</th>
-                        <th>Količina</th>
-                        <th>Cijena</th>
-                        <th>Ukupna Cijena</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filtriraniArtikli.map((artikl, index) => (
-                        <tr key={index}>
-                            <td>{artikl.redniBroj}</td>
-                            <td>{artikl.artiklId}</td>
-                            <td>{artikl.artiklNaziv}</td>
-                            <td>{artikl.kolicina}</td>
-                            <td>{artikl.cijena}</td>
-                            <td>{artikl.ukupnaCijena.toFixed(2)} €</td>
+                <Form.Group className="mb-3">
+                    <Form.Label>Napomena</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        value={napomena}
+                        onChange={(e) => setNapomena(e.target.value)}
+                        placeholder="Unesite napomenu"
+                    />
+                </Form.Group>
+
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Artikl ID</th>
+                            <th>Naziv Artikla</th>
+                            <th>Količina</th>
+                            <th>Cijena</th>
+                            <th>Ukupna Cijena</th>
                         </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5" className="text-end"><strong>Ukupno:</strong></td>
-                        <td><strong>{ukupniZbrojCijena.toFixed(2)} €</strong></td>
-                    </tr>
-                </tbody>
-            </Table>
+                    </thead>
+                    <tbody>
+                        {filtriraniArtikli.map((artikl, index) => (
+                            <tr key={index}>
+                                <td>{artikl.redniBroj}</td>
+                                <td>{artikl.artiklId}</td>
+                                <td>{artikl.artiklNaziv}</td>
+                                <td>{artikl.kolicina}</td>
+                                <td>{artikl.cijena}</td>
+                                <td>{artikl.ukupnaCijena.toFixed(2)} €</td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td colSpan="5" className="text-end"><strong>Ukupno:</strong></td>
+                            <td><strong>{ukupniZbrojCijena.toFixed(2)} €</strong></td>
+                        </tr>
+                    </tbody>
+                </Table>
 
-            <div className="d-flex justify-content-between">
-                <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
-                <Button variant="primary" onClick={handleCreatePrimka}>Spremi Primku</Button>
-            </div>
-        </Container>
+                <div className="d-flex justify-content-between">
+                    <Button variant="secondary" onClick={() => navigate(-1)}>Natrag</Button>
+                    <Button variant="primary" onClick={handleCreatePrimka}>Spremi Primku</Button>
+                </div>
+            </Card.Body>
+        </Card>
+        </Container >
     );
 }
 

@@ -29,7 +29,7 @@ function DokumentInfo() {
                     .catch(() => setUsername('Nepoznato'));
             }
 
-            
+
 
             axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, auth).then(resp => {
                 const nar = resp.data.find(n => n.dokumentId === res.data.narudzbenicaId);
@@ -96,6 +96,8 @@ function DokumentInfo() {
                     <p><strong>Tip:</strong> {dokument.tipDokumenta}</p>
                     <p><strong>Datum:</strong> {new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}</p>
                     <p><strong>Zaposlenik:</strong> {username}</p>
+                    <p><strong>Napomena:</strong> {dokument.napomena}</p>
+
                     {isPrimka && dostavioIme && (
                         <p><strong>Dostavio:</strong> {dostavioIme}</p>
                     )}

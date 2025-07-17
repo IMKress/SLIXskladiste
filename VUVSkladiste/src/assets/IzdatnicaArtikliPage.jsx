@@ -11,7 +11,7 @@ function IzdatnicaArtikliPage() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const { 
+    const {
         dodaniArtikli,
         datumIzdatnice,
         dokumentId,
@@ -39,7 +39,7 @@ function IzdatnicaArtikliPage() {
     const handleCreateIzdatnica = async () => {
         const formattedDate = formatDateForAPI(selectedDate);
 
-            const dokumentBody = {
+        const dokumentBody = {
             DokumentId: 0,
             DatumDokumenta: formattedDate,
             TipDokumentaId: 2,
@@ -52,7 +52,7 @@ function IzdatnicaArtikliPage() {
         console.log('Dokument koji se šalje:', dokumentBody);
         try {
 
-            const createDokumentResponse  = await axios.post('https://localhost:5001/api/home/add_dokument', dokumentBody, {
+            const createDokumentResponse = await axios.post('https://localhost:5001/api/home/add_dokument', dokumentBody, {
                 headers: { 'Content-Type': 'application/json' }
             });
             if (createDokumentResponse.status === 200) {
@@ -68,7 +68,7 @@ function IzdatnicaArtikliPage() {
                         UkupnaCijena: artikl.ukupnaCijena,
                         ArtiklId: artikl.artiklId,
                         TrenutnaKolicina: 0,
-                        ZaposlenikId:UserId
+                        ZaposlenikId: UserId
                     };
 
                     const response = await axios.post('https://localhost:5001/api/home/add_artDok', artiklDokBody, {
@@ -138,67 +138,72 @@ function IzdatnicaArtikliPage() {
 
     return (
         <Container className="mt-4">
-            <h2>Pregled Izdatnice</h2>
+            <Card className="form-card">
+                <Card.Header className="text-light" as="h4">Pregled Izdatnice</Card.Header>
 
-            <div className="mb-3">
-                <strong>Mjesto troška:</strong> {mjestoTroska}
-            </div>
+                <Card.Body>
 
-            <Form.Group controlId="formDatumIzdatnice" className="my-3">
-                <Form.Label>Datum izdatnice</Form.Label>
-                <DatePicker
-                    selected={selectedDate}
-                    onChange={(date) => setSelectedDate(date)}
-                    dateFormat="dd.MM.yyyy"
-                    className="form-control"
-                />
-            </Form.Group>
+                    <div className="mb-3">
+                        <strong>Mjesto troška:</strong> {mjestoTroska}
+                    </div>
 
-            <Form.Group className="mb-3">
-                <Form.Label>Napomena</Form.Label>
-                <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={napomena}
-                    onChange={(e) => setNapomena(e.target.value)}
-                    placeholder="Unesite napomenu"
-                />
-            </Form.Group>
+                    <Form.Group controlId="formDatumIzdatnice" className="my-3">
+                        <Form.Label>Datum izdatnice</Form.Label>
+                        <DatePicker
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            dateFormat="dd.MM.yyyy"
+                            className="form-control"
+                        />
+                    </Form.Group>
 
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Artikl ID</th>
-                        <th>Naziv Artikla</th>
-                        <th>Količina</th>
-                        <th>Cijena</th>
-                        <th>Ukupna Cijena</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dodaniArtikli.map((artikl) => (
-                        <tr key={artikl.redniBroj}>
-                            <td>{artikl.redniBroj}</td>
-                            <td>{artikl.artiklId}</td>
-                            <td>{artikl.artiklNaziv}</td>
-                            <td>{artikl.kolicina}</td>
-                            <td>{artikl.cijena}</td>
-                            <td>{artikl.ukupnaCijena.toFixed(2)} €</td>
-                        </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5" className="text-end"><strong>Ukupno:</strong></td>
-                        <td><strong>{ukupniZbrojCijena.toFixed(2)} €</strong></td>
-                    </tr>
-                </tbody>
-            </Table>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Napomena</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            value={napomena}
+                            onChange={(e) => setNapomena(e.target.value)}
+                            placeholder="Unesite napomenu"
+                        />
+                    </Form.Group>
 
-            <div className="d-flex justify-content-end mt-4">
-                <Button variant="success" onClick={handleButtonClick}>
-                    Napravi izdatnicu
-                </Button>
-            </div>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Artikl ID</th>
+                                <th>Naziv Artikla</th>
+                                <th>Količina</th>
+                                <th>Cijena</th>
+                                <th>Ukupna Cijena</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {dodaniArtikli.map((artikl) => (
+                                <tr key={artikl.redniBroj}>
+                                    <td>{artikl.redniBroj}</td>
+                                    <td>{artikl.artiklId}</td>
+                                    <td>{artikl.artiklNaziv}</td>
+                                    <td>{artikl.kolicina}</td>
+                                    <td>{artikl.cijena}</td>
+                                    <td>{artikl.ukupnaCijena.toFixed(2)} €</td>
+                                </tr>
+                            ))}
+                            <tr>
+                                <td colSpan="5" className="text-end"><strong>Ukupno:</strong></td>
+                                <td><strong>{ukupniZbrojCijena.toFixed(2)} €</strong></td>
+                            </tr>
+                        </tbody>
+                    </Table>
+
+                    <div className="d-flex justify-content-end mt-4">
+                        <Button variant="success" onClick={handleButtonClick}>
+                            Napravi izdatnicu
+                        </Button>
+                    </div>
+                </Card.Body>
+            </Card>
         </Container>
     );
 }

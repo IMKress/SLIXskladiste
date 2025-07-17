@@ -10,5 +10,6 @@ namespace Skladiste.Model
         public string ZaposlenikId { get; set; }
         public string OznakaDokumenta { get; set; }
         public string MjestoTroska { get; set; }
+        public string Napomena {  get; set; }
     }
 }

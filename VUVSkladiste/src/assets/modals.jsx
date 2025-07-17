@@ -1133,7 +1133,7 @@ export function AddEmployeeModal({ show, handleClose, onAdd }) {
                 Role: role
             });
 
-            if (response.status === 201) {
+            if (response.status === 201 || response.status === 200) {
                 alert("User added successfully!");
                 onAdd();  // To refresh data after addition
                 handleClose(); // Close the modal
@@ -1161,7 +1161,7 @@ export function AddEmployeeModal({ show, handleClose, onAdd }) {
             setRole('Zaposlenik');
         }}>
             <Modal.Header closeButton>
-                <Modal.Title>Add Employee</Modal.Title>
+                <Modal.Title>Dodaj zaposlenika</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
@@ -1230,10 +1230,10 @@ export function AddEmployeeModal({ show, handleClose, onAdd }) {
                     setConfirmPassword('');
                     setRole('Zaposlenik');
                 }}>
-                    Close
+                    Zatvori
                 </Button>
                 <Button variant="primary" onClick={handleAddUser}>
-                    Add User
+                    Dodaj
                 </Button>
             </Modal.Footer>
         </Modal>

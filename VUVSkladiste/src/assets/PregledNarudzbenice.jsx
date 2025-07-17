@@ -167,7 +167,7 @@ function PregledNarudzbenice() {
                             Povratak
                         </Button>
                         <Button
-                            variant="success"
+                            variant="info"
                             onClick={handleCreateNarudzbenica}
                             disabled={loading}
                         >
