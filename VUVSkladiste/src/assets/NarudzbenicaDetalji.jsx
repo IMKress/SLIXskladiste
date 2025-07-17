@@ -138,6 +138,7 @@ function NarudzbenicaDetalji() {
             } else {
                 alert('Greška pri slanju emaila.');
             }
+
         }
     };
     const [skladiste, setSkladiste] = useState({

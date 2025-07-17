@@ -841,6 +841,7 @@ namespace SKLADISTE.WebAPI.Controllers
             if (string.IsNullOrWhiteSpace(email))
                 return NotFound("Email dobavljača nije pronađen.");
 
+
             var result = await _service.SendNarudzbenicaEmailAsync(dokumentId, pdfBytes);
             if (!result)
                 return StatusCode(500, "Greška pri slanju emaila.");

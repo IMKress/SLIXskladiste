@@ -1,6 +1,5 @@
 ﻿
 using Skladiste.Model;
-using SKLADISTE.DAL.DataModel;
 using SKLADISTE.Repository.Common;
 using SKLADISTE.Service.Common;
 using Microsoft.Extensions.Options;
@@ -177,6 +176,7 @@ namespace SKLADISTE.Service
         {
             var email = await _repository.GetDobavljacEmailForDokumentAsync(dokumentId);
             if (string.IsNullOrWhiteSpace(email))
+
                 return false;
 
             try
@@ -185,6 +185,7 @@ namespace SKLADISTE.Service
                 {
                     Subject = "Narudžbenica",
                     Body = "U prilogu se nalazi narudžbenica."
+
                 };
                 message.Attachments.Add(new System.Net.Mail.Attachment(new System.IO.MemoryStream(pdfData), "narudzbenica.pdf", "application/pdf"));
 
@@ -200,6 +201,7 @@ namespace SKLADISTE.Service
             catch (Exception ex)
             {
                 Console.WriteLine($"Email slanje greška: {ex.Message}");
+
                 return false;
             }
         }
