@@ -29,7 +29,7 @@ function DokumentInfo() {
         if (!dokument) return;
 
         const doc = new jsPDF();
-  
+
         doc.setFontSize(14);
         doc.addImage(logo, 'PNG', 25, 25, 30, 15);
         doc.setFontSize(11);
@@ -60,11 +60,11 @@ function DokumentInfo() {
         doc.rect(20, 80, 170, 30); // x, y, width, height
         if (dokument.napomena) doc.text(` ${dokument.napomena}`, 40, 85);
 
-       
 
 
-        
-    
+
+
+
 
         const head = ['Artikl ID', 'Naziv', 'JMJ', 'Količina', 'Cijena', 'Ukupno'];
         if (isPrimka) {
@@ -90,7 +90,37 @@ function DokumentInfo() {
             return row;
         });
 
-        autoTable(doc, { startY: 115, head: [head], body });
+        const tableOptions = {
+            startY: 115,
+            head: [head],
+            body,
+            didDrawPage: (data) => {
+                const tableBottomY = data.cursor.y;
+                const lineY = tableBottomY + 56.7;
+
+
+                doc.setFontSize(9);
+                if (lineY < doc.internal.pageSize.height - 10) {
+                    if (isPrimka) {
+                        doc.setDrawColor(0);
+                        doc.text(`Dostavio:`, 140, lineY - 6);
+                        doc.line(130, lineY, 175, lineY);
+                        doc.text(`${dokument.dostavio}`, 140, lineY - 1);
+                        doc.text(`Preuzeo:`, 40, lineY - 6);
+                        doc.line(30, lineY, 75, lineY);
+                        doc.text(`${username}`, 35, lineY - 1);
+                    }
+                    else {
+                        doc.setDrawColor(0);
+                        doc.text(`Izdao:`, 140, lineY - 6);
+                        doc.line(130, lineY, 175, lineY);
+                        doc.text(`${username}`, 140, lineY - 1);
+                    }
+                }
+
+            }
+        };
+        autoTable(doc, tableOptions);
 
         doc.save(`dokument_${dokument.oznakaDokumenta || id}.pdf`);
     };
