@@ -321,7 +321,7 @@ namespace SKLADISTE.DAL.Migrations
                     b.Property<DateTime>("DatumDokumenta")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DobavljacId")
+                    b.Property<int?>("DobavljacId")
                         .HasColumnType("int");
 
                     b.Property<string>("Dostavio")
@@ -588,9 +588,7 @@ namespace SKLADISTE.DAL.Migrations
                 {
                     b.HasOne("SKLADISTE.DAL.DataModel.Dobavljac", null)
                         .WithMany("Dokumenti")
-                        .HasForeignKey("DobavljacId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DobavljacId");
 
                     b.HasOne("SKLADISTE.DAL.DataModel.DokumentTip", "TipDokumenta")
                         .WithMany("Dokumenti")
