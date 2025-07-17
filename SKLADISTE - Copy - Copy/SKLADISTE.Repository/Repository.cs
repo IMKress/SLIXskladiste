@@ -867,6 +867,7 @@ namespace SKLADISTE.Repository
                 Primke = (double)g.Primke,
                 Izdatnice = (double)g.Izdatnice
             });
+
         }
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId)
@@ -896,6 +897,7 @@ namespace SKLADISTE.Repository
                 Primke = (double)g.Primke,
                 Izdatnice = (double)g.Izdatnice
             });
+
         }
 
     }
