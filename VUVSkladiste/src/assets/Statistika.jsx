@@ -64,6 +64,7 @@ function ArtiklStatModal({ show, handleClose, artiklName, monthData }) {
 }
 
 function Statistika() {
+
   const [artikli, setArtikli] = useState([]);
   const [monthlyData, setMonthlyData] = useState([]);
   const [warehouseValue, setWarehouseValue] = useState(0);
@@ -95,6 +96,7 @@ function Statistika() {
         });
         setWarehouseValue(totalPrimke - totalIzdatnice);
         setMonthlyData(data);
+
         setArtikli(artikliRes.data);
       } catch (err) {
         console.error(err);
@@ -123,6 +125,7 @@ function Statistika() {
     } catch (err) {
       console.error(err);
     }
+
   };
 
   const chartData = {
