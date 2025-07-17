@@ -99,6 +99,7 @@ namespace SKLADISTE.Repository
                                  d.DokumentId,
                                  d.OznakaDokumenta,
                                  d.DatumDokumenta,
+                         
                                  dt.TipDokumenta,
                                  a.ArtiklId,
                                  a.ArtiklOznaka,
@@ -108,6 +109,7 @@ namespace SKLADISTE.Repository
                                  ad.Cijena,
                                  ad.TrenutnaKolicina,
                                  ad.UkupnaCijena
+                                 
                              };
 
             return joinedData.ToList();
