@@ -843,12 +843,15 @@ namespace SKLADISTE.Repository
 
         public IEnumerable<MonthlyStatsDto> GetMonthlyStats()
         {
+            var startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-11);
+
             var grouped = _appDbContext.ArtikliDokumenata
                 .Join(
                     _appDbContext.Dokumenti,
                     ad => ad.DokumentId,
                     d => d.DokumentId,
                     (ad, d) => new { ad.UkupnaCijena, d.TipDokumentaId, d.DatumDokumenta })
+                .Where(x => x.DatumDokumenta >= startDate)
                 .GroupBy(x => new { x.DatumDokumenta.Year, x.DatumDokumenta.Month })
                 .Select(g => new
                 {

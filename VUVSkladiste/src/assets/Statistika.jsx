@@ -166,37 +166,36 @@ function Statistika() {
     }
   };
 
-  const chartData = dailyMonthData.length > 0
-    ? {
-        labels: dailyMonthData.map(d => d.day),
-        datasets: [
-          {
-            label: 'Zarada',
-            data: dailyMonthData.map(d => d.profit),
-            backgroundColor: 'rgba(75,192,192,0.6)',
-          },
-        ],
-      }
-    : {
-        labels: monthlyData.map((m) => m.month),
-        datasets: [
-          {
-            label: 'Zarada',
-            data: monthlyData.map((m) => m.profit),
-            backgroundColor: 'rgba(75,192,192,0.6)',
-          },
-        ],
-      };
+  const monthlyChartData = {
+    labels: monthlyData.map((m) => m.month),
+    datasets: [
+      {
+        label: 'Zarada',
+        data: monthlyData.map((m) => m.profit),
+        backgroundColor: 'rgba(75,192,192,0.6)',
+      },
+    ],
+  };
+
+  const dailySource = dailyMonthData.length > 0 ? dailyMonthData : last30Data;
+  const dailyChartData = {
+    labels: dailySource.map((d) => d.day),
+    datasets: [
+      {
+        label: 'Zarada',
+        data: dailySource.map((d) => d.profit),
+        backgroundColor: 'rgba(75,192,192,0.6)',
+      },
+    ],
+  };
+
 
   return (
     <Container className="mt-4">
       <Card className="p-3 mb-4">
-        <h4 className="mb-3">Zarada po mjesecu</h4>
-        <div className="mb-3">
-          <label className="me-2">Odaberi mjesec:</label>
-          <input type="month" value={selectedMonth} onChange={handleMonthChange} />
-        </div>
-        <Bar data={chartData} />
+        <h4 className="mb-3">Zarada zadnjih 12 mjeseci</h4>
+        <Bar data={monthlyChartData} />
+
         <Table striped bordered hover variant="light" className="mt-3">
           <thead>
             <tr>
@@ -221,8 +220,14 @@ function Statistika() {
       </Card>
 
       <Card className="p-3 mb-4">
-        <h4 className="mb-3">Zarada zadnjih 30 dana</h4>
-        <Table striped bordered hover variant="light">
+        <h4 className="mb-3">Zarada po danu</h4>
+        <div className="mb-3">
+          <label className="me-2">Odaberi mjesec:</label>
+          <input type="month" value={selectedMonth} onChange={handleMonthChange} />
+        </div>
+        <Bar data={dailyChartData} />
+        <Table striped bordered hover variant="light" className="mt-3">
+
           <thead>
             <tr>
               <th>Datum</th>
@@ -232,7 +237,8 @@ function Statistika() {
             </tr>
           </thead>
           <tbody>
-            {last30Data.map((d, idx) => (
+            {dailySource.map((d, idx) => (
+
               <tr key={idx}>
                 <td>{d.day}</td>
                 <td>{d.primke.toFixed(2)}</td>
