@@ -125,7 +125,7 @@ function ArtiklInfo() {
                     <Button variant="secondary" onClick={() => navigate('/stanja')}>Natrag</Button>
                 </div>
             </Card>
-        </Container>
+      
 
         {showEditModal && (
             <EditModal
@@ -139,6 +139,7 @@ function ArtiklInfo() {
                 artiklId={artiklDetails.artiklId}
             />
         )}
+          </Container>
     );
 }
 
