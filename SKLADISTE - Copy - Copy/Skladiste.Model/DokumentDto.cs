@@ -11,6 +11,6 @@ namespace Skladiste.Model
         public DateTime DatumDokumenta { get; set; }
         public string Napomena { get; set; }
         public string TipDokumenta { get; set; }
-        public int DobavljacId { get; set; }
+        public int? DobavljacId { get; set; }
     }
 }
