@@ -35,7 +35,7 @@ function NarudzbenicaDetalji() {
     const [loading, setLoading] = useState(true);
     const [primke, setPrimke] = useState([]);
 
-    const handleDownloadPDF = () => {
+    const generatePDF = () => {
 
         const doc = new jsPDF();
         const title = `Narud\u017Ebenica #${narudzbenica?.oznakaDokumenta || id}`;
@@ -113,8 +113,27 @@ function NarudzbenicaDetalji() {
             }
         };
         autoTable(doc, tableOptions);
+        return doc;
+    };
 
+    const handleDownloadPDF = () => {
+        const doc = generatePDF();
         doc.save(`narudzbenica_${narudzbenica?.oznakaDokumenta || id}.pdf`);
+    };
+
+    const sendPdfEmail = async () => {
+        const doc = generatePDF();
+        const dataUri = doc.output('datauristring');
+        const base64 = dataUri.split(',')[1];
+        const token = sessionStorage.getItem('token');
+        try {
+            await axios.post(`https://localhost:5001/api/home/send_pdf/${id}`, { pdfBase64: base64 }, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Greška pri slanju emaila.');
+        }
     };
     const [skladiste, setSkladiste] = useState({
         skladisteId: 0,
@@ -226,6 +245,7 @@ function NarudzbenicaDetalji() {
                 alert("Status uspješno promijenjen.");
                 setStatusDokumenta("Isporuka");
                 setAktivniStatusId(3);
+                await sendPdfEmail();
             } else {
                 alert("Greška pri promjeni statusa.");
             }
