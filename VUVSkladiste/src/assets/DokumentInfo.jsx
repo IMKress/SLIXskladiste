@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 function DokumentInfo() {
     const { id } = useParams();
@@ -13,6 +15,54 @@ function DokumentInfo() {
     const [narucenaKolicinaMap, setNarucenaKolicinaMap] = useState({});
     const [isPrimka, setIsPrimka] = useState(null);
     const [dostavioIme, setDostavioIme] = useState('');
+
+    const handleDownloadPDF = () => {
+        if (!dokument) return;
+
+        const doc = new jsPDF();
+
+        doc.setFontSize(14);
+        doc.text(`Dokument ${dokument.oznakaDokumenta}`, 20, 15);
+        doc.setFontSize(11);
+        doc.text(`ID: ${dokument.dokumentId}`, 20, 23);
+        doc.text(`Tip: ${dokument.tipDokumenta}`, 20, 29);
+        doc.text(`Datum: ${new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}`, 20, 35);
+        doc.text(`Zaposlenik: ${username}`, 20, 41);
+        if (dokument.napomena) doc.text(`Napomena: ${dokument.napomena}`, 20, 47);
+        if (isPrimka && oznakaNarudzbenice) {
+            doc.text(`Narudžbenica: ${oznakaNarudzbenice}`, 20, 53);
+        } else if (!isPrimka && dokument.mjestoTroska) {
+            doc.text(`Mjesto troška: ${dokument.mjestoTroska}`, 20, 53);
+        }
+
+        const head = ['Artikl ID', 'Naziv', 'JMJ', 'Količina', 'Cijena', 'Ukupno'];
+        if (isPrimka) {
+            head.push('Naručena', 'Trenutna', 'Trenutna Cijena');
+        }
+
+        const body = artikli.map(a => {
+            const row = [
+                a.artiklId,
+                a.artiklNaziv,
+                a.artiklJmj,
+                a.kolicina,
+                a.cijena.toFixed(2),
+                a.ukupnaCijena.toFixed(2)
+            ];
+            if (isPrimka) {
+                row.push(
+                    narucenaKolicinaMap[a.artiklId] || '-',
+                    a.trenutnaKolicina,
+                    (a.trenutnaKolicina * a.cijena).toFixed(2)
+                );
+            }
+            return row;
+        });
+
+        autoTable(doc, { startY: 60, head: [head], body });
+
+        doc.save(`dokument_${dokument.oznakaDokumenta || id}.pdf`);
+    };
 
     useEffect(() => {
         const auth = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } };
@@ -153,6 +203,9 @@ function DokumentInfo() {
             ) : (
                 <p>Nema artikala za ovaj dokument.</p>
             )}
+            <Button variant="info" className="mt-3" onClick={handleDownloadPDF}>
+                Spremi kao PDF
+            </Button>
         </div>
     );
 }
