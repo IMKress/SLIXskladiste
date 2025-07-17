@@ -474,6 +474,13 @@ namespace SKLADISTE.Repository
                 .ToListAsync();
         }
 
+        public async Task<Dokument> GetDokumentByIdAsync(int dokumentId)
+        {
+            return await _appDbContext.Dokumenti
+                .Include(d => d.TipDokumenta)
+                .FirstOrDefaultAsync(d => d.DokumentId == dokumentId);
+        }
+
         public async Task<SkladistePodatci?> GetSkladisteAsync()
         {
             return await _appDbContext.SkladistePodatcis.FirstOrDefaultAsync();

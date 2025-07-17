@@ -8,7 +8,11 @@ using SKLADISTE.Repository.Common;
 using SKLADISTE.Service.Common;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using MailKit.Security;
+using MimeKit;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace SKLADISTE.Service
 {
@@ -261,6 +265,41 @@ namespace SKLADISTE.Service
         public IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month)
         {
             return _repository.GetDailyStatsForMonth(year, month);
+        }
+
+        public async Task<bool> PosaljiNarudzbenicuMailAsync(int dokumentId)
+        {
+            var dokument = await _repository.GetDokumentByIdAsync(dokumentId);
+            if (dokument == null)
+                return false;
+
+            var dobavljac = await _repository.GetDobavljacByIdAsync(dokument.DobavljacId);
+            if (dobavljac == null || string.IsNullOrWhiteSpace(dobavljac.Email))
+                return false;
+
+            var artikli = await _repository.GetArtikliByDokumentIdAsync(dokumentId);
+
+            var builder = new StringBuilder();
+            builder.AppendLine($"Narudžbenica: {dokument.OznakaDokumenta}");
+            builder.AppendLine($"Datum: {dokument.DatumDokumenta:dd.MM.yyyy}");
+            builder.AppendLine("Stavke:");
+            foreach (dynamic a in artikli)
+            {
+                builder.AppendLine($"- {a.ArtiklNaziv} {a.Kolicina} {a.ArtiklJmj}");
+            }
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Skladiste", "noreply@skladiste.local"));
+            message.To.Add(new MailboxAddress(dobavljac.DobavljacNaziv, dobavljac.Email));
+            message.Subject = "Narudžbenica - isporuka";
+            message.Body = new TextPart("plain") { Text = builder.ToString() };
+
+            using var client = new SmtpClient();
+            await client.ConnectAsync("localhost", 25, SecureSocketOptions.Auto);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+
+            return true;
         }
 
     }
