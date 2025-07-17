@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Modal, Button, Container, Card } from 'react-bootstrap';
 import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
+import { Bar, Line } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   BarElement,
+  PointElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
 } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Tooltip, Legend);
 
-function ArtiklStatModal({ show, handleClose, artiklName, monthData }) {
+function ArtiklStatModal({ show, handleClose, artiklName, monthData, historyData }) {
   const chartData = {
     labels: monthData.map(m => m.month),
     datasets: [
@@ -26,6 +28,18 @@ function ArtiklStatModal({ show, handleClose, artiklName, monthData }) {
     ],
   };
 
+  const historyChart = {
+    labels: historyData.map(h => h.date),
+    datasets: [
+      {
+        label: 'Stanje',
+        data: historyData.map(h => h.state),
+        borderColor: 'rgba(255, 99, 132, 0.7)',
+        fill: false,
+      },
+    ],
+  };
+
   return (
     <Modal show={show} onHide={handleClose} size="lg">
       <Modal.Header closeButton>
@@ -33,6 +47,7 @@ function ArtiklStatModal({ show, handleClose, artiklName, monthData }) {
       </Modal.Header>
       <Modal.Body>
         <Bar data={chartData} />
+        <Line data={historyChart} className="mt-4" />
         <Table striped bordered hover className="mt-3">
           <thead>
             <tr>
@@ -73,6 +88,8 @@ function Statistika() {
   const [last30Data, setLast30Data] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [dailyMonthData, setDailyMonthData] = useState([]);
+  const [mostSold, setMostSold] = useState([]);
+  const [avgStorage, setAvgStorage] = useState([]);
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -80,10 +97,12 @@ function Statistika() {
 
     async function fetchData() {
       try {
-        const [statsRes, artikliRes, last30Res] = await Promise.all([
+        const [statsRes, artikliRes, last30Res, soldRes, avgRes] = await Promise.all([
           axios.get('https://localhost:5001/api/home/monthly_stats', { headers }),
           axios.get('https://localhost:5001/api/home/artikli_db', { headers }),
           axios.get('https://localhost:5001/api/home/daily_stats_last30', { headers }),
+          axios.get('https://localhost:5001/api/home/most_sold_products', { headers }),
+          axios.get('https://localhost:5001/api/home/average_storage_time', { headers }),
         ]);
 
         const data = statsRes.data.map((m) => ({
@@ -109,6 +128,8 @@ function Statistika() {
         setLast30Data(last30);
 
         setArtikli(artikliRes.data);
+        setMostSold(soldRes.data);
+        setAvgStorage(avgRes.data);
       } catch (err) {
         console.error(err);
       }
@@ -121,17 +142,24 @@ function Statistika() {
     const token = sessionStorage.getItem('token');
     const headers = { Authorization: `Bearer ${token}` };
     try {
-      const res = await axios.get(
-        `https://localhost:5001/api/home/monthly_stats/${artikl.artiklId}`,
-        { headers }
-      );
+      const [res, histRes] = await Promise.all([
+        axios.get(`https://localhost:5001/api/home/monthly_stats/${artikl.artiklId}`, { headers }),
+        axios.get(`https://localhost:5001/api/home/ModalGraphInfo/${artikl.artiklId}`, { headers })
+      ]);
       const data = res.data.map((m) => ({
         month: m.mjesec,
         primke: m.primke,
         izdatnice: m.izdatnice,
         profit: m.izdatnice - m.primke,
       }));
-      setSelectedArtikl({ name: artikl.artiklNaziv, data });
+
+      let stanje = 0;
+      const hist = histRes.data.map((h) => {
+        if (h.tipDokumentaId === 1) stanje += h.kolicina; else stanje -= h.kolicina;
+        return { date: h.datumDokumenta.split('T')[0], state: stanje };
+      });
+
+      setSelectedArtikl({ name: artikl.artiklNaziv, data, history: hist });
       setShowModal(true);
     } catch (err) {
       console.error(err);
@@ -276,12 +304,53 @@ function Statistika() {
         </Table>
       </Card>
 
+      <Card className="p-3 mt-4">
+        <h4 className="mb-3">Najčešće prodavani proizvodi</h4>
+        <Table striped bordered hover variant="light">
+          <thead>
+            <tr>
+              <th>Naziv</th>
+              <th>Količina</th>
+            </tr>
+          </thead>
+          <tbody>
+            {mostSold.map((m) => (
+              <tr key={m.artiklId}>
+                <td>{m.artiklNaziv}</td>
+                <td>{m.totalKolicina}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Card>
+
+      <Card className="p-3 mt-4">
+        <h4 className="mb-3">Prosječno vrijeme skladištenja</h4>
+        <Table striped bordered hover variant="light">
+          <thead>
+            <tr>
+              <th>Naziv</th>
+              <th>Prosjek dana</th>
+            </tr>
+          </thead>
+          <tbody>
+            {avgStorage.map((a) => (
+              <tr key={a.artiklId}>
+                <td>{a.artiklNaziv}</td>
+                <td>{a.prosjecniDani.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Card>
+
       {selectedArtikl && (
         <ArtiklStatModal
           show={showModal}
           handleClose={() => setShowModal(false)}
           artiklName={selectedArtikl.name}
           monthData={selectedArtikl.data}
+          historyData={selectedArtikl.history}
         />
       )}
     </Container>

@@ -273,5 +273,15 @@ namespace SKLADISTE.Service
             return await _repository.GetAktivniStatusIdAsync(dokumentId);
         }
 
+        public IEnumerable<MostSoldProductDto> GetMostSoldProducts()
+        {
+            return _repository.GetMostSoldProducts();
+        }
+
+        public IEnumerable<AverageStorageTimeDto> GetAverageStorageTimes()
+        {
+            return _repository.GetAverageStorageTimes();
+        }
+
     }
 }

@@ -846,6 +846,20 @@ namespace SKLADISTE.WebAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet("most_sold_products")]
+        public IActionResult GetMostSoldProducts()
+        {
+            var data = _service.GetMostSoldProducts();
+            return Ok(data);
+        }
+
+        [HttpGet("average_storage_time")]
+        public IActionResult GetAverageStorageTime()
+        {
+            var data = _service.GetAverageStorageTimes();
+            return Ok(data);
+        }
+
 
     }
 

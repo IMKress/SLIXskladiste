@@ -81,6 +81,8 @@ namespace SKLADISTE.Repository.Common
 
         Task<bool> UpdateRokIsporukeAsync(int dokumentId, DateTime rokIsporuke);
         Task<int?> GetAktivniStatusIdAsync(int dokumentId);
+        IEnumerable<MostSoldProductDto> GetMostSoldProducts();
+        IEnumerable<AverageStorageTimeDto> GetAverageStorageTimes();
 
         // IEnumerable<> GetAllArtiklsUlazDb();
         /*   IEnumerable<Artikl> GetAllArtiklsDb();
