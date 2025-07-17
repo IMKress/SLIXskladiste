@@ -851,6 +851,7 @@ namespace SKLADISTE.Repository
                              Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
                              Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
                              Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+
                          };
 
             return stats.OrderBy(s => s.Mjesec).ToList();
@@ -867,6 +868,7 @@ namespace SKLADISTE.Repository
                              Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
                              Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
                              Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+
                          };
 
             return stats.OrderBy(s => s.Mjesec).ToList();
