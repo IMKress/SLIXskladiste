@@ -189,11 +189,13 @@ function Statistika() {
     ],
   };
 
+
   return (
     <Container className="mt-4">
       <Card className="p-3 mb-4">
         <h4 className="mb-3">Zarada zadnjih 12 mjeseci</h4>
         <Bar data={monthlyChartData} />
+
         <Table striped bordered hover variant="light" className="mt-3">
           <thead>
             <tr>
@@ -225,6 +227,7 @@ function Statistika() {
         </div>
         <Bar data={dailyChartData} />
         <Table striped bordered hover variant="light" className="mt-3">
+
           <thead>
             <tr>
               <th>Datum</th>
@@ -235,6 +238,7 @@ function Statistika() {
           </thead>
           <tbody>
             {dailySource.map((d, idx) => (
+
               <tr key={idx}>
                 <td>{d.day}</td>
                 <td>{d.primke.toFixed(2)}</td>
