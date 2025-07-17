@@ -793,6 +793,20 @@ namespace SKLADISTE.WebAPI.Controllers
             return StatusCode(500, "Greska kod azuriranja kolicina.");
         }
 
+        [HttpGet("monthly_stats")]
+        public IActionResult GetMonthlyStats()
+        {
+            var data = _service.GetMonthlyStats();
+            return Ok(data);
+        }
+
+        [HttpGet("monthly_stats/{artiklId}")]
+        public IActionResult GetMonthlyStatsForArtikl(int artiklId)
+        {
+            var data = _service.GetMonthlyStatsForArtikl(artiklId);
+            return Ok(data);
+        }
+
 
     }
 
