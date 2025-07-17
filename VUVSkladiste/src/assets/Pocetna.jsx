@@ -53,7 +53,7 @@ function Pocetna() {
     const handleButtonClickNovaIzdatnica = () => {
         navigate('/Izdatnica'); // Ensure this path matches exactly
     }; const handleButtonClickStatistika = () => {
-        navigate('/Statistika'); // Ensure this path matches exactly
+        navigate('/statistika'); // Ensure this path matches exactly
     };
     const handleButtonClickZaposlenici = () => {
         navigate('/Zaposlenici'); // Ensure this path matches exactly

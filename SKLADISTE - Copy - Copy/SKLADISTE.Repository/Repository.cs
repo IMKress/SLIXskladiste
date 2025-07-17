@@ -849,8 +849,9 @@ namespace SKLADISTE.Repository
                          select new MonthlyStatsDto
                          {
                              Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
-                             Primke = g.Where(x => x.TipDokumentaId == 1).Sum(x => (double)x.UkupnaCijena),
-                             Izdatnice = g.Where(x => x.TipDokumentaId == 2).Sum(x => (double)x.UkupnaCijena)
+                             Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
+                             Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+
                          };
 
             return stats.OrderBy(s => s.Mjesec).ToList();
@@ -865,8 +866,9 @@ namespace SKLADISTE.Repository
                          select new MonthlyStatsDto
                          {
                              Mjesec = $"{g.Key.Year}-{g.Key.Month:D2}",
-                             Primke = g.Where(x => x.TipDokumentaId == 1).Sum(x => (double)x.UkupnaCijena),
-                             Izdatnice = g.Where(x => x.TipDokumentaId == 2).Sum(x => (double)x.UkupnaCijena)
+                             Primke = g.Sum(x => x.TipDokumentaId == 1 ? (double)x.UkupnaCijena : 0),
+                             Izdatnice = g.Sum(x => x.TipDokumentaId == 2 ? (double)x.UkupnaCijena : 0)
+
                          };
 
             return stats.OrderBy(s => s.Mjesec).ToList();
