@@ -191,6 +191,7 @@ namespace SKLADISTE.Service
 
                 using var client = new System.Net.Mail.SmtpClient(_emailSettings.SmtpHost, _emailSettings.SmtpPort)
                 {
+                    UseDefaultCredentials = false,
                     Credentials = new System.Net.NetworkCredential(_emailSettings.Username, _emailSettings.Password),
                     EnableSsl = true
                 };
