@@ -15,6 +15,14 @@ function DokumentInfo() {
     const [narucenaKolicinaMap, setNarucenaKolicinaMap] = useState({});
     const [isPrimka, setIsPrimka] = useState(null);
     const [dostavioIme, setDostavioIme] = useState('');
+    const [dobavljacNaziv, setDobavljacNaziv] = useState('');
+    const [skladiste, setSkladiste] = useState({
+        skladisteId: 0,
+        skladisteNaziv: '',
+        adresaSkladista: '',
+        brojTelefona: '',
+        email: ''
+    });
 
     const handleDownloadPDF = () => {
         if (!dokument) return;
@@ -32,10 +40,15 @@ function DokumentInfo() {
         doc.text(`${dokument.tipDokumenta}: ${dokument.oznakaDokumenta}`, 70, 45);
         doc.setFontSize(11);
 
-        doc.text(`Dobavljac:`, 21, 60);
-        doc.line(42, 60, 100, 60);
-        doc.text(`Primatelj:`, 105, 60);
-        doc.line(123, 60, 180, 60);
+        if (isPrimka) {
+            doc.text(`Dobavljac: ${dobavljacNaziv}`, 21, 60);
+            doc.line(42, 60, 100, 60);
+            doc.text(`Primatelj: ${skladiste.skladisteNaziv}`, 105, 60);
+            doc.line(123, 60, 180, 60);
+        } else {
+            doc.text(`Dobavljac: ${skladiste.skladisteNaziv}`, 21, 60);
+            doc.line(42, 60, 100, 60);
+        }
        
 
         if (isPrimka && oznakaNarudzbenice) {
@@ -93,6 +106,9 @@ function DokumentInfo() {
     useEffect(() => {
         const auth = { headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token')}` } };
 
+        axios.get("https://localhost:5001/api/home/skladiste", auth)
+            .then(res => { if (res.data) setSkladiste(res.data); });
+
         const fetchPrimkaData = async () => {
             const res = await axios.get(`https://localhost:5001/api/home/primka_info/${id}`, auth);
             setIsPrimka(true);
@@ -109,7 +125,13 @@ function DokumentInfo() {
 
             axios.get(`https://localhost:5001/api/home/joined_narudzbenice`, auth).then(resp => {
                 const nar = resp.data.find(n => n.dokumentId === res.data.narudzbenicaId);
-                if (nar) setOznakaNarudzbenice(nar.oznakaDokumenta);
+                if (nar) {
+                    setOznakaNarudzbenice(nar.oznakaDokumenta);
+                    if (nar.dobavljacId) {
+                        axios.get(`https://localhost:5001/api/home/dobavljaciDTO/${nar.dobavljacId}`, auth)
+                            .then(dr => setDobavljacNaziv(dr.data.dobavljacNaziv || dr.data.DobavljacNaziv));
+                    }
+                }
             });
 
             axios.get(`https://localhost:5001/api/home/artikli_info_po_primci/${id}`, auth).then(resp => {
