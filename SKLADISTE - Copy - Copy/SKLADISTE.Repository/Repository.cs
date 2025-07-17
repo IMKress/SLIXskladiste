@@ -322,6 +322,13 @@ namespace SKLADISTE.Repository
             {
                 return false;
             }
+
+            bool hasDocuments = await _appDbContext.ArtikliDokumenata.AnyAsync(ad => ad.ArtiklId == artiklId);
+            if (hasDocuments)
+            {
+                return false;
+            }
+
             _appDbContext.Artikli.Remove(artikl);
             await _appDbContext.SaveChangesAsync();
             return true;
