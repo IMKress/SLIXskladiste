@@ -983,6 +983,61 @@ namespace SKLADISTE.Repository
 
         }
 
+        public IEnumerable<MostSoldProductDto> GetMostSoldProducts()
+        {
+            var query = from ad in _appDbContext.ArtikliDokumenata
+                        join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
+                        join a in _appDbContext.Artikli on ad.ArtiklId equals a.ArtiklId
+                        where d.TipDokumentaId == 2
+                        group ad by new { ad.ArtiklId, a.ArtiklNaziv } into g
+                        orderby g.Sum(x => x.Kolicina) descending
+                        select new MostSoldProductDto
+                        {
+                            ArtiklId = g.Key.ArtiklId,
+                            ArtiklNaziv = g.Key.ArtiklNaziv,
+                            TotalKolicina = g.Sum(x => x.Kolicina)
+                        };
+
+            return query.ToList();
+        }
+
+        public IEnumerable<AverageStorageTimeDto> GetAverageStorageTimes()
+        {
+            var epoch = new DateTime(1970, 1, 1);
+
+            var primke = from ad in _appDbContext.ArtikliDokumenata
+                          join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
+                          where d.TipDokumentaId == 1
+                          group d by ad.ArtiklId into g
+                          select new
+                          {
+                              ArtiklId = g.Key,
+                              AvgPrimka = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
+                          };
+
+            var izdatnice = from ad in _appDbContext.ArtikliDokumenata
+                            join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
+                            where d.TipDokumentaId == 2
+                            group d by ad.ArtiklId into g
+                            select new
+                            {
+                                ArtiklId = g.Key,
+                                AvgIzdatnica = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
+                            };
+
+            var query = from p in primke
+                        join i in izdatnice on p.ArtiklId equals i.ArtiklId
+                        join a in _appDbContext.Artikli on p.ArtiklId equals a.ArtiklId
+                        select new AverageStorageTimeDto
+                        {
+                            ArtiklId = p.ArtiklId,
+                            ArtiklNaziv = a.ArtiklNaziv,
+                            ProsjecniDani = (i.AvgIzdatnica - p.AvgPrimka) / 86400.0
+                        };
+
+            return query.ToList();
+        }
+
     }
 
 }
