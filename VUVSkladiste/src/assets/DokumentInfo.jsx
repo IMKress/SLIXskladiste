@@ -4,6 +4,7 @@ import axios from 'axios';
 import Table from 'react-bootstrap/Table';
 import { Card, Button } from 'react-bootstrap';
 import { jsPDF } from 'jspdf';
+import logo from './img/logo.png';
 import autoTable from 'jspdf-autotable';
 
 function DokumentInfo() {
@@ -28,11 +29,9 @@ function DokumentInfo() {
         if (!dokument) return;
 
         const doc = new jsPDF();
-        doc.rect(105, 0, 85, 300); // x, y, width, height
-        doc.rect(20, 0, 85, 300); // x, y, width, height
-        doc.rect(20, 20, 170, 257); // x, y, width, height
+  
         doc.setFontSize(14);
-        doc.text(`SLIKA`, 21, 30);
+        doc.addImage(logo, 'PNG', 25, 25, 30, 15);
         doc.setFontSize(11);
         doc.text(`Datum: ${new Date(dokument.datumDokumenta).toLocaleDateString('hr-HR')}`, 150, 30);
 
@@ -42,14 +41,14 @@ function DokumentInfo() {
 
         if (isPrimka) {
             doc.text(`Dobavljac: ${dobavljacNaziv}`, 21, 60);
-            doc.line(42, 60, 100, 60);
+            doc.line(40, 60.5, 100, 60.5);
             doc.text(`Primatelj: ${skladiste.skladisteNaziv}`, 105, 60);
-            doc.line(123, 60, 180, 60);
+            doc.line(123, 60.5, 180, 60.5);
         } else {
             doc.text(`Dobavljac: ${skladiste.skladisteNaziv}`, 21, 60);
-            doc.line(42, 60, 100, 60);
+            doc.line(42, 60.5, 100, 60.5);
         }
-       
+
 
         if (isPrimka && oznakaNarudzbenice) {
             doc.text(`Narudžbenica: ${oznakaNarudzbenice}`, 21, 70);
@@ -59,20 +58,13 @@ function DokumentInfo() {
         doc.line(46, 70.5, 76, 70.5);
         doc.text(`Napomena:`, 21, 85);
         doc.rect(20, 80, 170, 30); // x, y, width, height
-        if (dokument.napomena) doc.text(`Napomena: ${dokument.napomena}`, 40, 85);
+        if (dokument.napomena) doc.text(` ${dokument.napomena}`, 40, 85);
 
-        doc.setFontSize(14);
-        doc.text(`Dokument ${dokument.oznakaDokumenta}`, 20, 15);
-        doc.setFontSize(11);
+       
 
 
-        /*
-        doc.text(`Zaposlenik: ${username}`, 20, 41);
-        if (isPrimka && oznakaNarudzbenice) {
-            doc.text(`Narudžbenica: ${oznakaNarudzbenice}`, 20, 53);
-        } else if (!isPrimka && dokument.mjestoTroska) {
-            doc.text(`Mjesto troška: ${dokument.mjestoTroska}`, 20, 53);
-        }
+        
+    
 
         const head = ['Artikl ID', 'Naziv', 'JMJ', 'Količina', 'Cijena', 'Ukupno'];
         if (isPrimka) {
@@ -98,7 +90,7 @@ function DokumentInfo() {
             return row;
         });
 
-        autoTable(doc, { startY: 60, head: [head], body });*/
+        autoTable(doc, { startY: 115, head: [head], body });
 
         doc.save(`dokument_${dokument.oznakaDokumenta || id}.pdf`);
     };
