@@ -175,7 +175,8 @@ namespace SKLADISTE.Service
         public async Task<bool> SendNarudzbenicaEmailAsync(int dokumentId, byte[] pdfData)
         {
             var email = await _repository.GetDobavljacEmailForDokumentAsync(dokumentId);
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrWhiteSpace(email))
+
                 return false;
 
             try
@@ -183,7 +184,8 @@ namespace SKLADISTE.Service
                 using var message = new System.Net.Mail.MailMessage(_emailSettings.FromAddress, email)
                 {
                     Subject = "Narudžbenica",
-                    Body = "U prilogu se nalazi narudžbenica.",
+                    Body = "U prilogu se nalazi narudžbenica."
+
                 };
                 message.Attachments.Add(new System.Net.Mail.Attachment(new System.IO.MemoryStream(pdfData), "narudzbenica.pdf", "application/pdf"));
 
@@ -192,11 +194,14 @@ namespace SKLADISTE.Service
                     Credentials = new System.Net.NetworkCredential(_emailSettings.Username, _emailSettings.Password),
                     EnableSsl = true
                 };
+
                 await client.SendMailAsync(message);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"Email slanje greška: {ex.Message}");
+
                 return false;
             }
         }

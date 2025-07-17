@@ -837,6 +837,11 @@ namespace SKLADISTE.WebAPI.Controllers
                 return BadRequest("Neispravan PDF format.");
             }
 
+            var email = await _service.GetDobavljacEmailForDokumentAsync(dokumentId);
+            if (string.IsNullOrWhiteSpace(email))
+                return NotFound("Email dobavljača nije pronađen.");
+
+
             var result = await _service.SendNarudzbenicaEmailAsync(dokumentId, pdfBytes);
             if (!result)
                 return StatusCode(500, "Greška pri slanju emaila.");

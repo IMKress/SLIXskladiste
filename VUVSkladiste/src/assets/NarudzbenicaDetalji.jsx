@@ -130,9 +130,15 @@ function NarudzbenicaDetalji() {
             await axios.post(`https://localhost:5001/api/home/send_pdf/${id}`, { pdfBase64: base64 }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
+            alert('Email poslan.');
         } catch (err) {
             console.error(err);
-            alert('Greška pri slanju emaila.');
+            if (err.response && err.response.status === 404) {
+                alert('Dobavljač nema postavljenu email adresu.');
+            } else {
+                alert('Greška pri slanju emaila.');
+            }
+
         }
     };
     const [skladiste, setSkladiste] = useState({
