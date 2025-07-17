@@ -45,7 +45,7 @@ function IzdatnicaArtikliPage() {
             TipDokumentaId: 2,
             ZaposlenikId: UserId,
             Napomena: napomena,
-            DobavljacId: 1,
+            DobavljacId: null,
             OznakaDokumenta: oznaka,
             MjestoTroska: mjestoTroska
         };
