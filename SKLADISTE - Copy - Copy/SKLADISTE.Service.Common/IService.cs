@@ -50,6 +50,8 @@ namespace SKLADISTE.Service.Common
         Task<bool> AddDobavljacAsync(Dobavljac dobavljac);
         Task<bool> UpdateDobavljacAsync(Dobavljac dobavljac);
         Task<bool> DeleteDobavljacAsync(int id);
+        Task<string?> GetDobavljacEmailForDokumentAsync(int dokumentId);
+        Task<bool> SendNarudzbenicaEmailAsync(int dokumentId, byte[] pdfData);
         Task<IEnumerable<Dokument>> GetDokumentiByDobavljacIdAsync(int dobavljacId);
 
         Task<SkladistePodatci?> GetSkladisteAsync();

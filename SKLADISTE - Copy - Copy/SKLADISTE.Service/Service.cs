@@ -1,11 +1,8 @@
 ﻿
-//using Skladiste.Model;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Skladiste.Model;
-using SKLADISTE.DAL.DataModel;
 using SKLADISTE.Repository.Common;
 using SKLADISTE.Service.Common;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,12 +12,12 @@ namespace SKLADISTE.Service
     public class Service : IService
     {
         private readonly IRepository _repository;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly EmailSettings _emailSettings;
 
-
-        public Service(IRepository repository)
+        public Service(IRepository repository, IOptions<EmailSettings> emailSettings)
         {
             _repository = repository;
+            _emailSettings = emailSettings.Value;
         }
 
         public async Task<(string UserName, string FirstName, string LastName)> GetUserDetailsAsync(string userId)
@@ -168,6 +165,40 @@ namespace SKLADISTE.Service
         public async Task<bool> DeleteDobavljacAsync(int id)
         {
             return await _repository.DeleteDobavljacAsync(id);
+        }
+
+        public async Task<string?> GetDobavljacEmailForDokumentAsync(int dokumentId)
+        {
+            return await _repository.GetDobavljacEmailForDokumentAsync(dokumentId);
+        }
+
+        public async Task<bool> SendNarudzbenicaEmailAsync(int dokumentId, byte[] pdfData)
+        {
+            var email = await _repository.GetDobavljacEmailForDokumentAsync(dokumentId);
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            try
+            {
+                using var message = new System.Net.Mail.MailMessage(_emailSettings.FromAddress, email)
+                {
+                    Subject = "Narudžbenica",
+                    Body = "U prilogu se nalazi narudžbenica.",
+                };
+                message.Attachments.Add(new System.Net.Mail.Attachment(new System.IO.MemoryStream(pdfData), "narudzbenica.pdf", "application/pdf"));
+
+                using var client = new System.Net.Mail.SmtpClient(_emailSettings.SmtpHost, _emailSettings.SmtpPort)
+                {
+                    Credentials = new System.Net.NetworkCredential(_emailSettings.Username, _emailSettings.Password),
+                    EnableSsl = true
+                };
+                await client.SendMailAsync(message);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
         public async Task<IEnumerable<Dokument>> GetDokumentiByDobavljacIdAsync(int dobavljacId)
         {

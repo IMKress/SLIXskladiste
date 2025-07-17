@@ -465,6 +465,16 @@ namespace SKLADISTE.Repository
                 return false;
             }
         }
+
+        public async Task<string?> GetDobavljacEmailForDokumentAsync(int dokumentId)
+        {
+            var dokument = await _appDbContext.Dokumenti.FindAsync(dokumentId);
+            if (dokument == null)
+                return null;
+
+            var dobavljac = await _appDbContext.Dobavljaci.FindAsync(dokument.DobavljacId);
+            return dobavljac?.Email;
+        }
         public async Task<IEnumerable<Dokument>> GetDokumentiByDobavljacIdAsync(int dobavljacId)
         {
             return await _appDbContext.Dokumenti
