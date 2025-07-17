@@ -821,6 +821,33 @@ namespace SKLADISTE.WebAPI.Controllers
             return Ok(data);
         }
 
+        [HttpPost("send_pdf/{dokumentId}")]
+        public async Task<IActionResult> SendPdfEmail(int dokumentId, [FromBody] EmailPdfRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.PdfBase64))
+                return BadRequest("Neispravni podaci.");
+
+            byte[] pdfBytes;
+            try
+            {
+                pdfBytes = Convert.FromBase64String(request.PdfBase64);
+            }
+            catch
+            {
+                return BadRequest("Neispravan PDF format.");
+            }
+
+            var email = await _service.GetDobavljacEmailForDokumentAsync(dokumentId);
+            if (string.IsNullOrWhiteSpace(email))
+                return NotFound("Email dobavljača nije pronađen.");
+
+            var result = await _service.SendNarudzbenicaEmailAsync(dokumentId, pdfBytes);
+            if (!result)
+                return StatusCode(500, "Greška pri slanju emaila.");
+
+            return Ok("Email poslan.");
+        }
+
 
     }
 

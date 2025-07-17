@@ -13,6 +13,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using System;
+using Skladiste.Model;
 
 namespace SKLADISTE.WebAPI
 {
@@ -44,6 +45,7 @@ namespace SKLADISTE.WebAPI
 
             services.AddScoped<IService, Service.Service>();
             services.AddScoped<IRepository, Repository.Repository>();
+            services.Configure<Skladiste.Model.EmailSettings>(Configuration.GetSection("EmailSettings"));
             services.AddHostedService<NarudzbenicaCleanupService>();
 
             // Add CORS policy
