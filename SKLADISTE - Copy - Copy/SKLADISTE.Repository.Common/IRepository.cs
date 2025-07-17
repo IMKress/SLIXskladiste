@@ -76,6 +76,9 @@ namespace SKLADISTE.Repository.Common
         IEnumerable<MonthlyStatsDto> GetMonthlyStats();
         IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId);
 
+        IEnumerable<DailyStatsDto> GetDailyStatsLast30Days();
+        IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month);
+
         // IEnumerable<> GetAllArtiklsUlazDb();
         /*   IEnumerable<Artikl> GetAllArtiklsDb();
        IEnumerable<RobaStanje> GetAllArtiklsStanjeDb();

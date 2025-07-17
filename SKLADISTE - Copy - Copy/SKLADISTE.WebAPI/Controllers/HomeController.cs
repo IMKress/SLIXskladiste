@@ -807,6 +807,20 @@ namespace SKLADISTE.WebAPI.Controllers
             return Ok(data);
         }
 
+        [HttpGet("daily_stats_last30")]
+        public IActionResult GetDailyStatsLast30Days()
+        {
+            var data = _service.GetDailyStatsLast30Days();
+            return Ok(data);
+        }
+
+        [HttpGet("daily_stats/{year}/{month}")]
+        public IActionResult GetDailyStatsForMonth(int year, int month)
+        {
+            var data = _service.GetDailyStatsForMonth(year, month);
+            return Ok(data);
+        }
+
 
     }
 

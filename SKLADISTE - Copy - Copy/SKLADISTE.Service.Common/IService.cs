@@ -76,5 +76,8 @@ namespace SKLADISTE.Service.Common
         IEnumerable<MonthlyStatsDto> GetMonthlyStats();
         IEnumerable<MonthlyStatsDto> GetMonthlyStatsForArtikl(int artiklId);
 
+        IEnumerable<DailyStatsDto> GetDailyStatsLast30Days();
+        IEnumerable<DailyStatsDto> GetDailyStatsForMonth(int year, int month);
+
     }
 }

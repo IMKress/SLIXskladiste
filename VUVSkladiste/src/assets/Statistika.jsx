@@ -70,6 +70,9 @@ function Statistika() {
   const [warehouseValue, setWarehouseValue] = useState(0);
   const [selectedArtikl, setSelectedArtikl] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [last30Data, setLast30Data] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const [dailyMonthData, setDailyMonthData] = useState([]);
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -77,9 +80,10 @@ function Statistika() {
 
     async function fetchData() {
       try {
-        const [statsRes, artikliRes] = await Promise.all([
+        const [statsRes, artikliRes, last30Res] = await Promise.all([
           axios.get('https://localhost:5001/api/home/monthly_stats', { headers }),
           axios.get('https://localhost:5001/api/home/artikli_db', { headers }),
+          axios.get('https://localhost:5001/api/home/daily_stats_last30', { headers }),
         ]);
 
         const data = statsRes.data.map((m) => ({
@@ -96,6 +100,13 @@ function Statistika() {
         });
         setWarehouseValue(totalPrimke - totalIzdatnice);
         setMonthlyData(data);
+        const last30 = last30Res.data.map(d => ({
+          day: d.dan,
+          primke: d.primke,
+          izdatnice: d.izdatnice,
+          profit: d.izdatnice - d.primke,
+        }));
+        setLast30Data(last30);
 
         setArtikli(artikliRes.data);
       } catch (err) {
@@ -128,21 +139,63 @@ function Statistika() {
 
   };
 
-  const chartData = {
-    labels: monthlyData.map((m) => m.month),
-    datasets: [
-      {
-        label: 'Zarada',
-        data: monthlyData.map((m) => m.profit),
-        backgroundColor: 'rgba(75,192,192,0.6)',
-      },
-    ],
+  const handleMonthChange = async (e) => {
+    const value = e.target.value;
+    setSelectedMonth(value);
+    if (!value) {
+      setDailyMonthData([]);
+      return;
+    }
+    const token = sessionStorage.getItem('token');
+    const headers = { Authorization: `Bearer ${token}` };
+    const [year, month] = value.split('-');
+    try {
+      const res = await axios.get(
+        `https://localhost:5001/api/home/daily_stats/${year}/${month}`,
+        { headers }
+      );
+      const data = res.data.map((d) => ({
+        day: d.dan,
+        primke: d.primke,
+        izdatnice: d.izdatnice,
+        profit: d.izdatnice - d.primke,
+      }));
+      setDailyMonthData(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
+
+  const chartData = dailyMonthData.length > 0
+    ? {
+        labels: dailyMonthData.map(d => d.day),
+        datasets: [
+          {
+            label: 'Zarada',
+            data: dailyMonthData.map(d => d.profit),
+            backgroundColor: 'rgba(75,192,192,0.6)',
+          },
+        ],
+      }
+    : {
+        labels: monthlyData.map((m) => m.month),
+        datasets: [
+          {
+            label: 'Zarada',
+            data: monthlyData.map((m) => m.profit),
+            backgroundColor: 'rgba(75,192,192,0.6)',
+          },
+        ],
+      };
 
   return (
     <Container className="mt-4">
       <Card className="p-3 mb-4">
         <h4 className="mb-3">Zarada po mjesecu</h4>
+        <div className="mb-3">
+          <label className="me-2">Odaberi mjesec:</label>
+          <input type="month" value={selectedMonth} onChange={handleMonthChange} />
+        </div>
         <Bar data={chartData} />
         <Table striped bordered hover variant="light" className="mt-3">
           <thead>
@@ -165,6 +218,30 @@ function Statistika() {
           </tbody>
         </Table>
         <h5 className="mt-3">Trenutna vrijednost skladišta: {warehouseValue.toFixed(2)}</h5>
+      </Card>
+
+      <Card className="p-3 mb-4">
+        <h4 className="mb-3">Zarada zadnjih 30 dana</h4>
+        <Table striped bordered hover variant="light">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Ukupno Primke</th>
+              <th>Ukupno Izdatnice</th>
+              <th>Zarada</th>
+            </tr>
+          </thead>
+          <tbody>
+            {last30Data.map((d, idx) => (
+              <tr key={idx}>
+                <td>{d.day}</td>
+                <td>{d.primke.toFixed(2)}</td>
+                <td>{d.izdatnice.toFixed(2)}</td>
+                <td>{d.profit.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </Card>
 
       <Card className="p-3">
