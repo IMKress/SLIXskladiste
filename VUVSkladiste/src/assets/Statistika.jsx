@@ -18,12 +18,14 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineEleme
 
 function ArtiklStatModal({ show, handleClose, artiklName, monthData, historyData }) {
   const chartData = {
-    labels: monthData.map(m => m.month),
+    labels: monthData.map((m) => m.month),
     datasets: [
       {
         label: 'Zarada',
-        data: monthData.map(m => m.profit),
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
+        data: monthData.map((m) => m.profit),
+        backgroundColor: monthData.map((m) =>
+          m.profit < 0 ? 'rgba(255, 99, 132, 0.6)' : 'rgba(54, 162, 235, 0.5)'
+        ),
       },
     ],
   };
@@ -90,6 +92,7 @@ function Statistika() {
   const [dailyMonthData, setDailyMonthData] = useState([]);
   const [mostSold, setMostSold] = useState([]);
   const [avgStorage, setAvgStorage] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const token = sessionStorage.getItem('token');
@@ -200,7 +203,9 @@ function Statistika() {
       {
         label: 'Zarada',
         data: monthlyData.map((m) => m.profit),
-        backgroundColor: 'rgba(75,192,192,0.6)',
+        backgroundColor: monthlyData.map((m) =>
+          m.profit < 0 ? 'rgba(255, 99, 132, 0.6)' : 'rgba(75,192,192,0.6)'
+        ),
       },
     ],
   };
@@ -212,10 +217,17 @@ function Statistika() {
       {
         label: 'Zarada',
         data: dailySource.map((d) => d.profit),
-        backgroundColor: 'rgba(75,192,192,0.6)',
+        backgroundColor: dailySource.map((d) =>
+          d.profit < 0 ? 'rgba(255, 99, 132, 0.6)' : 'rgba(75,192,192,0.6)'
+        ),
       },
     ],
   };
+
+  const filteredArtikli = artikli.filter((a) =>
+    a.artiklNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    a.artiklOznaka.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
 
   return (
@@ -280,6 +292,13 @@ function Statistika() {
 
       <Card className="p-3">
         <h4 className="mb-3">Artikli</h4>
+        <input
+          type="text"
+          className="form-control mb-3"
+          placeholder="Pretraži artikle"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
         <Table striped bordered hover variant="light">
           <thead>
             <tr>
@@ -289,7 +308,7 @@ function Statistika() {
             </tr>
           </thead>
           <tbody>
-            {artikli.map((a) => (
+            {filteredArtikli.map((a) => (
               <tr key={a.artiklId}>
                 <td>{a.artiklOznaka}</td>
                 <td>{a.artiklNaziv}</td>
