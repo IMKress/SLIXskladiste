@@ -33,6 +33,36 @@ function Izdatnice() {
         }
     }, []);
 
+    useEffect(() => {
+        if (selectedArtikl) {
+            axios
+                .get(`https://localhost:5001/api/home/FIFO_list/${selectedArtikl}`)
+                .then((res) => {
+                    const ukupno = res.data.reduce(
+                        (acc, item) => acc + item.trenutnaKolicina,
+                        0
+                    );
+                    const sumaCijena = res.data.reduce(
+                        (acc, item) => acc + item.cijena * item.trenutnaKolicina,
+                        0
+                    );
+                    setRaspolozivaKolicina(ukupno);
+                    const prosjek = ukupno ? sumaCijena / ukupno : 0;
+                    setProsjekCijena(prosjek);
+                    setCijena(prosjek.toFixed(2));
+                })
+                .catch(() => {
+                    setRaspolozivaKolicina(0);
+                    setProsjekCijena(0);
+                    setCijena('');
+                });
+        } else {
+            setRaspolozivaKolicina(0);
+            setProsjekCijena(0);
+            setCijena('');
+        }
+    }, [selectedArtikl]);
+
 
     useEffect(() => {
         const fetchArtikli = async () => {
@@ -84,18 +114,28 @@ function Izdatnice() {
             alert("Popunite sva polja.");
             return;
         }
+        const kolicinaNum = parseFloat(kolicina);
+        if (kolicinaNum <= 0) {
+            alert("Količina mora biti veća od 0.");
+            return;
+        }
+        if (kolicinaNum > raspolozivaKolicina) {
+            alert(`Nedovoljna količina na skladištu. Dostupno: ${raspolozivaKolicina}`);
+            return;
+        }
 
        const novi = {
             redniBroj: dodaniArtikli.length + 1,
             artiklId: artikl.artiklId,
             artiklOznaka: artikl.artiklOznaka,
             artiklNaziv: artikl.artiklNaziv,
-            kolicina: parseFloat(kolicina),
+            kolicina: kolicinaNum,
             cijena: parseFloat(cijena),
-            ukupnaCijena: parseFloat(kolicina) * parseFloat(cijena)
+            ukupnaCijena: kolicinaNum * parseFloat(cijena)
         };
 
         setDodaniArtikli(prev => [...prev, novi]);
+        setRaspolozivaKolicina(prev => prev - kolicinaNum);
         setSelectedArtikl('');
         setKolicina('');
         setCijena('');
@@ -160,6 +200,9 @@ function Izdatnice() {
                                     value={kolicina}
                                     onChange={(e) => setKolicina(e.target.value)}
                                 />
+                                <Form.Text muted>
+                                    Raspoloživo: {raspolozivaKolicina}
+                                </Form.Text>
                             </Form.Group>
                         </Col>
                         <Col>
