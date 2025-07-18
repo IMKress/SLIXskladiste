@@ -99,10 +99,10 @@ function NarudzbenicaDetalji() {
                 const tableBottomY = data.cursor.y; // bottom Y of the table
                 const lineY = tableBottomY + 56.7; // 2 cm below
 
-                doc.text(`Izdao:`, 140, lineY-6);
+                doc.text(`Izdao:`, 140, lineY - 6);
                 doc.setFontSize(9);
 
-                doc.text(`${zaposlenikIme}`, 140, lineY-1);
+                doc.text(`${zaposlenikIme}`, 140, lineY - 1);
                 // Make sure the line fits on the page
                 if (lineY < doc.internal.pageSize.height - 10) {
                     doc.setDrawColor(0); // black
@@ -490,7 +490,7 @@ function NarudzbenicaDetalji() {
                             {aktivniStatusId === 1 ? (
                                 <div className="mb-2">
                                     <strong>Rok isporuke:</strong>{' '}
-                                    <input type="date" min={new Date().toISOString().split('T')[0]} value={new Date(detalji.rokIsporuke).toISOString().split('T')[0]} onChange={e => setDetalji(prev=>({...prev, rokIsporuke:e.target.value}))} />
+                                    <input type="date" min={new Date().toISOString().split('T')[0]} value={new Date(detalji.rokIsporuke).toLocaleDateString('en-CA')} onChange={e => setDetalji(prev => ({ ...prev, rokIsporuke: e.target.value }))} />
                                     <Button size="sm" className="ms-2" onClick={handleRokSave}>Spremi</Button>
                                 </div>
                             ) : (
