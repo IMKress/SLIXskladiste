@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-import { Button, Card, Form } from 'react-bootstrap';
+import { Button, Card, Form, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function Dokumenti() {
@@ -10,6 +10,8 @@ function Dokumenti() {
     const [filteredArtikli, setFilteredArtikli] = useState([]);
     const [filterType, setFilterType] = useState("all");
     const [searchTerm, setSearchTerm] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,8 +52,16 @@ function Dokumenti() {
             );
         }
 
+        if (startDate) {
+            filtered = filtered.filter(art => new Date(art.datumDokumenta) >= new Date(startDate));
+        }
+
+        if (endDate) {
+            filtered = filtered.filter(art => new Date(art.datumDokumenta) <= new Date(endDate));
+        }
+
         setFilteredArtikli(filtered);
-    }, [filterType, searchTerm, artikli]);
+    }, [filterType, searchTerm, artikli, startDate, endDate]);
 
     const handleInfoClick = (dokumentId) => {
         navigate(`/dokument-info/${dokumentId}`);
@@ -94,6 +104,15 @@ function Dokumenti() {
                             style={{ width: '80%' }}
                         />
                     </Form.Group>
+
+                    <Row className="mt-2" style={{ width: '80%', margin: '0 auto' }}>
+                        <Col>
+                            <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                        </Col>
+                        <Col>
+                            <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                        </Col>
+                    </Row>
 
                     <Table className="centered-table mt-3" striped bordered hover variant="light">
                         <thead>
