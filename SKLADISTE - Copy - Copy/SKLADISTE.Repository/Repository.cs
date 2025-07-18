@@ -99,6 +99,7 @@ namespace SKLADISTE.Repository
                                  d.DokumentId,
                                  d.OznakaDokumenta,
                                  d.DatumDokumenta,
+                         
                                  dt.TipDokumenta,
                                  a.ArtiklId,
                                  a.ArtiklOznaka,
@@ -108,6 +109,7 @@ namespace SKLADISTE.Repository
                                  ad.Cijena,
                                  ad.TrenutnaKolicina,
                                  ad.UkupnaCijena
+                                 
                              };
 
             return joinedData.ToList();
@@ -1005,6 +1007,7 @@ namespace SKLADISTE.Repository
         {
             var epoch = new DateTime(1970, 1, 1);
 
+
             var primke = from ad in _appDbContext.ArtikliDokumenata
                           join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
                           where d.TipDokumentaId == 1
@@ -1014,6 +1017,7 @@ namespace SKLADISTE.Repository
                               ArtiklId = g.Key,
                               AvgPrimka = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
                           };
+
 
             var izdatnice = from ad in _appDbContext.ArtikliDokumenata
                             join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
@@ -1025,6 +1029,7 @@ namespace SKLADISTE.Repository
                                 AvgIzdatnica = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
                             };
 
+
             var query = from p in primke
                         join i in izdatnice on p.ArtiklId equals i.ArtiklId
                         join a in _appDbContext.Artikli on p.ArtiklId equals a.ArtiklId
@@ -1033,6 +1038,7 @@ namespace SKLADISTE.Repository
                             ArtiklId = p.ArtiklId,
                             ArtiklNaziv = a.ArtiklNaziv,
                             ProsjecniDani = (i.AvgIzdatnica - p.AvgPrimka) / 86400.0
+
                         };
 
             return query.ToList();
