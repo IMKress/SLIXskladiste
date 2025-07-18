@@ -1005,17 +1005,30 @@ namespace SKLADISTE.Repository
 
         public IEnumerable<AverageStorageTimeDto> GetAverageStorageTimes()
         {
+            var epoch = new DateTime(1970, 1, 1);
+
+
             var primke = from ad in _appDbContext.ArtikliDokumenata
                           join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
                           where d.TipDokumentaId == 1
                           group d by ad.ArtiklId into g
-                          select new { ArtiklId = g.Key, AvgPrimka = g.Average(x => x.DatumDokumenta.Ticks) };
+                          select new
+                          {
+                              ArtiklId = g.Key,
+                              AvgPrimka = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
+                          };
+
 
             var izdatnice = from ad in _appDbContext.ArtikliDokumenata
                             join d in _appDbContext.Dokumenti on ad.DokumentId equals d.DokumentId
                             where d.TipDokumentaId == 2
                             group d by ad.ArtiklId into g
-                            select new { ArtiklId = g.Key, AvgIzdatnica = g.Average(x => x.DatumDokumenta.Ticks) };
+                            select new
+                            {
+                                ArtiklId = g.Key,
+                                AvgIzdatnica = g.Average(x => EF.Functions.DateDiffSecond(epoch, x.DatumDokumenta))
+                            };
+
 
             var query = from p in primke
                         join i in izdatnice on p.ArtiklId equals i.ArtiklId
@@ -1024,7 +1037,8 @@ namespace SKLADISTE.Repository
                         {
                             ArtiklId = p.ArtiklId,
                             ArtiklNaziv = a.ArtiklNaziv,
-                            ProsjecniDani = (i.AvgIzdatnica - p.AvgPrimka) / TimeSpan.TicksPerDay
+                            ProsjecniDani = (i.AvgIzdatnica - p.AvgPrimka) / 86400.0
+
                         };
 
             return query.ToList();
