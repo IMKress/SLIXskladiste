@@ -20,6 +20,8 @@ function Stanja() {
     const [selectedArtiklKategorija, setselectedArtiklKategorija] = useState('');
     const [selectedArtiklId, setSelectedArtiklId] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
+    const [filterJmj, setFilterJmj] = useState('');
+    const [filterKategorija, setFilterKategorija] = useState('');
     const [userDetails, setUserDetails] = useState({ username: '', roles: [] });
 
     const navigate = useNavigate();
@@ -176,13 +178,16 @@ function Stanja() {
         }
     };
 
-    const filteredArtikli = artikli.filter((art) =>
-        art.artiklId.toString().includes(searchTerm) ||
-        art.artiklNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        art.artiklJmj.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        art.kategorijaNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (art.kolicinaUlaz !== undefined && art.kolicinaUlaz.toString().includes(searchTerm))
-    );
+    const filteredArtikli = artikli
+        .filter(art => (filterJmj ? art.artiklJmj === filterJmj : true))
+        .filter(art => (filterKategorija ? art.kategorijaNaziv === filterKategorija : true))
+        .filter(art =>
+            art.artiklId.toString().includes(searchTerm) ||
+            art.artiklNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            art.artiklJmj.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            art.kategorijaNaziv.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (art.kolicinaUlaz !== undefined && art.kolicinaUlaz.toString().includes(searchTerm))
+        );
 
     const stanjaFix = (stanje) => stanje || 0;
 
@@ -228,6 +233,21 @@ function Stanja() {
                         />
 
                     </Form.Group>
+
+                    <div className="d-flex justify-content-center gap-2 mt-2">
+                        <Form.Select value={filterJmj} onChange={e => setFilterJmj(e.target.value)} style={{ width: '40%' }}>
+                            <option value="">Sve JMJ</option>
+                            {jmjOptions.map(j => (
+                                <option key={j} value={j}>{j}</option>
+                            ))}
+                        </Form.Select>
+                        <Form.Select value={filterKategorija} onChange={e => setFilterKategorija(e.target.value)} style={{ width: '40%' }}>
+                            <option value="">Sve kategorije</option>
+                            {kategorijeOptions.map(k => (
+                                <option key={k.kategorijaNaziv} value={k.kategorijaNaziv}>{k.kategorijaNaziv}</option>
+                            ))}
+                        </Form.Select>
+                    </div>
 
                     <Table striped bordered hover variant="light">
                         <thead>

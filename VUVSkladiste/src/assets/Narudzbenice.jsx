@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from 'react-bootstrap/Table';
-import { Button, Card, Form, ButtonGroup } from 'react-bootstrap';
+import { Button, Card, Form, ButtonGroup, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 function Narudzbenice() {
@@ -10,6 +10,8 @@ function Narudzbenice() {
     const [narudzbenice, setNarudzbenice] = useState([]);
     const [filteredNarudzbenice, setFilteredNarudzbenice] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [usernames, setUsernames] = useState({});
     const [statusi, setStatusi] = useState({});
     const [rokovi, setRokovi] = useState({});
@@ -108,6 +110,14 @@ function Narudzbenice() {
             );
         }
 
+        if (startDate) {
+            filtered = filtered.filter(art => new Date(art.datumDokumenta) >= new Date(startDate));
+        }
+
+        if (endDate) {
+            filtered = filtered.filter(art => new Date(art.datumDokumenta) <= new Date(endDate));
+        }
+
         if (filterStatus !== "sve") {
             filtered = filtered.filter(n => {
                 const status = statusi[n.dokumentId]?.toLowerCase();
@@ -118,7 +128,7 @@ function Narudzbenice() {
         }
 
         setFilteredNarudzbenice(filtered);
-    }, [searchTerm, narudzbenice, filterStatus, statusi]);
+    }, [searchTerm, narudzbenice, filterStatus, statusi, startDate, endDate]);
 
     const handleShowInfoPage = (dokumentId) => {
         navigate(`/narudzbenica/${dokumentId}`);
@@ -161,6 +171,15 @@ function Narudzbenice() {
                             style={{ width: '80%' }}
                         />
                     </Form.Group>
+
+                    <Row className="mt-2" style={{ width: '80%', margin: '0 auto' }}>
+                        <Col>
+                            <Form.Control type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+                        </Col>
+                        <Col>
+                            <Form.Control type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+                        </Col>
+                    </Row>
 
                     <Table className="centered-table mt-3" striped bordered hover variant="light">
                         <thead>
